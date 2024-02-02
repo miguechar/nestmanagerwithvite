@@ -4,10 +4,7 @@ import { useState } from "react";
 import { MailIcon } from "../../Components/icons/MailIcon";
 import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { getFB } from "../../Components/Global/functions/firebase";
 
 export default function LogIn() {
@@ -16,52 +13,57 @@ export default function LogIn() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate()
-  const navigateTo = (path) => {navigate(path)}
+  const navigate = useNavigate();
+  const navigateTo = (path) => {
+    navigate(path);
+  };
   const auth = getAuth();
 
-  async function setIntialUserData(useremail) {
+  async function setInitialUserData(useremail) {
     try {
       const users = await getFB("Users/");
       const currentUser = Object.values(users).find(
         (user) => user.email === useremail
       );
 
-      localStorage.setItem("userEmail", useremail);
-      localStorage.setItem("userFirstName", currentUser.firstName);
-      localStorage.setItem("userLastName", currentUser.lastName);
-      localStorage.setItem("role", currentUser.role);
+      if (currentUser) {
+        localStorage.setItem("userEmail", useremail);
+        localStorage.setItem("userFirstName", currentUser.firstName);
+        localStorage.setItem("userLastName", currentUser.lastName);
+        localStorage.setItem("role", currentUser.role);
+      } else {
+        throw new Error("User not found");
+      }
     } catch (error) {
       console.error("Error retrieving user data:", error);
+      // Consider how to handle this situation - maybe redirect to an error page or show a message
     }
   }
 
-  function logIn(e) {
+  const logIn = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
-      signInWithEmailAndPassword(
+      const userCredential = await signInWithEmailAndPassword(
         auth,
         userDetails.email,
         userDetails.password
-      ).then((userCredential) => {
-        const user = userCredential.user;
-        if (user != null) {
-          const userEmail = auth?.currentUser?.email;
-          setIntialUserData(userEmail);
-          navigateTo("/home");
-        } else {
-          setLoading(false);
-          localStorage.removeItem("userEmail");
-        }
-      });
-      setLoading(false);
+      );
+      const user = userCredential.user;
+      if (user != null) {
+        const userEmail = auth?.currentUser?.email;
+        await setInitialUserData(userEmail); // Ensure user data is set
+        navigateTo("/home"); // Navigate after successful login and data setup
+      } else {
+        localStorage.removeItem("userEmail");
+      }
     } catch (err) {
       console.error(err);
-      setLoading(false);
+    } finally {
+      setLoading(false); // Ensure loading is set to false in all cases
     }
-  }
+  };
 
   return (
     <div

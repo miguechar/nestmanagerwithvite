@@ -11,6 +11,7 @@ import { FabricationRequests } from "./Pages/FabricationRequests/Index";
 import { RequestFab } from "./Pages/FabricationRequests/RequestFabrication/Index";
 import { ViewAllFabs } from "./Pages/FabricationRequests/ViewAllFabReqs/Index";
 import { EngineeringInbox } from "./Pages/FabricationRequests/EngineeringInbox";
+import { PlateshopInbox } from "./Pages/FabricationRequests/PlateshopInbox";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/fabricationrequests/requestfab" element={<WrapNav title={"Request Fabrication"} component={<RequestFab/>} />} />
           <Route path="/fabricationrequests/allfabs" element={<WrapNav title={"View All Fabrication"} component={<ViewAllFabs/>} />} />
           <Route path="/fabricationrequests/engineeringinbox" element={<WrapNav title={"Engineering Inbox"} component={<EngineeringInbox/>} />} />
+          <Route path="/fabricationrequests/plateshopinbox" element={<WrapNav title={"Plate Shop Inbox"} component={<PlateshopInbox/>} />} />
         </Routes>
       </BrowserRouter>
     </div>

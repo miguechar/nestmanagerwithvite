@@ -1,8 +1,10 @@
-import { Card, CardBody, CardHeader, Input } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Input, Button } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { getFB } from "../../../Components/Global/functions/firebase";
+import { PartsListCreate } from "../../../Components/Common/PartsListCreate";
+import SnackBarComponent from "../../../Components/Common/Snackbar";
 
-export const CheckPartsEng = ({ allFabrequests, selectedFro }) => {
+export const CheckPartsEng = ({ selectedFabReq, updateParentState}) => {
   const [fabreq, setFabreq] = useState({
     dateRequiered: "",
     requestedBy: "",
@@ -33,6 +35,12 @@ export const CheckPartsEng = ({ allFabrequests, selectedFro }) => {
     currentCount: "",
     select: true,
   });
+  const [editPartsList, setEditPartsList] = useState(false);
+  const [snackBar, setSnackBar] = useState({
+    open: false,
+    message: "",
+    severity: ""
+  })
 
   const [nests, setNests] = useState([]);
 
@@ -46,16 +54,58 @@ export const CheckPartsEng = ({ allFabrequests, selectedFro }) => {
       ...fabreq,
       partsList: updatedPartsList,
     });
+    updateParentState(updatedPartsList)
   };
 
-  useEffect(() => {
-    const selectedfab = allFabrequests.find(
-      (value) => value.frNo === selectedFro
-    );
-    if (selectedfab) {
-      setFabreq(selectedfab);
+  function updatePartsList(newPartsList) {
+    setFabreq({ ...fabreq, partsList: newPartsList });
+    updateParentState(newPartsList)
+  }
+
+  async function FetchNests(currentfab, newPartsList) {
+    const nests = await getFB("nests");
+
+    if (Array.isArray(nests)) {
+      // setNests(nests);
+
+      // const partsList = currentfab.partsList ;
+      const partsList = newPartsList ? newPartsList : currentfab.partsList
+      if (partsList.length > 0) {
+        var newPartsList = [];
+
+        // look for each part of fab in nests
+        for (let i = 0; i < partsList.length; i++) {
+          const paths = nests.filter((value) =>
+            value.parts.some((subvalue) => subvalue.name === partsList[i].name)
+          );
+          // adding these found values to array and if no path is found to leave blank
+          newPartsList.push({
+            "name": partsList[i].name,
+            "qty": partsList[i].qty,
+            "path": paths[0].path ? paths[0].path : ""
+          })
+        }
+        updateParentState(newPartsList)
+        setFabreq({...fabreq, partsList: newPartsList});
+        setSnackBar({
+          open: true,
+          message: "Parts found in Nest Manager!",
+          severity: "success"
+        })
+        setNests(nests)
+      }
     }
-  }, [allFabrequests, selectedFro]);
+  };
+
+  function handleSnackBarClose() {
+    setSnackBar({...snackBar, open: false})
+  }
+
+  useEffect(() => {
+    setFabreq(selectedFabReq)
+
+    FetchNests(selectedFabReq);
+  }, [selectedFabReq]);
 
   return (
     <div>
@@ -64,6 +114,12 @@ export const CheckPartsEng = ({ allFabrequests, selectedFro }) => {
           <CardHeader>Add WE Nest or Path</CardHeader>
           <CardBody>
             <div>
+              <div style={{ textAlign: "right" }}>
+                {/* this button will trigger partsListCreate */}
+                <Button color={editPartsList ? "danger" : "primary"} onClick={() => setEditPartsList(editPartsList ? false : true)}>
+                  {editPartsList ? "Close Edit PartsList" : "Edit / Add Parts"}
+                </Button>
+              </div>
               <div>
                 {fabreq.partsList.length > 0 ? (
                   <div>
@@ -97,7 +153,33 @@ export const CheckPartsEng = ({ allFabrequests, selectedFro }) => {
             </div>
           </CardBody>
         </Card>
+
+        <div style={{ marginTop: "10px" }}>
+          {editPartsList ? (
+            <Card>
+              <CardHeader>Edit / Add Parts</CardHeader>
+              <CardBody>
+                <PartsListCreate
+                  partsList={fabreq.partsList}
+                  updatePartsList={updatePartsList}
+                />
+              </CardBody>
+            </Card>
+          ) : (
+            <div></div>
+          )}
+        </div>
       </div>
+
+      <div>
+        <SnackBarComponent 
+          onClose={handleSnackBarClose}
+          open={snackBar.open}
+          message={snackBar.message}
+          severity={snackBar.severity}
+        />
+      </div>
+
     </div>
   );
 };

@@ -49,6 +49,7 @@ export const RequestFab = () => {
     hoursWorked: "",
     currentCount: "",
     select: true,
+    sentToFloor: "no"
   });
 
   function updatePartsList(newPartsList) {

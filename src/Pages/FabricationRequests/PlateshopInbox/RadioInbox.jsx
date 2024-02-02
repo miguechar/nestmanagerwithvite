@@ -26,10 +26,9 @@ export const RadioInbox = ({ fabreq, updateParentState }) => {
           <CardHeader>Check Fab</CardHeader>
           <CardBody>
             <div>
-              <div>
+              <div >
                 {allFabReq.length > 0 ? (
-                  <div>
-                    {" "}
+                  <div style={{height: "550px", overflow: "auto"}} > 
                     {allFabReq
                       .sort((a, b) => {
                         const getSequentialNumber = (frNo) =>

@@ -39,6 +39,7 @@ const filterOptions = [
 ];
 
 const INITIAL_VISIBLE_COLUMNS = [
+  "nestName",
   "hull",
   "po",
   "uid",
@@ -55,7 +56,7 @@ export default function DataTable({ users, columns }) {
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = React.useState("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(50);
   const [sortDescriptor, setSortDescriptor] = React.useState({
     column: "age",
     direction: "ascending",
@@ -236,47 +237,6 @@ export default function DataTable({ users, columns }) {
               </DropdownMenu>
             </Dropdown>
 
-            {/* <Dropdown>
-                <DropdownTrigger className="sm:flex">
-                  <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
-                    Filter
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                  disallowEmptySelection
-                  aria-label="Table Columns"
-                  closeOnSelect={false}
-                  selectedKeys={statusFilter}
-                  selectionMode="multiple"
-                  onSelectionChange={setStatusFilter}
-                >
-                  {filterOptions.map((status) => (
-                    <DropdownItem key={status.uid} className="capitalize">
-                      {capitalize(status.name)}
-                    </DropdownItem>
-                  ))}
-                </DropdownMenu>
-              </Dropdown> */}
-
-            <Dropdown>
-              <DropdownTrigger>
-                <Button variant="bordered" className="capitalize">
-                  {selectedFilter}
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                aria-label="Single selection example"
-                variant="flat"
-                disallowEmptySelection
-                selectionMode="single"
-                selectedKeys={selectedFilter}
-                onSelectionChange={setSelectedFilter}>
-                {filterOptions.map((value) => (
-                  <DropdownItem key={value.uid}>{value.name}</DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-
             <Dropdown>
               <DropdownTrigger className="sm:flex">
                 <Button
@@ -316,6 +276,7 @@ export default function DataTable({ users, columns }) {
               {/* <option value="5">5</option> */}
               <option value="10">10</option>
               <option value="15">15</option>
+              <option value="15">50</option>
             </select>
           </label>
         </div>

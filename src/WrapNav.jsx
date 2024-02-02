@@ -4,8 +4,11 @@ import { NavigationBar } from "./Components/Global/NavBar";
 export const WrapNav = ({ component, title, subtitle }) => {
   return (
     <div>
-      <NavigationBar />
-      <div style={{ textAlign: "left", marginTop: "5px"}}>
+      <div style={{ position: "static" }}>
+        <NavigationBar />
+      </div>
+
+      <div style={{ textAlign: "left", marginTop: "50px" }}>
         <Typography
           variant="h4"
           fontWeight="bold"
