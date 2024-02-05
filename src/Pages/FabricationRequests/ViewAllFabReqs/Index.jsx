@@ -22,6 +22,7 @@ import {
 } from "../../../Components/Global/functions/firebase";
 import { auth } from "../../../Config";
 import SnackBarComponent from "../../../Components/Common/Snackbar";
+import Dialog from "../../../Components/Common/Dialog";
 
 export const ViewAllFabs = () => {
   const [fabrequests, setFabrequests] = useState([]);
@@ -29,10 +30,18 @@ export const ViewAllFabs = () => {
     filter: "",
     filteredArray: [],
   });
+  const [selectedPdf, setSelectedPdf] = useState(null);
+  const [showPdfViewer, setShowPdfViewer] = useState(false);
   const [SnackBar, setSnackBar] = useState({
     open: false,
     message: "",
     severity: "",
+  });
+  const [dialog, setDialog] = useState({
+    open: false,
+    title: "",
+    body: "",
+    footer: "",
   });
 
   function handleSnackBarClose() {
@@ -40,6 +49,10 @@ export const ViewAllFabs = () => {
       ...SnackBar,
       open: false,
     });
+  }
+
+  function handleDialogClose() {
+    setDialog({ ...dialog, open: false });
   }
 
   function deleteFabReq(fab) {
@@ -110,11 +123,9 @@ export const ViewAllFabs = () => {
           (value) => value.engineeredChecked === "no"
         );
         break;
-        case "Rejected":
-          filteredFabs = fabrequests.filter(
-            (value) => value.rejected === "yes"
-          );
-          break;
+      case "Rejected":
+        filteredFabs = fabrequests.filter((value) => value.rejected === "yes");
+        break;
       default:
         break;
     }
@@ -132,6 +143,36 @@ export const ViewAllFabs = () => {
       setFilterValues({ ...filterValues, filteredArray: filteredFabs });
     }
   }
+
+  const handleViewPdfClick = async (pdfPath) => {
+    // setSelectedPdf(pdfPath);
+    // setShowPdfViewer(true); // Show the PDF viewer when the button is clicked
+
+    let arrayOfPaths = [];
+    for (let i = 0; i < pdfPath.length; i++) {
+      const currentPath = pdfPath[i];
+      const exists = arrayOfPaths.some((value) => value === currentPath.path);
+      if (!exists) {
+        arrayOfPaths.push(currentPath.path);
+      }
+    }
+
+    const response = await fetch("http://10.102.30.12:8080/merge-pdfs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ paths: arrayOfPaths }),
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      const mergedPdfUrl = URL.createObjectURL(blob);
+      window.open(mergedPdfUrl, '_blank');
+    } else {
+      console.error("Failed to merge PDFs");
+    }
+  };
 
   useEffect(() => {
     fetchData();
@@ -318,7 +359,21 @@ export const ViewAllFabs = () => {
                                     : "Mark as NOT sent to Floor"}
                                 </Button>
                               </div>
+                              {value.engineeredChecked === "yes" ? (
+                                <div>
+                                  <Button
+                                    color="primary"
+                                    onClick={() =>
+                                      handleViewPdfClick(value.partsList)
+                                    }>
+                                    View Nest PDF in Another Window
+                                  </Button>
+                                </div>
+                              ) : (
+                                <div></div>
+                              )}
                             </div>
+                            <div></div>
                           </div>
                         </div>
                       }
@@ -333,6 +388,15 @@ export const ViewAllFabs = () => {
                 message={SnackBar.message}
                 severity={SnackBar.severity}
                 onClose={handleSnackBarClose}
+              />
+            </div>
+            <div>
+              <Dialog
+                open={dialog.open}
+                onClose={handleDialogClose}
+                title={dialog.title}
+                body={dialog.body}
+                footer={dialog.footer}
               />
             </div>
           </CardBody>

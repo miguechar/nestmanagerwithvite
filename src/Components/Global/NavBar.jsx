@@ -170,6 +170,16 @@ export const NavigationBar = () => {
               </DropdownItem>
             )}
 
+            {localStorage.getItem("userEmail") === "miguel.charry@us.fincantieri.com" && (
+              <DropdownItem
+                key="users"
+                color="primary"
+                onClick={() => navigateTo("/manageusers")}
+              >
+                Projects
+              </DropdownItem>
+            )}
+
             <DropdownItem
               key="changeavatar"
               color="primary"
@@ -283,17 +293,17 @@ export const NavigationBar = () => {
               base: "gap-4",
             }}
           >
-            <DropdownItem
+            {/* <DropdownItem
               key="usage_metrics"
               onClick={() => navigateTo("/fabricationrequests/home")}
-              description="Create Nest by AutoComplete PDF, Upload CSV or manually enter"
+              description="Fab Dashboard"
               startContent={icons.activity}
             >
               Fabrication Requests Dashboard
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem
               key="autoscaling"
-              description="Scan Nest QR and record HN, SN"
+              description=""
               onClick={() => navigateTo("/fabricationrequests/requestfab")}
               startContent={icons.scale}
             >
@@ -301,7 +311,7 @@ export const NavigationBar = () => {
             </DropdownItem>
             <DropdownItem
               key="production_ready"
-              description="View Data Table of all create WE nests & generate report"
+              description=""
               onClick={() =>
                 navigateTo("/fabricationrequests/engineeringinbox")
               }
@@ -311,7 +321,7 @@ export const NavigationBar = () => {
             </DropdownItem>
             <DropdownItem
               key="99_uptime"
-              description="Applications stay on the grid with high availability and high uptime guarantees."
+              description=""
               onClick={() => navigateTo("/fabricationrequests/plateshopinbox")}
               startContent={icons.server}
             >
@@ -319,7 +329,7 @@ export const NavigationBar = () => {
             </DropdownItem>
             <DropdownItem
               key="supreme_support"
-              description="Overcome any challenge with a supporting team ready to respond."
+              description=""
               onClick={() => navigateTo("/fabricationrequests/allfabs")}
               startContent={icons.user}
             >

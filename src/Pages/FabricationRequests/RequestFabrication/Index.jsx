@@ -49,7 +49,8 @@ export const RequestFab = () => {
     hoursWorked: "",
     currentCount: "",
     select: true,
-    sentToFloor: "no"
+    sentToFloor: "no",
+    newCount: "",
   });
 
   function updatePartsList(newPartsList) {
@@ -112,7 +113,7 @@ export const RequestFab = () => {
           </CardBody>
         </Card>
         <Card>
-          <CardHeader>{"Fab Request Form: " + fabreq.frNo}</CardHeader>
+          <CardHeader>{"Fab Request Form: " + fabreq.frNo + " *new*"}</CardHeader>
           <CardBody>
             <div>
               <div className="input-container-3column">

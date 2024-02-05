@@ -1,5 +1,5 @@
 import { Button } from "@nextui-org/react";
-import { setFB } from "../../../Components/Global/functions/firebase";
+import { setFB, updateFB } from "../../../Components/Global/functions/firebase";
 import Dialog from "../../../Components/Common/Dialog";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,8 +15,12 @@ export const SubmitRequest = ({ fabreq }) => {
 
   function handleSubmit() {
     const someFunctionToCallSetFB = () => {
-      setFB("testing/", fabreq);
-
+      console.log(fabreq)
+      updateFB("/fabricationRequests/count", {
+        count: fabreq.newCount,
+      });
+      setFB("/fabricationRequests/fabricationRequests/", fabreq);
+      
       const body = (
         <div>
           <Button
