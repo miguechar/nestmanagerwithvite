@@ -24,11 +24,22 @@ export const NestsDataTable = () => {
     { name: "Ship To", uid: "shipTo", sortable: true },
   ];
 
+  const initialColumns = [
+    "nestName",
+    "hull",
+    "po",
+    "uid",
+    "addedon",
+    "status",
+    "stock",
+    "Serial Number",
+  ];
+
   useEffect(() => {
     setNestsdb({ ...nestsdb, loading: true });
     const fetchData = async () => {
       const nests = await getFB("/nests");
-    
+
       if (Array.isArray(nests)) {
         // Sort the nests array by the 'addedon' date in ascending order
         const sortedNests = nests.sort((a, b) => {
@@ -36,12 +47,11 @@ export const NestsDataTable = () => {
           const dateB = new Date(b.addedon);
           return dateB - dateA; // Ascending order
         });
-    
+
         // Now set the sorted array into your state
         setNestsdb({ ...nestsdb, loading: false, nests: sortedNests });
       }
     };
-    
 
     fetchData();
   }, []);
@@ -50,7 +60,11 @@ export const NestsDataTable = () => {
     <div>
       {nestsdb.nests ? (
         <div>
-          <DataTable users={nestsdb.nests} columns={columns} />
+          <DataTable
+            rows={nestsdb.nests}
+            columns={columns}
+            initialColumns={initialColumns}
+          />
         </div>
       ) : (
         <div></div>

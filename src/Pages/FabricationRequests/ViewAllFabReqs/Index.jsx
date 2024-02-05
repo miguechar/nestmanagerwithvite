@@ -81,7 +81,6 @@ export const ViewAllFabs = () => {
     let filteredFabs = [];
     switch (filter) {
       case "All Items":
-        // No need to filter
         break;
       case "Sent To Floor":
         filteredFabs = fabrequests.filter(

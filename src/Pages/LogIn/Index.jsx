@@ -19,6 +19,23 @@ export default function LogIn() {
   };
   const auth = getAuth();
 
+  // Example of sending the ID token to your Flask backend
+  const sendTokenToBackend = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const token = await user.getIdToken();
+      // Send token to your backend via POST request
+      fetch("/api/verifyToken", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      });
+    }
+    console.log("Went here")
+  };
+
   async function setInitialUserData(useremail) {
     try {
       const users = await getFB("Users/");
@@ -26,11 +43,16 @@ export default function LogIn() {
         (user) => user.email === useremail
       );
 
+      console.log(auth.currentUser)
+
       if (currentUser) {
         localStorage.setItem("userEmail", useremail);
         localStorage.setItem("userFirstName", currentUser.firstName);
         localStorage.setItem("userLastName", currentUser.lastName);
         localStorage.setItem("role", currentUser.role);
+        localStorage.setItem("avatar", currentUser.avatar);
+
+        await sendTokenToBackend()
       } else {
         throw new Error("User not found");
       }

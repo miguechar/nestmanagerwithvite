@@ -12,6 +12,7 @@ import { RequestFab } from "./Pages/FabricationRequests/RequestFabrication/Index
 import { ViewAllFabs } from "./Pages/FabricationRequests/ViewAllFabReqs/Index";
 import { EngineeringInbox } from "./Pages/FabricationRequests/EngineeringInbox";
 import { PlateshopInbox } from "./Pages/FabricationRequests/PlateshopInbox";
+import { ManageUsers } from "./Pages/AvatarPages/ManageUsers/Index";
 
 function App() {
   return (
@@ -29,6 +30,9 @@ function App() {
           <Route path="/fabricationrequests/allfabs" element={<WrapNav title={"View All Fabrication"} component={<ViewAllFabs/>} />} />
           <Route path="/fabricationrequests/engineeringinbox" element={<WrapNav title={"Engineering Inbox"} component={<EngineeringInbox/>} />} />
           <Route path="/fabricationrequests/plateshopinbox" element={<WrapNav title={"Plate Shop Inbox"} component={<PlateshopInbox/>} />} />
+
+          {/* avatar pages */}
+          <Route path="/manageusers" element={<WrapNav title={"Manage users"} component={<ManageUsers/>} />} />
         </Routes>
       </BrowserRouter>
     </div>

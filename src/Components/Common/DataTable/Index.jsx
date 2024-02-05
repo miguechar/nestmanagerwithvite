@@ -20,40 +20,25 @@ import { PlusIcon } from "../../icons/PlusIcon";
 import { VerticalDotsIcon } from "../../icons/VerticalDotsIcons";
 import { SearchIcon } from "../../icons/SearchIcon";
 import { ChevronDownIcon } from "../../icons/ChevronDownIcon";
-// import {columns, users, statusOptions} from "./data";
+// import {columns, rows, statusOptions} from "./data";
 import { capitalize } from "./utils";
+import Dialog from "../Dialog";
 
 const statusColorMap = {
   "Cut": "success",
   "Not Cut": "danger",
-};
+};``
 
 const statusOptions = [
   { name: "Cut", uid: "Cut" },
   { name: "Not Cut", uid: "Not Cut" },
 ];
 
-const filterOptions = [
-  { name: "Nest Name", uid: "nestName" },
-  { name: "PO", uid: "po" },
-];
-
-const INITIAL_VISIBLE_COLUMNS = [
-  "nestName",
-  "hull",
-  "po",
-  "uid",
-  "addedon",
-  "status",
-  "stock",
-  "Serial Number",
-];
-
-export default function DataTable({ users, columns }) {
+export default function DataTable({ rows, columns, initialColumns }) {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState(
-    new Set(INITIAL_VISIBLE_COLUMNS)
+    new Set(initialColumns)
   );
   const [statusFilter, setStatusFilter] = React.useState("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(50);
@@ -77,10 +62,10 @@ export default function DataTable({ users, columns }) {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredrows = [...rows];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
+      filteredrows = filteredrows.filter((user) =>
         user.po.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
@@ -88,13 +73,13 @@ export default function DataTable({ users, columns }) {
       statusFilter !== "all" &&
       Array.from(statusFilter).length !== statusOptions.length
     ) {
-      filteredUsers = filteredUsers.filter((user) =>
+      filteredrows = filteredrows.filter((user) =>
         Array.from(statusFilter).includes(user.status)
       );
     }
 
-    return filteredUsers;
-  }, [users, filterValue, statusFilter]);
+    return filteredrows;
+  }, [rows, filterValue, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -119,6 +104,14 @@ export default function DataTable({ users, columns }) {
     const cellValue = user[columnKey];
 
     switch (columnKey) {
+      case "avatar":
+        return (
+          <User
+            avatarProps={{ radius: "lg", src: user.avatar }}
+            >
+            {user.email}
+          </User>
+        );
       case "name":
         return (
           <User
@@ -259,14 +252,11 @@ export default function DataTable({ users, columns }) {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button color="primary" endContent={<PlusIcon />}>
-              Add New
-            </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {users.length} nests
+            Total {rows.length} nests
           </span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
@@ -287,7 +277,7 @@ export default function DataTable({ users, columns }) {
     statusFilter,
     visibleColumns,
     onRowsPerPageChange,
-    users.length,
+    rows.length,
     onSearchChange,
     hasSearchFilter,
   ]);
