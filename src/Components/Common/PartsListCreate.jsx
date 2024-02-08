@@ -1,6 +1,8 @@
 import { Button, Input } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import ListBox from "./ListBox";
+import { TextField } from "@mui/material";
+import { ReadCSV } from "../Processing/ReadCsv";
 
 export const PartsListCreate = ({ partsList, updatePartsList }) => {
   const [partsListData, setPartsListData] = useState({
@@ -8,6 +10,10 @@ export const PartsListCreate = ({ partsList, updatePartsList }) => {
     tempName: "",
     tempQty: "1",
   });
+
+  function updateParent(value) {
+    updatePartsList(value)
+  }
 
   function addPart(e) {
     e.preventDefault();
@@ -41,35 +47,46 @@ export const PartsListCreate = ({ partsList, updatePartsList }) => {
     );
     setPartsListData({ ...partsListData, partsList: filtered });
     updatePartsList(filtered);
-  };
+  }
 
   useEffect(() => {
-    setPartsListData({...partsListData, partsList: partsList})
-  }, [partsList])
+    setPartsListData({ ...partsListData, partsList: partsList });
+  }, [partsList]);
 
   return (
     <div>
       <div>
         <form onSubmit={addPart}>
-          <div style={{ display: "flex" }} className=" mb-6 md:mb-0 gap-4">
-            <Input
-              label="Name"
-              value={partsListData.tempName}
-              onChange={(e) =>
-                setPartsListData({ ...partsListData, tempName: e.target.value })
-              }
-            />
-            <Input
-              label="Qty"
-              value={partsListData.tempQty}
-              type="number"
-              onChange={(e) =>
-                setPartsListData({ ...partsListData, tempQty: e.target.value })
-              }
-            />
-            <Button color="primary" type="submit">
-              Enter Part
-            </Button>
+          <div className="input-container-2column">
+            <div className="input-container-1column">
+              <Input
+                label="Name"
+                value={partsListData.tempName}
+                onChange={(e) =>
+                  setPartsListData({
+                    ...partsListData,
+                    tempName: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="input-container-3column">
+              <Input
+                label="Qty"
+                value={partsListData.tempQty}
+                type="number"
+                onChange={(e) =>
+                  setPartsListData({
+                    ...partsListData,
+                    tempQty: e.target.value,
+                  })
+                }
+              />
+              <ReadCSV updateParentState={updateParent} formatType={"partsList"} />
+              <Button color="primary" type="submit">
+                Enter Part
+              </Button>
+            </div>
           </div>
         </form>
       </div>
@@ -79,6 +96,7 @@ export const PartsListCreate = ({ partsList, updatePartsList }) => {
             <div className="input-container-1column">
               <ListBox
                 title={value.name}
+                subtitle={value.qty}
                 clickEvent={() => deletePart(value.name)}
               />
             </div>

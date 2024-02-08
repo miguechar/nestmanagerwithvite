@@ -77,7 +77,15 @@
 
 .input-container-1column {
   display: grid;
-  /* grid-template-columns: repeat(1, 1fr); */
+  grid-template-columns: repeat(1, 1fr);
+  gap: 10px; /* This sets the gap between grid items */
+  width: 100%;
+  padding: 5px; /* Adjust padding as needed */
+}
+
+.input-container-6column {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
   gap: 10px; /* This sets the gap between grid items */
   width: 100%;
   padding: 5px; /* Adjust padding as needed */
