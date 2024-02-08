@@ -42,6 +42,7 @@ export const NavigationBar = () => {
     footer: "",
   });
   const [icon, setIcons] = useState([]);
+  const [serverMessage, setServerMessage] = useState("Server is Down");
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -75,11 +76,11 @@ export const NavigationBar = () => {
   };
 
   function changeAvatar() {
-    const changeAvatarIcon = ({icon}) => {
+    const changeAvatarIcon = ({ icon }) => {
       const userID = auth?.currentUser?.uid;
       updateFB("Users/" + userID, { avatar: icon });
       localStorage.setItem("avatar", icon);
-      console.log("Users/" + userID + "/avatar", icon)
+      console.log("Users/" + userID + "/avatar", icon);
     };
 
     const body = (
@@ -94,10 +95,12 @@ export const NavigationBar = () => {
               size="sm"
               src={localStorage.getItem("role")}
             />
-          }
-        >
+          }>
           {userAvatarts.map((userAvatarts) => (
-            <SelectItem key={userAvatarts.avatar} textValue={userAvatarts.avatar} value={userAvatarts.avatar}>
+            <SelectItem
+              key={userAvatarts.avatar}
+              textValue={userAvatarts.avatar}
+              value={userAvatarts.avatar}>
               <div className="flex gap-2 items-center">
                 <Avatar
                   alt={userAvatarts.name}
@@ -146,7 +149,7 @@ export const NavigationBar = () => {
                 src: localStorage.getItem("avatar"),
               }}
               className="transition-transform"
-              description={localStorage.getItem("role")}
+              description = {localStorage.getItem("project") ? localStorage.getItem("role") + ", " + localStorage.getItem("project") : localStorage.getItem("role")}
               name={
                 localStorage.getItem("userFirstName") +
                 " " +
@@ -164,27 +167,35 @@ export const NavigationBar = () => {
               <DropdownItem
                 key="users"
                 color="primary"
-                onClick={() => navigateTo("/manageusers")}
-              >
+                onClick={() => navigateTo("/manageusers")}>
                 Users
               </DropdownItem>
             )}
 
-            {localStorage.getItem("userEmail") === "miguel.charry@us.fincantieri.com" && (
+            {localStorage.getItem("userEmail") ===
+              "miguel.charry@us.fincantieri.com" && (
               <DropdownItem
                 key="users"
                 color="primary"
-                onClick={() => navigateTo("/manageusers")}
-              >
+                onClick={() => navigateTo("/projectmanager")}>
                 Projects
+              </DropdownItem>
+            )}
+
+            {localStorage.getItem("userEmail") ===
+              "miguel.charry@us.fincantieri.com" && (
+              <DropdownItem
+                key="users"
+                color="primary"
+                onClick={() => navigateTo("/k2Project")}>
+                K2 Project
               </DropdownItem>
             )}
 
             <DropdownItem
               key="changeavatar"
               color="primary"
-              onClick={() => changeAvatar()}
-            >
+              onClick={() => changeAvatar()}>
               Change Avatar
             </DropdownItem>
 
@@ -201,14 +212,24 @@ export const NavigationBar = () => {
     SetDialog({ ...dialog, open: false });
   }
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetch("http://10.102.30.12:8080/api/status")
+        .then((response) => response.json())
+        .then((data) => setServerMessage(data.status))
+        .catch(() => setServerMessage("Server is Down"));
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <div>
       <Navbar
         position="static"
         isBordered
         isMenuOpen={isMenuOpen}
-        onMenuOpenChange={setIsMenuOpen}
-      >
+        onMenuOpenChange={setIsMenuOpen}>
         <NavbarBrand>
           <AcmeLogo />
           <p className="font-bold text-inherit">Nest Manager</p>
@@ -218,8 +239,7 @@ export const NavigationBar = () => {
             <Button
               color="primary"
               variant="light"
-              onClick={() => navigateTo("/home")}
-            >
+              onClick={() => navigateTo("/home")}>
               Home
             </Button>
           </NavbarItem>
@@ -232,8 +252,7 @@ export const NavigationBar = () => {
                 className="p-0 bg-transparent data-[hover=true]:bg-transparent"
                 endContent={icons.chevron}
                 radius="sm"
-                variant="light"
-              >
+                variant="light">
                 Nests
               </Button>
             </DropdownTrigger>
@@ -243,30 +262,26 @@ export const NavigationBar = () => {
             className="w-[340px]"
             itemClasses={{
               base: "gap-4",
-            }}
-          >
+            }}>
             <DropdownItem
               key="usage_metrics"
               description="Create Nest by AutoComplete PDF, Upload CSV or manually enter"
               onClick={() => navigateTo("/createnewnest")}
-              startContent={icons.activity}
-            >
+              startContent={icons.activity}>
               Create New Nest
             </DropdownItem>
             <DropdownItem
               key="autoscaling"
               description="Scan Nest QR and record HN, SN"
               onClick={() => navigateTo("/recordnestdata")}
-              startContent={icons.scale}
-            >
+              startContent={icons.scale}>
               Record Nest Data
             </DropdownItem>
             <DropdownItem
               key="viewallnests"
               description="View Data Table of all create WE nests & generate report"
               onClick={() => navigateTo("/viewallnests")}
-              startContent={icons.flash}
-            >
+              startContent={icons.flash}>
               View All Nests
             </DropdownItem>
           </DropdownMenu>
@@ -280,8 +295,7 @@ export const NavigationBar = () => {
                 className="p-0 bg-transparent data-[hover=true]:bg-transparent"
                 endContent={icons.chevron}
                 radius="sm"
-                variant="light"
-              >
+                variant="light">
                 Fabrication Requests
               </Button>
             </DropdownTrigger>
@@ -291,8 +305,7 @@ export const NavigationBar = () => {
             className="w-[340px]"
             itemClasses={{
               base: "gap-4",
-            }}
-          >
+            }}>
             {/* <DropdownItem
               key="usage_metrics"
               onClick={() => navigateTo("/fabricationrequests/home")}
@@ -305,8 +318,7 @@ export const NavigationBar = () => {
               key="autoscaling"
               description=""
               onClick={() => navigateTo("/fabricationrequests/requestfab")}
-              startContent={icons.scale}
-            >
+              startContent={icons.scale}>
               Request Fab Req
             </DropdownItem>
             <DropdownItem
@@ -315,28 +327,35 @@ export const NavigationBar = () => {
               onClick={() =>
                 navigateTo("/fabricationrequests/engineeringinbox")
               }
-              startContent={icons.flash}
-            >
+              startContent={icons.flash}>
               Engineering Inbox
             </DropdownItem>
             <DropdownItem
               key="99_uptime"
               description=""
               onClick={() => navigateTo("/fabricationrequests/plateshopinbox")}
-              startContent={icons.server}
-            >
+              startContent={icons.server}>
               Plateshop Inbox
             </DropdownItem>
             <DropdownItem
               key="supreme_support"
               description=""
               onClick={() => navigateTo("/fabricationrequests/allfabs")}
-              startContent={icons.user}
-            >
+              startContent={icons.user}>
               View All Fabrication Requests
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
+        <NavbarContent>
+          <NavbarItem>
+            <p
+              style={{
+                color: serverMessage === "Server is Down" ? "red" : "green",
+              }}>
+              {serverMessage}
+            </p>
+          </NavbarItem>
+        </NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem>
             <PopOver

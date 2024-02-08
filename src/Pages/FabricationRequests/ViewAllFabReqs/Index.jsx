@@ -10,6 +10,7 @@ import {
   DropdownItem,
   DropdownMenu,
 } from "@nextui-org/react";
+import {PDFViewer} from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import { SplittedAccordion } from "../../../Components/Common/Accordion";
 import { getFB } from "../../../Components/Global/functions/firebase";
@@ -145,9 +146,6 @@ export const ViewAllFabs = () => {
   }
 
   const handleViewPdfClick = async (pdfPath) => {
-    // setSelectedPdf(pdfPath);
-    // setShowPdfViewer(true); // Show the PDF viewer when the button is clicked
-
     let arrayOfPaths = [];
     for (let i = 0; i < pdfPath.length; i++) {
       const currentPath = pdfPath[i];
@@ -322,9 +320,13 @@ export const ViewAllFabs = () => {
                               <p>
                                 Ship To: {value.shipTo ? value.shipTo : "-"}
                               </p>
+                              <p>
+                                UID: {value.uid ? value.uid : "-"}
+                              </p>
                             </div>
                             <Box mt={"10px"} height={"800px"}>
-                              <FabricationPDF data={value} />
+                              <PDFViewer style={{width: "100%", height: "100%"}} > <FabricationPDF data={value} /></PDFViewer>
+                              {/* <FabricationPDF data={value} /> */}
                             </Box>
 
                             <div
@@ -364,7 +366,7 @@ export const ViewAllFabs = () => {
                                   <Button
                                     color="primary"
                                     onClick={() =>
-                                      handleViewPdfClick(value.partsList)
+                                      handleViewPdfClick(value.partsList, value)
                                     }>
                                     View Nest PDF in Another Window
                                   </Button>

@@ -166,7 +166,7 @@ export const EngineeringInbox = () => {
           <div></div>
         )}
       </div>
-      <div>
+      <div className="input-container-1column">
         {selectedValue ? (
           <div>
             <div>

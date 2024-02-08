@@ -96,7 +96,7 @@ import {
   export const FabricationPDF = ({ data }) => {
     
     return (
-      <PDFViewer style={styles.viewer}>
+      // <PDFViewer style={styles.viewer}>
         <Document>
           <Page size={"letter"} style={styles.page}>
             <View>
@@ -581,7 +581,7 @@ import {
             </View>
           </Page>
         </Document>
-      </PDFViewer>
+      // </PDFViewer>
     );
   };
   

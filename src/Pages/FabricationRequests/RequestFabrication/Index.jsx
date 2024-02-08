@@ -93,6 +93,7 @@ export const RequestFab = () => {
           currentCount: count,
           requestedBy: auth?.currentUser?.email,
           newCount: newCount,
+          shipTo: localStorage.getItem("userEmail") === "eric.milbach@us.fincantieri.com" ? "Rollerfield Attn Eric M." : ""
         });
       }
       if (Array.isArray(nests)) {

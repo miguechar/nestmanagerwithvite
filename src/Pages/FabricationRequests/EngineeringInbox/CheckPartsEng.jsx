@@ -1,10 +1,18 @@
-import { Card, CardBody, CardHeader, Input, Button } from "@nextui-org/react";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Input,
+  Button,
+  Select,
+  SelectItem,
+} from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { getFB } from "../../../Components/Global/functions/firebase";
 import { PartsListCreate } from "../../../Components/Common/PartsListCreate";
 import SnackBarComponent from "../../../Components/Common/Snackbar";
 
-export const CheckPartsEng = ({ selectedFabReq, updateParentState}) => {
+export const CheckPartsEng = ({ selectedFabReq, updateParentState }) => {
   const [fabreq, setFabreq] = useState({
     dateRequiered: "",
     requestedBy: "",
@@ -39,10 +47,10 @@ export const CheckPartsEng = ({ selectedFabReq, updateParentState}) => {
   const [snackBar, setSnackBar] = useState({
     open: false,
     message: "",
-    severity: ""
-  })
+    severity: "",
+  });
 
-  const [nests, setNests] = useState([]);
+  const [nestsdb, setNestsdb] = useState([]);
 
   const handlePathChange = (e, index) => {
     const updatedPartsList = [...fabreq.partsList];
@@ -54,12 +62,12 @@ export const CheckPartsEng = ({ selectedFabReq, updateParentState}) => {
       ...fabreq,
       partsList: updatedPartsList,
     });
-    updateParentState(updatedPartsList)
+    updateParentState(updatedPartsList);
   };
 
   function updatePartsList(newPartsList) {
     setFabreq({ ...fabreq, partsList: newPartsList });
-    updateParentState(newPartsList)
+    updateParentState(newPartsList);
   }
 
   async function FetchNests(currentfab, newPartsList) {
@@ -69,7 +77,7 @@ export const CheckPartsEng = ({ selectedFabReq, updateParentState}) => {
       // setNests(nests);
 
       // const partsList = currentfab.partsList ;
-      const partsList = newPartsList ? newPartsList : currentfab.partsList
+      const partsList = newPartsList ? newPartsList : currentfab.partsList;
       if (partsList.length > 0) {
         var newPartsList = [];
 
@@ -80,31 +88,53 @@ export const CheckPartsEng = ({ selectedFabReq, updateParentState}) => {
           );
           // adding these found values to array and if no path is found to leave blank
           newPartsList.push({
-            "name": partsList[i].name,
-            "qty": partsList[i].qty,
-            "path": paths[0].path ? paths[0].path : ""
-          })
+            name: partsList[i].name,
+            qty: partsList[i].qty,
+            path: paths[0].path ? paths[0].path : "",
+          });
         }
-        updateParentState(newPartsList)
-        setFabreq({...fabreq, partsList: newPartsList});
+        updateParentState(newPartsList);
+        setFabreq({ ...fabreq, partsList: newPartsList });
         setSnackBar({
           open: true,
           message: "Parts found in Nest Manager!",
-          severity: "success"
-        })
-        setNests(nests)
+          severity: "success",
+        });
+        setNests(nests);
       }
     }
-  };
+  }
 
   function handleSnackBarClose() {
-    setSnackBar({...snackBar, open: false})
+    setSnackBar({ ...snackBar, open: false });
+  }
+
+  async function fetchNests() {
+    const nests = await getFB("/nests/");
+
+    if (Array.isArray(nests)) {
+      setNestsdb(nests);
+    }
+  }
+
+  function autoFillPartsPaths(path) {
+    let newPartsList = [];
+    for(let i = 0; i < fabreq.partsList.length; i++) {
+      newPartsList.push({
+        name: fabreq.partsList[i].name,
+        qty: fabreq.partsList[i].qty,
+        path: path
+      })
+    }
+    setFabreq({...fabreq, partsList: newPartsList})
+    updateParentState(newPartsList)
   }
 
   useEffect(() => {
-    setFabreq(selectedFabReq)
+    setFabreq(selectedFabReq);
 
     FetchNests(selectedFabReq);
+    fetchNests();
   }, [selectedFabReq]);
 
   return (
@@ -114,9 +144,27 @@ export const CheckPartsEng = ({ selectedFabReq, updateParentState}) => {
           <CardHeader>Add WE Nest or Path</CardHeader>
           <CardBody>
             <div>
-              <div style={{ textAlign: "right" }}>
+              <div style={{ justifyContent: "space-between", display: "flex" }}>
                 {/* this button will trigger partsListCreate */}
-                <Button color={editPartsList ? "danger" : "primary"} onClick={() => setEditPartsList(editPartsList ? false : true)}>
+
+                <Select
+                  label="Select Recent Nest"
+                  style={{ width: "350px" }}
+                  description="IF YOU ARE ENTERING PATHS MANUALLY PLEASE BE SURE TO INCLUDE NESTNAME AT END AND NO SUFFIX OF .PDF"
+                  onChange={(e) => autoFillPartsPaths(e.target.value)}>
+                  {nestsdb
+                    .sort((a, b) => new Date(b.addedon) - new Date(a.addedon)) // Sort by date in descending order
+                    .map((value) => (
+                      <SelectItem value={value.path + "\\" + value.nestName} key={value.path + "\\" + value.nestName}>
+                        {value.nestName}
+                      </SelectItem>
+                    ))}
+                </Select>
+                <Button
+                  color={editPartsList ? "danger" : "primary"}
+                  onClick={() =>
+                    setEditPartsList(editPartsList ? false : true)
+                  }>
                   {editPartsList ? "Close Edit PartsList" : "Edit / Add Parts"}
                 </Button>
               </div>
@@ -172,14 +220,13 @@ export const CheckPartsEng = ({ selectedFabReq, updateParentState}) => {
       </div>
 
       <div>
-        <SnackBarComponent 
+        <SnackBarComponent
           onClose={handleSnackBarClose}
           open={snackBar.open}
           message={snackBar.message}
           severity={snackBar.severity}
         />
       </div>
-
     </div>
   );
 };

@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import "./index.css";
+import { useState, useEffect } from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import LogIn from "./Pages/LogIn/Index";
 import { WrapNav } from "./WrapNav";
 import { Home } from "./Pages/Home/Index";
@@ -13,8 +15,53 @@ import { ViewAllFabs } from "./Pages/FabricationRequests/ViewAllFabReqs/Index";
 import { EngineeringInbox } from "./Pages/FabricationRequests/EngineeringInbox";
 import { PlateshopInbox } from "./Pages/FabricationRequests/PlateshopInbox";
 import { ManageUsers } from "./Pages/AvatarPages/ManageUsers/Index";
+import { K2Project } from "./Pages/K2Project/Index";
+import { ProjectManager } from "./Pages/ProjectManager/Index";
 
 function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, obtain the username or any unique identifier
+        const username = user.email; // Or any other identifier
+        setCurrentUser(username);
+        // Send the username to Flask backend
+        sendUsernameToFlask(username);
+      } else {
+        // User is signed out
+        setCurrentUser(null);
+      }
+    });
+
+    // Setup interval to send username every 10 seconds
+    const interval = setInterval(() => {
+      if (currentUser) {
+        sendUsernameToFlask(currentUser);
+      }
+    }, 10000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
+  }, [currentUser]);
+
+  function sendUsernameToFlask(username) {
+    fetch('http://10.102.30.12:8080/update_user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username }),
+    })
+    .then(response => response.json())
+    // .then(data => console.log(data.message))
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  }
+
   return (
     <div>
       <BrowserRouter>
@@ -33,6 +80,12 @@ function App() {
 
           {/* avatar pages */}
           <Route path="/manageusers" element={<WrapNav title={"Manage users"} component={<ManageUsers/>} />} />
+
+          {/* K2 */}
+          <Route path="/k2Project" element={<WrapNav title={"K2 Project"} component={<K2Project/>} />} />
+
+          {/* Project Manage */}
+          <Route path="/projectmanager" element={<WrapNav title={"Project Manager"} component={<ProjectManager/>} />} />
         </Routes>
       </BrowserRouter>
     </div>

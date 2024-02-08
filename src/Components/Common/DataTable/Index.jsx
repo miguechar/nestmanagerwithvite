@@ -193,6 +193,12 @@ export default function DataTable({ rows, columns, initialColumns }) {
     setPage(1);
   }, []);
 
+  function handleSelectedKeys(value) {
+    setSelectedKeys(value);
+    
+    console.log(selectedKeys)
+  }
+
   const topContent = React.useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
@@ -333,7 +339,7 @@ export default function DataTable({ rows, columns, initialColumns }) {
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
+      onSelectionChange={handleSelectedKeys}
       onSortChange={setSortDescriptor}>
       <TableHeader columns={headerColumns}>
         {(column) => (
