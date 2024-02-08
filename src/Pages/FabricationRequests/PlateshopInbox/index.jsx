@@ -10,6 +10,7 @@ import { PlateShopDetails } from "./PlateshopDetails";
 export const PlateshopInbox = () => {
   const [allFabReq, setAllFabReq] = useState([]);
   const [selectedValue, setSelectedValue] = useState("");
+  const [operators, setOperators] = useState([])
   const [fabreq, setFabreq] = useState([]);
   const [snackBar, setSnackBar] = useState({
     open: false,
@@ -122,63 +123,10 @@ export const PlateshopInbox = () => {
     }
   }
 
-  function rejectFabDialog() {
-    var message = "";
-    const footer = (
-      <div
-        style={{
-          justifyContent: "space-between",
-          width: "100%",
-          display: "flex",
-        }}>
-        <Button color="primary" onClick={() => handleDialogClose()}>
-          Close
-        </Button>
-        <Button color="danger" onClick={() => rejectFab(message)}>
-          Submit Rejection
-        </Button>
-      </div>
-    );
-
-    const body = (
-      <div>
-        <Input
-          label="Reason Why?"
-          onChange={(e) => {
-            message = e.target.value;
-          }}
-        />
-      </div>
-    );
-
-    setDialog({
-      ...dialog,
-      open: true,
-      title: "Rejection",
-      body: body,
-      footer: footer,
-    });
-  }
-
-  function rejectFab(message) {
-    const rejectedFab = {
-      ...fabreq,
-      engineeredChecked: "yes",
-      rejected: "yes",
-      rejectionMessage: message,
-    };
-
-    updateFB(
-      "/fabricationRequests/fabricationRequests/" + fabreq.uid,
-      rejectedFab
-    );
-    handleDialogClose();
-    fetchData();
-    setSelectedValue({});
-  }
 
   const fetchData = async () => {
     const fabreq = await getFB("/fabricationRequests/fabricationRequests");
+    const operators = await getFB("/fabricationRequests/Operators")
 
     if (Array.isArray(fabreq)) {
       const plateshop = fabreq.filter(
@@ -188,6 +136,7 @@ export const PlateshopInbox = () => {
           value.rejected !== "yes"
       );
       setAllFabReq(plateshop);
+      setOperators(operators)
     }
   };
 

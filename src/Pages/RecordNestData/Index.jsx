@@ -29,7 +29,7 @@ export const RecordNestData = () => {
 
     // if a nest is found set state of nestdata
     if (selectedNest) {
-      setNestData(selectedNest[0]);
+      setNestData({...selectedNest[0], status: "Cut"});
       console.log(selectedNest[0])
     } else {
       const footer = (
@@ -64,6 +64,7 @@ export const RecordNestData = () => {
 
   async function updateNestData() {
     const path = ("nests/" + nestdata.uid + "/");
+    const updatedNest = {...nestdata, status: "Cut"}
     await updateFB(path, nestdata);
     setNestData()
 
