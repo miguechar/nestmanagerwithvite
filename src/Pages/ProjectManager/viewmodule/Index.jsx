@@ -11,6 +11,7 @@ export const ViewModule = () => {
   const [project, setProject] = useState({
     module: data.module,
     full: data.data,
+    moduleUid: data.moduleUid,
   });
   const [newAssembly, setNewAssembly] = useState(false);
 
@@ -52,7 +53,7 @@ export const ViewModule = () => {
         </Card>
         
       </div>
-      {newAssembly ? <CreateAssembly module={project.module} /> : <div></div>}
+      {newAssembly ? <CreateAssembly module={project.module} project={data.data} moduleUid={data.moduleUid} /> : <div></div>}
     </div>
   );
 };

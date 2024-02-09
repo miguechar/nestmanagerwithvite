@@ -28,8 +28,9 @@ export const ProjectManager = () => {
     const getCurProj = project.filter(
       (value) => value.projectNo === localStorage.getItem("project")
     );
+
     const moduleNames = Object.values(getCurProj[0].Modules).map(
-      (module) => module.moduleName
+      (module) => ({ name: module.moduleName, uid: module.uid })
     );
 
     setProject({
@@ -37,10 +38,11 @@ export const ProjectManager = () => {
       full: getCurProj[0],
       modules: moduleNames,
     });
-  };
+};
 
-  function goToViewModule(module) {
-    navigate("/projectmanager/viewmodule", {state: { module: module, data: project}})
+
+  function goToViewModule(module, moduleUid) {
+    navigate("/projectmanager/viewmodule", {state: { module: module, data: project, moduleUid: moduleUid}})
   }
 
   useEffect(() => {
@@ -63,13 +65,13 @@ export const ProjectManager = () => {
                 <p>Gross Tonnage: 0t</p>
               </div>
               <div>
-                {project.modules.map((name, index) => (
+                {project.modules.map((value, index) => (
                   <div style={{ marginTop: "10px" }}>
                     <Card key={index}>
                       <CardHeader>
                         <div style={{ justifyContent: "space-between", display:"flex",width: "100%"}}>
-                          {name}
-                          <Button color="secondary" radius="full" endContent={<ChevronRightIcon/>} onClick={() => goToViewModule(name)}>View</Button>
+                          {value.name}
+                          <Button color="secondary" radius="full" endContent={<ChevronRightIcon/>} onClick={() => goToViewModule(value.name, value.uid)}>View</Button>
                         </div>
                       </CardHeader>
                     </Card>

@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardBody,
   CardHeader,
@@ -9,8 +10,9 @@ import {
 import { assyType, subModules } from "../pmmenuitems";
 import { useState } from "react";
 import { PartsListCreate } from "../../../Components/Common/PartsListCreate";
+import { setFB } from "../../../Components/Global/functions/firebase";
 
-export const CreateAssembly = ({ updateParent, module }) => {
+export const CreateAssembly = ({ updateParent, module, project, moduleUid }) => {
   const [assembly, setAssembly] = useState({
     module: module,
     subModule: "",
@@ -24,6 +26,25 @@ export const CreateAssembly = ({ updateParent, module }) => {
 
   function updatePartsList(partsList) {
     setAssembly({ ...assembly, partsList: partsList });
+  }
+
+  function handleAssemblySubmit() {
+    const newAssembly = {
+      ...assembly,
+      assemblyName:
+        assembly.module +
+        assembly.subModule +
+        "-" +
+        assembly.buildStage +
+        "-" +
+        assembly.assyType +
+        assembly.assyNo,
+    };
+
+    if(assembly.subModule !== "" && assembly.buildStage !== "" && assembly.assyType !== "" && assembly.assyNo !== "") {
+      const path = "Projects/" + project[0].uid + "/Modules/" + moduleUid + "/0/Assembly/"
+      setFB(path, newAssembly)
+    }
   }
 
   return (
@@ -50,9 +71,14 @@ export const CreateAssembly = ({ updateParent, module }) => {
                   value={assembly.subModule}
                   onChange={(e) =>
                     setAssembly({ ...assembly, subModule: e.target.value })
-                  }>
+                  }
+                >
                   {subModules.map((value) => (
-                    <SelectItem key={value.value} value={value.value} textValue={value.value}>
+                    <SelectItem
+                      key={value.value}
+                      value={value.value}
+                      textValue={value.value}
+                    >
                       {value.value + "-" + value.name}
                     </SelectItem>
                   ))}
@@ -63,7 +89,8 @@ export const CreateAssembly = ({ updateParent, module }) => {
                   value={assembly.buildStage}
                   onChange={(e) =>
                     setAssembly({ ...assembly, buildStage: e.target.value })
-                  }>
+                  }
+                >
                   <SelectItem key={"00"} value={"00"} textValue="00">
                     {"00"}
                   </SelectItem>
@@ -79,9 +106,14 @@ export const CreateAssembly = ({ updateParent, module }) => {
                   label="Assy Letter"
                   onChange={(e) =>
                     setAssembly({ ...assembly, assyType: e.target.value })
-                  }>
+                  }
+                >
                   {assyType.map((value) => (
-                    <SelectItem key={value.value} value={value.value} textValue={value.value}>
+                    <SelectItem
+                      key={value.value}
+                      value={value.value}
+                      textValue={value.value}
+                    >
                       {value.value + "-" + value.name}
                     </SelectItem>
                   ))}
@@ -107,11 +139,20 @@ export const CreateAssembly = ({ updateParent, module }) => {
                   value={assembly.progress}
                   onChange={(e) =>
                     setAssembly({ ...assembly, progress: e.target.value })
-                  }>
-                  <SelectItem key={"Complete"} value={"Complete"} textValue={"Complete"}>
+                  }
+                >
+                  <SelectItem
+                    key={"Complete"}
+                    value={"Complete"}
+                    textValue={"Complete"}
+                  >
                     {"Complete"}
                   </SelectItem>
-                  <SelectItem key={"Not Complete"} value={"Not Complete"} textValue={"Not Complete"}>
+                  <SelectItem
+                    key={"Not Complete"}
+                    value={"Not Complete"}
+                    textValue={"Not Complete"}
+                  >
                     {"Not Complete"}
                   </SelectItem>
                 </Select>
@@ -131,6 +172,10 @@ export const CreateAssembly = ({ updateParent, module }) => {
             />
           </CardBody>
         </Card>
+      </div>
+
+      <div className="input-container-1column">
+        <Button onClick={handleAssemblySubmit}>Submit Assembly</Button>
       </div>
     </div>
   );
