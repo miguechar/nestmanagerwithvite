@@ -88,7 +88,7 @@ export const CreateModule = ({ proj }) => {
       moduleName: moduleName,
       moduleDescription: moduleDescription,
     };
-
+    console.log(project)
     setFB("/Projects/" + project.uid + "/Modules/", newModule);
     handleDialogClose();
   }
@@ -114,13 +114,6 @@ export const CreateModule = ({ proj }) => {
                 <Button radius="full" onClick={() => handleCreateModule()}>
                   Create New Module
                 </Button>
-              </div>
-              <div>
-                {/* {modules.length > 0 ? (
-                  modules.map((value) => <div></div>)
-                ) : (
-                  <div></div>
-                )} */}
               </div>
             </div>
           </CardBody>

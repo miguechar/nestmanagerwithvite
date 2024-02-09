@@ -51,3 +51,18 @@ export const assyType = [
         name: "0",
     },
 ]
+
+export const structureType = [
+    {
+        name: "LongBhd",
+        value: "LongBhd"
+    },
+    {
+        name: "Frame",
+        value: "Frame"
+    },
+    {
+        name: "Deck",
+        value: "Deck"
+    },
+]

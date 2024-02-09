@@ -47,12 +47,10 @@ export const CreateAssembly = ({ updateParent, module, project, moduleUid }) => 
     if(assembly.parentAssembly !== "") {
       const path = "Projects/" + project[0].uid + "/Modules/" + moduleUid + "/0/Assembly/" + newAssembly.parentAssembly 
       setFB(path, newAssembly)
-      // console.log(path)
     }
     else if(assembly.subModule !== "" && assembly.buildStage !== "" && assembly.assyType !== "" && assembly.assyNo !== "") {
-      // const path = "Projects/" + project[0].uid + "/Modules/" + moduleUid + "/0/Assembly/"
-      // setFB(path, newAssembly)
-      console.log("normal")
+      const path = "Projects/" + project[0].uid + "/Modules/" + moduleUid + "/0/Assembly/"
+      setFB(path, newAssembly)
     }
   }
 

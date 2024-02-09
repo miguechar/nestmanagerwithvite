@@ -94,7 +94,7 @@ export default function CustomizedTreeView({ data, moduleName, updateParent }) {
       // If the value is an object and not an empty one, generate child TreeItems
       if (typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length > 0) {
         return (
-          <StyledTreeItem key={newParentKey} nodeId={newParentKey} label={key} onClick={handleClick}>
+          <StyledTreeItem key={newParentKey} nodeId={newParentKey} label={key} >
             {generateTreeItems(value, newParentKey)}
           </StyledTreeItem>
         );
