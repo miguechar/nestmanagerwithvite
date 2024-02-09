@@ -65,8 +65,8 @@ export const ViewModule = () => {
         
 
         if(structureData.assemblies && typeof structureData.assemblies === "object") {
-          node.Children = {};
-          processFrameData(structureData.assemblies, node.Children)
+          node.Assemblies = {};
+          processFrameData(structureData.assemblies, node.Assemblies)
         }
         parentObj[structure] = node
       })
@@ -88,7 +88,7 @@ export const ViewModule = () => {
     }
 
     if (FrameList && typeof FrameList === "object") {
-      processFrameData(FrameList,dataForTreeView[project.module].Structure)
+      processFrameData(FrameList,dataForTreeView[project.module].Structure.Frame)
     }
 
     setTreeData(dataForTreeView); // Uncomment and use if you're setting state in a framework like React
