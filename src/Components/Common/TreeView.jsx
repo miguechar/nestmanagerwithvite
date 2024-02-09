@@ -78,54 +78,49 @@ const StyledTreeItem = styled(CustomTreeItem)(({ theme }) => ({
 
 export default function CustomizedTreeView({ data, moduleName, updateParent }) {
   // Find the module by moduleName
-  const module = Object.values(data[0].Modules).find(
-    (mod) => mod.moduleName === moduleName
-  );
 
-  function generateTreeItems(data, parentKey = '', moduleName = '') {
+
+  function generateTreeItems(data, parentKey = '') {
     return Object.entries(data).map(([key, value]) => {
-      // Skip specific properties
-      if (['moduleDescription', 'moduleName', 'uid'].includes(key)) {
-        return null;
-      }
-  
-      // Determine the label: use moduleName if key is empty, indicating we're at the module's main object
-      const label = key === "" ? moduleName : key;
+      // Create a new key for nested items to maintain unique IDs
+      const newParentKey = parentKey ? `${parentKey}.${key}` : key;
   
       // Handle clicking on a tree item
       const handleClick = (e) => {
         e.stopPropagation(); // Prevent triggering click events on parent items
-        // console.log(`Clicked on item: ${parentKey}${label}:`, value);
-        updateParent(`${parentKey}${label}`)
+        updateParent(newParentKey); // Pass the new parent key for context
       };
   
-      if (typeof value === 'object') {
-        // For nested objects, continue passing moduleName to maintain context
+      // If the value is an object and not an empty one, generate child TreeItems
+      if (typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length > 0) {
         return (
-          <StyledTreeItem key={key} nodeId={`${parentKey}${label}`} label={label} onClick={handleClick}>
-            {generateTreeItems(value, `${parentKey}${label}.`, moduleName)}
+          <StyledTreeItem key={newParentKey} nodeId={newParentKey} label={key} onClick={handleClick}>
+            {generateTreeItems(value, newParentKey)}
           </StyledTreeItem>
         );
+      } else {
+        // For leaf nodes, directly create a TreeItem with the determined label
+        return (
+          <StyledTreeItem key={newParentKey} nodeId={newParentKey} label={`${key}: ${value}`} onClick={handleClick} />
+        );
       }
-      // For leaf nodes, directly create a TreeItem with the determined label
-      return (
-        <StyledTreeItem key={key} nodeId={`${parentKey}${label}`} label={`${label}: ${value}`} onClick={handleClick} />
-      );
     });
   }
   
+  
+  
+  
 
   return (
-    <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}>
+    <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: "100%" }}>
       <TreeView
-      onClick={console.log("")}
         aria-label="customized"
         defaultExpanded={["1"]}
         defaultCollapseIcon={<MinusSquare />}
         defaultExpandIcon={<PlusSquare />}
         defaultEndIcon={<CloseSquare />}
         sx={{ overflowX: "hidden" }}>
-        {module && generateTreeItems(module)}
+        {generateTreeItems(data)}
       </TreeView>
     </Box>
   );

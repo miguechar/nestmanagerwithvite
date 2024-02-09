@@ -24,7 +24,7 @@ export default function ListBox({ title, edge, clickEvent, icon, subtitle }) {
         }>
         <div className="input-container-2column">
           <div>{title}</div>
-          <div>{"qty: " + subtitle}</div>
+          {subtitle ? <div>{"qty: " + subtitle}</div> : <div></div>}
         </div>
       </ListboxItem>
     </Listbox>

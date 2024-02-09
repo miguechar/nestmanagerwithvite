@@ -11,6 +11,7 @@ import { assyType, subModules } from "../pmmenuitems";
 import { useState } from "react";
 import { PartsListCreate } from "../../../Components/Common/PartsListCreate";
 import { setFB } from "../../../Components/Global/functions/firebase";
+import { useEffect } from "react";
 
 export const CreateAssembly = ({ updateParent, module, project, moduleUid }) => {
   const [assembly, setAssembly] = useState({
@@ -22,7 +23,9 @@ export const CreateAssembly = ({ updateParent, module, project, moduleUid }) => 
     weight: "",
     progress: "",
     partsList: [],
+    parentAssembly: ""
   });
+  const [allAssemblies, setAllAssemblies] = useState([])
 
   function updatePartsList(partsList) {
     setAssembly({ ...assembly, partsList: partsList });
@@ -41,11 +44,48 @@ export const CreateAssembly = ({ updateParent, module, project, moduleUid }) => 
         assembly.assyNo,
     };
 
-    if(assembly.subModule !== "" && assembly.buildStage !== "" && assembly.assyType !== "" && assembly.assyNo !== "") {
-      const path = "Projects/" + project[0].uid + "/Modules/" + moduleUid + "/0/Assembly/"
+    if(assembly.parentAssembly !== "") {
+      const path = "Projects/" + project[0].uid + "/Modules/" + moduleUid + "/0/Assembly/" + newAssembly.parentAssembly 
       setFB(path, newAssembly)
+      // console.log(path)
+    }
+    else if(assembly.subModule !== "" && assembly.buildStage !== "" && assembly.assyType !== "" && assembly.assyNo !== "") {
+      // const path = "Projects/" + project[0].uid + "/Modules/" + moduleUid + "/0/Assembly/"
+      // setFB(path, newAssembly)
+      console.log("normal")
     }
   }
+
+  function fetchParents() {
+    const moduleAssemblies = (project.full.Modules[moduleUid]["0"].Assembly)
+    
+    var allModuleAssemblies = [];
+
+    function processAssemblies(assemblyObj, currentPath = "") {
+      Object.entries(assemblyObj).forEach(([uid, assemblyData]) => {
+        const newPath = currentPath + uid + "/Assembly/"; // Update the path with the current UID
+  
+        // Add the current assembly to the array with its path
+        allModuleAssemblies.push({ "name": assemblyData.assemblyName, "uid": assemblyData.uid, "path": newPath });
+  
+        // Check for children assemblies and process them recursively, passing the updated path
+        if (assemblyData.Assembly && typeof assemblyData.Assembly === 'object') {
+          processAssemblies(assemblyData.Assembly, newPath);
+        }
+      });
+    }
+  
+    if (moduleAssemblies && typeof moduleAssemblies === 'object') {
+      processAssemblies(moduleAssemblies);
+    }
+  
+    setAllAssemblies(allModuleAssemblies); // Uncomment and use if you're setting state in a framework like React
+    return allModuleAssemblies;
+  }
+
+  useEffect(() => {
+    fetchParents()
+  }, [])
 
   return (
     <div>
@@ -155,6 +195,20 @@ export const CreateAssembly = ({ updateParent, module, project, moduleUid }) => 
                   >
                     {"Not Complete"}
                   </SelectItem>
+                </Select>
+
+                <Select
+                  label="Parent"
+                  value={assembly.parentAssembly}
+                  onChange={(e) =>
+                    setAssembly({ ...assembly, parentAssembly: e.target.value })
+                  }
+                >
+                  {allAssemblies.map((value) => (
+                    <SelectItem value={value.path} textValue={value.name} key={value.path}>
+                      {value.name}
+                    </SelectItem>
+                  ))}
                 </Select>
               </div>
             </div>

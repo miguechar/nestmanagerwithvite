@@ -15,6 +15,10 @@ export const subModules = [
         value: "P1",
         name: "Deck",
     },
+    {
+        value: "00",
+        name: "00",
+    },
 ]
 
 export const assyType = [
@@ -41,5 +45,9 @@ export const assyType = [
     {
         value: "K",
         name: "Long",
+    },
+    {
+        value: "0",
+        name: "0",
     },
 ]
