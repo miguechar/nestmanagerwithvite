@@ -101,7 +101,7 @@ export default function CustomizedTreeView({ data, moduleName, updateParent }) {
       } else {
         // For leaf nodes, directly create a TreeItem with the determined label
         return (
-          <StyledTreeItem key={newParentKey} nodeId={newParentKey} label={`${key}: ${value}`} onClick={handleClick} />
+          <StyledTreeItem key={newParentKey} nodeId={newParentKey} label={`${key}: ${value}`} onDoubleClick={handleClick} />
         );
       }
     });

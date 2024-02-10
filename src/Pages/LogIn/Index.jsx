@@ -32,6 +32,11 @@ export default function LogIn() {
         localStorage.setItem("userLastName", currentUser.lastName);
         localStorage.setItem("role", currentUser.role);
         localStorage.setItem("avatar", currentUser.avatar);
+        if (
+          auth?.currentUser?.email === "miguel.charry@us.fincantieri.com"
+        ) {
+          localStorage.setItem("project", "0434");
+        }
       } else {
         throw new Error("User not found");
       }

@@ -76,7 +76,18 @@ export const CreateStructure = ({
       moduleUid +
       "/0/Structure/" +
       structure.type;
-    setFB(path, structure);
+
+    var assyList = []
+    
+    for (let i = 0; i < structure.assemblies.length; i++) {
+      assyList.push({"description": structure.assemblies[i]})
+    }
+
+    const updatedStructure = {
+      ...structure,
+      assemblies: assyList
+    }  
+    setFB(path, updatedStructure);
   }
 
   useEffect(() => {

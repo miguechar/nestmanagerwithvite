@@ -23,11 +23,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    if (
-      localStorage.getItem("userEmail") === "miguel.charry@us.fincantieri.com"
-    ) {
-      localStorage.setItem("project", "0434");
-    }
+    
 
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
