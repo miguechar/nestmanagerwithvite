@@ -28,6 +28,7 @@ export const CreateAssembly = ({ updateParent, module, project, moduleUid }) => 
   const [allAssemblies, setAllAssemblies] = useState([])
 
   function updatePartsList(partsList) {
+    console.log(partsList)
     setAssembly({ ...assembly, partsList: partsList });
   }
 
@@ -221,6 +222,7 @@ export const CreateAssembly = ({ updateParent, module, project, moduleUid }) => 
             <PartsListCreate
               partsList={assembly.partsList}
               updatePartsList={updatePartsList}
+              formatType={"BOM"}
             />
           </CardBody>
         </Card>

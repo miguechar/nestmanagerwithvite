@@ -4,7 +4,7 @@ import ListBox from "./ListBox";
 import { TextField } from "@mui/material";
 import { ReadCSV } from "../Processing/ReadCsv";
 
-export const PartsListCreate = ({ partsList, updatePartsList }) => {
+export const PartsListCreate = ({ partsList, updatePartsList, formatType }) => {
   const [partsListData, setPartsListData] = useState({
     partsList: partsList,
     tempName: "",
@@ -12,7 +12,7 @@ export const PartsListCreate = ({ partsList, updatePartsList }) => {
   });
 
   function updateParent(value) {
-    updatePartsList(value)
+    updatePartsList(value);
   }
 
   function addPart(e) {
@@ -82,7 +82,10 @@ export const PartsListCreate = ({ partsList, updatePartsList }) => {
                   })
                 }
               />
-              <ReadCSV updateParentState={updateParent} formatType={"partsList"} />
+              <ReadCSV
+                updateParentState={updateParent}
+                formatType={formatType}
+              />
               <Button color="primary" type="submit">
                 Enter Part
               </Button>
@@ -91,19 +94,26 @@ export const PartsListCreate = ({ partsList, updatePartsList }) => {
         </form>
       </div>
       <div>
-        {partsListData.partsList ? (
-          partsListData.partsList.map((value) => (
-            <div className="input-container-1column">
-              <ListBox
-                title={value.name}
-                subtitle={value.qty}
-                clickEvent={() => deletePart(value.name)}
-              />
-            </div>
-          ))
-        ) : (
-          <div></div>
-        )}
+        {formatType === "BOM" || formatType === "partsList" ? (
+          partsListData.partsList ? (
+            partsListData.partsList.map((value) => (
+              <div
+                className="input-container-1column"
+                key={formatType === "BOM" ? value.BOMKey : value.name}
+              >
+                <ListBox
+                  title={formatType === "BOM" ? value.NAME : value.name}
+                  subtitle={formatType === "BOM" ? value.QTY : value.qty}
+                  clickEvent={() =>
+                    deletePart(formatType === "BOM" ? value.NAME : value.name)
+                  }
+                />
+              </div>
+            ))
+          ) : (
+            <div>No parts available.</div>
+          )
+        ) : null}
       </div>
     </div>
   );

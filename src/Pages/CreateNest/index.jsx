@@ -171,6 +171,7 @@ export const CreateNest = () => {
                     <PartsListCreate
                       partsList={nestData.partsList}
                       updatePartsList={updatePartsList}
+                      formatType={"partsList"}
                     />
                   </div>
                 </CardBody>

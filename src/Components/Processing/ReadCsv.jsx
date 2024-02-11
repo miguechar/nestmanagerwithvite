@@ -38,27 +38,41 @@ export const ReadCSV = ({ updateParentState, formatType }) => {
   };
 
   const parseCsv = (csvContent) => {
-    // Assuming the CSV has columns named "name" and "qty"
+    // Split CSV content into rows
     const rows = csvContent.split("\n");
+    // Assuming the first row contains headers
+    const headers = rows[0].replace(/\r/g, "").split(",");
+    
     const parsedData = rows.slice(1).map((row) => {
       // Remove carriage return (\r) from each value and split by comma
       const values = row.replace(/\r/g, "").split(",");
-
+      
       // Check if the row is not empty
       if (values.length > 1) {
         if (formatType === "partsList") {
           const [name, qty] = values;
           return { name, qty };
-        } else {
-          return values; // Return array as is
+        } 
+        else if (formatType === "BOM") {
+          // Create an object for the row with each header as a key
+          const entry = headers.reduce((acc, header, index) => {
+            acc[header] = values[index];
+            return acc;
+          }, {});
+  
+          return entry;
+        }
+        else {
+          return values; // Return array as is for other formats
         }
       }
-
+  
       return null; // Return null for empty rows
     });
-
+  
     return parsedData.filter(Boolean); // Filter out null values
   };
+  
 
   return (
     <Box>
