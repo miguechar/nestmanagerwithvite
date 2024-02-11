@@ -13,12 +13,14 @@ import { useEffect } from "react";
 import RadioGroupComponent from "../../../Components/Common/RadioGroup";
 import CheckBoxList from "../../../Components/Common/CheckBoxList";
 import { setFB } from "../../../Components/Global/functions/firebase";
+import SnackBarComponent from "../../../Components/Common/Snackbar";
 
 export const CreateStructure = ({
   updateParent,
   module,
   project,
   moduleUid,
+  updateParent
 }) => {
   const [structure, setStructure] = useState({
     type: "",
@@ -27,6 +29,11 @@ export const CreateStructure = ({
   });
   const [allAssemblies, setAllAssemblies] = useState([]);
   const [selectedAssembly, setSelectedAssembly] = useState([]);
+  const [snackBar, setSnackBar] = useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
 
   function fetchParents() {
     const moduleAssemblies = project.full.Modules[moduleUid]["0"].Assembly;
@@ -77,17 +84,25 @@ export const CreateStructure = ({
       "/0/Structure/" +
       structure.type;
 
-    var assyList = []
-    
+    var assyList = [];
+
     for (let i = 0; i < structure.assemblies.length; i++) {
-      assyList.push({"description": structure.assemblies[i]})
+      assyList.push({ description: structure.assemblies[i] });
     }
 
     const updatedStructure = {
       ...structure,
-      assemblies: assyList
-    }  
+      assemblies: assyList,
+    };
     setFB(path, updatedStructure);
+
+    setSnackBar({
+      open: true,
+      message: structure.description + " created",
+      severity: "success"
+    });
+
+    updateParent()
   }
 
   useEffect(() => {
@@ -108,12 +123,14 @@ export const CreateStructure = ({
                     value={structure.type}
                     onChange={(e) =>
                       setStructure({ ...structure, type: e.target.value })
-                    }>
+                    }
+                  >
                     {structureType.map((value) => (
                       <SelectItem
                         key={value.value}
                         textValue={value.value}
-                        value={value.value}>
+                        value={value.value}
+                      >
                         {value.value}
                       </SelectItem>
                     ))}
@@ -135,7 +152,8 @@ export const CreateStructure = ({
                   <div>
                     <Button
                       color="primary"
-                      onClick={() => handleCreateStructure()}>
+                      onClick={() => handleCreateStructure()}
+                    >
                       Submit
                     </Button>
                   </div>
@@ -156,6 +174,13 @@ export const CreateStructure = ({
             </div>
           </CardBody>
         </Card>
+      </div>
+      <div>
+        <SnackBarComponent
+          open={snackBar.open}
+          message={snackBar.message}
+          severity={snackBar.severity}
+        />
       </div>
     </div>
   );

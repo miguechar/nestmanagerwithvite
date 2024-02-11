@@ -4,6 +4,7 @@ import { Button, Card, CardBody, CardHeader } from "@nextui-org/react";
 import CustomizedTreeView from "../../../Components/Common/TreeView";
 import { CreateAssembly } from "./CreateAssembly";
 import { CreateStructure } from "./CreateStructure";
+import { getFB } from "../../../Components/Global/functions/firebase";
 
 export const ViewModule = () => {
   // use location to get data from Project Manager Index.jsx
@@ -32,7 +33,7 @@ export const ViewModule = () => {
       [project.module]: {
         Assembly: {},
         Structure: {
-          Frame: {}
+          Frame: {},
         },
       },
     };
@@ -61,24 +62,25 @@ export const ViewModule = () => {
     function processFrameData(structureObj, parentObj) {
       Object.entries(structureObj).forEach(([uid, structureData]) => {
         const structure = structureData.description;
-        const node = {Description: structureData.description}
-        
+        const node = { Description: structureData.description };
 
-        if(structureData.assemblies && typeof structureData.assemblies === "object") {
+        if (
+          structureData.assemblies &&
+          typeof structureData.assemblies === "object"
+        ) {
           node.Assemblies = {};
-          processFrameData(structureData.assemblies, node.Assemblies)
+          processFrameData(structureData.assemblies, node.Assemblies);
         }
-        parentObj[structure] = node
-      })
+        parentObj[structure] = node;
+      });
     }
 
     // Assuming your data structure contains the necessary module data
     const moduleAssemblies =
       project.full.full.Modules[project.moduleUid]["0"].Assembly; // Adjust based on actual data structure
-    
-    const FrameList = 
-      project.full.full.Modules[project.moduleUid]["0"].Structure.Frame;
 
+    const FrameList =
+      project.full.full.Modules[project.moduleUid]["0"].Structure.Frame;
 
     if (moduleAssemblies && typeof moduleAssemblies === "object") {
       processAssemblies(
@@ -88,15 +90,38 @@ export const ViewModule = () => {
     }
 
     if (FrameList && typeof FrameList === "object") {
-      processFrameData(FrameList,dataForTreeView[project.module].Structure.Frame)
+      processFrameData(
+        FrameList,
+        dataForTreeView[project.module].Structure.Frame
+      );
     }
 
     setTreeData(dataForTreeView); // Uncomment and use if you're setting state in a framework like React
     return dataForTreeView;
   }
 
+  async function fetchProject() {
+    const projectUid = data.data.full.uid;
+    const moduleUid = data.moduleUid;
+    const path = "Projects/" + projectUid;
+    console.log(project.full);
+    const project = await getFB(path);
+    setProject({ ...project, full: project });
+  }
+
+  function handleStructureCreated(value) {
+    fetchProject();
+    setNewStructure(false);
+  }
+
+  function handleAssemblyCreated(value) {
+    fetchProject();
+    setNewAssembly(false);
+  }
+
   useEffect(() => {
     createTreeview();
+    fetchProject();
   }, []);
 
   return (
@@ -137,6 +162,7 @@ export const ViewModule = () => {
           module={project.module}
           project={data.data}
           moduleUid={data.moduleUid}
+          updateParent={handleAssemblyCreated}
         />
       ) : (
         <div></div>
@@ -146,6 +172,7 @@ export const ViewModule = () => {
           module={project.module}
           project={data.data}
           moduleUid={data.moduleUid}
+          updateParent={handleStructureCreated}
         />
       ) : (
         <div></div>

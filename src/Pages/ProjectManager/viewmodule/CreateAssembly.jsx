@@ -12,8 +12,14 @@ import { useState } from "react";
 import { PartsListCreate } from "../../../Components/Common/PartsListCreate";
 import { setFB } from "../../../Components/Global/functions/firebase";
 import { useEffect } from "react";
+import SnackBarComponent from "../../../Components/Common/Snackbar";
 
-export const CreateAssembly = ({ updateParent, module, project, moduleUid }) => {
+export const CreateAssembly = ({
+  updateParent,
+  module,
+  project,
+  moduleUid,
+}) => {
   const [assembly, setAssembly] = useState({
     module: module,
     subModule: "",
@@ -23,12 +29,17 @@ export const CreateAssembly = ({ updateParent, module, project, moduleUid }) => 
     weight: "",
     progress: "",
     partsList: [],
-    parentAssembly: ""
+    parentAssembly: "",
   });
-  const [allAssemblies, setAllAssemblies] = useState([])
+  const [allAssemblies, setAllAssemblies] = useState([]);
+  const [snackBar, setSnackBar] = useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
 
   function updatePartsList(partsList) {
-    console.log(partsList)
+    console.log(partsList);
     setAssembly({ ...assembly, partsList: partsList });
   }
 
@@ -45,46 +56,71 @@ export const CreateAssembly = ({ updateParent, module, project, moduleUid }) => 
         assembly.assyNo,
     };
 
-    if(assembly.parentAssembly !== "") {
-      const path = "Projects/" + project[0].uid + "/Modules/" + moduleUid + "/0/Assembly/" + newAssembly.parentAssembly 
-      setFB(path, newAssembly)
+    if (assembly.parentAssembly !== "") {
+      const path =
+        "Projects/" +
+        project[0].uid +
+        "/Modules/" +
+        moduleUid +
+        "/0/Assembly/" +
+        newAssembly.parentAssembly;
+      setFB(path, newAssembly);
+    } else if (
+      assembly.subModule !== "" &&
+      assembly.buildStage !== "" &&
+      assembly.assyType !== "" &&
+      assembly.assyNo !== ""
+    ) {
+      const path =
+        "Projects/" + project[0].uid + "/Modules/" + moduleUid + "/0/Assembly/";
+      setFB(path, newAssembly);
     }
-    else if(assembly.subModule !== "" && assembly.buildStage !== "" && assembly.assyType !== "" && assembly.assyNo !== "") {
-      const path = "Projects/" + project[0].uid + "/Modules/" + moduleUid + "/0/Assembly/"
-      setFB(path, newAssembly)
-    }
+
+    setSnackBar({
+      open: true,
+      message: newAssembly.assemblyName + " created",
+      severity: "success",
+    });
+    updateParent()
   }
 
   function fetchParents() {
-    const moduleAssemblies = (project.full.Modules[moduleUid]["0"].Assembly)
-    
+    const moduleAssemblies = project.full.Modules[moduleUid]["0"].Assembly;
+
     var allModuleAssemblies = [];
 
     function processAssemblies(assemblyObj, currentPath = "") {
       Object.entries(assemblyObj).forEach(([uid, assemblyData]) => {
         const newPath = currentPath + uid + "/Assembly/"; // Update the path with the current UID
-  
+
         // Add the current assembly to the array with its path
-        allModuleAssemblies.push({ "name": assemblyData.assemblyName, "uid": assemblyData.uid, "path": newPath });
-  
+        allModuleAssemblies.push({
+          name: assemblyData.assemblyName,
+          uid: assemblyData.uid,
+          path: newPath,
+        });
+
         // Check for children assemblies and process them recursively, passing the updated path
-        if (assemblyData.Assembly && typeof assemblyData.Assembly === 'object') {
+        if (
+          assemblyData.Assembly &&
+          typeof assemblyData.Assembly === "object"
+        ) {
           processAssemblies(assemblyData.Assembly, newPath);
         }
       });
     }
-  
-    if (moduleAssemblies && typeof moduleAssemblies === 'object') {
+
+    if (moduleAssemblies && typeof moduleAssemblies === "object") {
       processAssemblies(moduleAssemblies);
     }
-  
+
     setAllAssemblies(allModuleAssemblies); // Uncomment and use if you're setting state in a framework like React
     return allModuleAssemblies;
   }
 
   useEffect(() => {
-    fetchParents()
-  }, [])
+    fetchParents();
+  }, []);
 
   return (
     <div>
@@ -204,7 +240,11 @@ export const CreateAssembly = ({ updateParent, module, project, moduleUid }) => 
                   }
                 >
                   {allAssemblies.map((value) => (
-                    <SelectItem value={value.path} textValue={value.name} key={value.path}>
+                    <SelectItem
+                      value={value.path}
+                      textValue={value.name}
+                      key={value.path}
+                    >
                       {value.name}
                     </SelectItem>
                   ))}
@@ -230,6 +270,13 @@ export const CreateAssembly = ({ updateParent, module, project, moduleUid }) => 
 
       <div className="input-container-1column">
         <Button onClick={handleAssemblySubmit}>Submit Assembly</Button>
+      </div>
+      <div>
+        <SnackBarComponent
+          open={snackBar.open}
+          message={snackBar.message}
+          severity={snackBar.severity}
+        />
       </div>
     </div>
   );
