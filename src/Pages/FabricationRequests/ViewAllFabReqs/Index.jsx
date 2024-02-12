@@ -10,7 +10,7 @@ import {
   DropdownItem,
   DropdownMenu,
 } from "@nextui-org/react";
-import {PDFViewer} from "@react-pdf/renderer";
+import { PDFViewer } from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import { SplittedAccordion } from "../../../Components/Common/Accordion";
 import { getFB } from "../../../Components/Global/functions/firebase";
@@ -166,16 +166,16 @@ export const ViewAllFabs = () => {
     if (response.ok) {
       const blob = await response.blob();
       const mergedPdfUrl = URL.createObjectURL(blob);
-      window.open(mergedPdfUrl, '_blank');
+      window.open(mergedPdfUrl, "_blank");
     } else {
       console.error("Failed to merge PDFs");
     }
   };
 
   function handlePrintStickers(partsList) {
-    const y = ([partsList])
+    const y = [partsList];
 
-    const x = y[0]
+    const x = y[0];
 
     const body = (
       <div>
@@ -184,19 +184,21 @@ export const ViewAllFabs = () => {
           <p>{value.name}</p>
         ))}
       </div>
-    )
+    );
     const footer = (
       <div>
-        <Button color="danger" onClick={() => handleDialogClose()}>Close Message</Button>
+        <Button color="danger" onClick={() => handleDialogClose()}>
+          Close Message
+        </Button>
       </div>
-    )
+    );
 
     setDialog({
       open: true,
       title: "Parts on " + partsList.frNo,
       body: body,
-      footer: footer
-    })
+      footer: footer,
+    });
 
     fetch("http://10.102.30.12:8080/receive_fab_req_stickers", {
       method: "POST",
@@ -212,6 +214,23 @@ export const ViewAllFabs = () => {
       });
   }
 
+  function handlePartSearch(part) {
+    const partLowercased = part.toLowerCase(); // Convert the search term to lowercase outside the loop for efficiency
+    const filteredfabreq = fabrequests.filter((value) =>
+      Array.isArray(value.partsList) && // Check if partsList exists and is an array
+      value.partsList.some((subvalue) =>
+        subvalue.name.toLowerCase().includes(partLowercased) // Ensure case-insensitive comparison
+      )
+    );
+    if (part !== "") {
+      setFilterValues({...filterValues, filteredArray: filteredfabreq})
+    } else {
+      setFilterValues({...filterValues, filteredArray: []})
+    }
+  }
+  
+  
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -222,6 +241,15 @@ export const ViewAllFabs = () => {
         <Card>
           <CardHeader>All Fabrication Requests</CardHeader>
           <CardBody>
+            <div
+              className="input-container-4column"
+              style={{ marginLeft: "10px", marginBottom: "10px" }}>
+              <Input
+                placeholder="Search by Part..."
+                startContent={<SearchIcon />}
+                onChange={(e) => handlePartSearch(e.target.value)}
+              />
+            </div>
             <div
               style={{
                 justifyContent: "space-between",
@@ -360,12 +388,14 @@ export const ViewAllFabs = () => {
                               <p>
                                 Ship To: {value.shipTo ? value.shipTo : "-"}
                               </p>
-                              <p>
-                                UID: {value.uid ? value.uid : "-"}
-                              </p>
+                              <p>UID: {value.uid ? value.uid : "-"}</p>
                             </div>
                             <Box mt={"10px"} height={"800px"}>
-                              <PDFViewer style={{width: "100%", height: "100%"}} > <FabricationPDF data={value} /></PDFViewer>
+                              <PDFViewer
+                                style={{ width: "100%", height: "100%" }}>
+                                {" "}
+                                <FabricationPDF data={value} />
+                              </PDFViewer>
                             </Box>
 
                             <div
@@ -414,7 +444,11 @@ export const ViewAllFabs = () => {
                                 <div></div>
                               )}
                               <div>
-                                <Button color="secondary" onClick={() => handlePrintStickers(value)} >Print Stickers</Button>
+                                <Button
+                                  color="secondary"
+                                  onClick={() => handlePrintStickers(value)}>
+                                  Print Stickers
+                                </Button>
                               </div>
                             </div>
                             <div></div>
