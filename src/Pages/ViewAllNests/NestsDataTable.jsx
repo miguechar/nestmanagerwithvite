@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import DataTable from "../../Components/Common/DataTable/Index";
 import { getFB } from "../../Components/Global/functions/firebase";
+import { Input } from "@nextui-org/react";
+import { SearchIcon } from "../../Components/icons/SearchIcon";
 
 export const NestsDataTable = () => {
   const [nestsdb, setNestsdb] = useState({ loading: false, nests: [] });
+  const [filtered, setfiltered] = useState([])
 
   const columns = [
     { name: "UID", uid: "uid", sortable: true },
@@ -38,6 +41,21 @@ export const NestsDataTable = () => {
 
   }
 
+  function handlePartSearch(part) {
+    const partLowercased = part.toLowerCase(); // Convert the search term to lowercase outside the loop for efficiency
+    const filteredNests = nestsdb.nests.filter((value) =>
+      Array.isArray(value.parts) && // Check if partsList exists and is an array
+      value.parts.some((subvalue) =>
+        subvalue.name.toLowerCase().includes(partLowercased) // Ensure case-insensitive comparison
+      )
+    );
+    if (part !== "") {
+      setfiltered(filteredNests)
+    } else {
+      setfiltered([])
+    }
+  }
+
   useEffect(() => {
     setNestsdb({ ...nestsdb, loading: true });
     const fetchData = async () => {
@@ -63,8 +81,17 @@ export const NestsDataTable = () => {
     <div>
       {nestsdb.nests ? (
         <div>
+          <div
+              className="input-container-4column"
+              style={{ marginBottom: "10px" }}>
+              <Input
+                placeholder="Search by Part..."
+                startContent={<SearchIcon />}
+                onChange={(e) => handlePartSearch(e.target.value)}
+              />
+            </div>
           <DataTable
-            rows={nestsdb.nests}
+            rows={ filtered.length > 0 ? filtered : nestsdb.nests}
             columns={columns}
             initialColumns={initialColumns}
             updateParent={handleSelection}
