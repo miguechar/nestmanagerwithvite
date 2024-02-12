@@ -172,6 +172,46 @@ export const ViewAllFabs = () => {
     }
   };
 
+  function handlePrintStickers(partsList) {
+    const y = ([partsList])
+
+    const x = y[0]
+
+    const body = (
+      <div>
+        <p>You now have 5 seconds to switch to BClient</p>
+        {x.partsList.map((value) => (
+          <p>{value.name}</p>
+        ))}
+      </div>
+    )
+    const footer = (
+      <div>
+        <Button color="danger" onClick={() => handleDialogClose()}>Close Message</Button>
+      </div>
+    )
+
+    setDialog({
+      open: true,
+      title: "Parts on " + partsList.frNo,
+      body: body,
+      footer: footer
+    })
+
+    fetch("http://10.102.30.12:8080/receive_fab_req_stickers", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify([partsList]),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -326,7 +366,6 @@ export const ViewAllFabs = () => {
                             </div>
                             <Box mt={"10px"} height={"800px"}>
                               <PDFViewer style={{width: "100%", height: "100%"}} > <FabricationPDF data={value} /></PDFViewer>
-                              {/* <FabricationPDF data={value} /> */}
                             </Box>
 
                             <div
@@ -374,6 +413,9 @@ export const ViewAllFabs = () => {
                               ) : (
                                 <div></div>
                               )}
+                              <div>
+                                <Button color="secondary" onClick={() => handlePrintStickers(value)} >Print Stickers</Button>
+                              </div>
                             </div>
                             <div></div>
                           </div>

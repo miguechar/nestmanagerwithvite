@@ -34,6 +34,10 @@ export const NestsDataTable = () => {
     "Serial Number",
   ];
 
+  function handleSelection(value) {
+
+  }
+
   useEffect(() => {
     setNestsdb({ ...nestsdb, loading: true });
     const fetchData = async () => {
@@ -63,6 +67,7 @@ export const NestsDataTable = () => {
             rows={nestsdb.nests}
             columns={columns}
             initialColumns={initialColumns}
+            updateParent={handleSelection}
           />
         </div>
       ) : (

@@ -530,6 +530,7 @@ export const ffgModules = [
     {
         name: "S1L",
     },
+    
     {
         name: "S2L",
     },
@@ -599,6 +600,12 @@ export const ffgModules = [
     {
         name: "F2U",
     },
+    {
+        name: "F3U"
+    },
+    {
+        name: "F3L"
+    }
 ];
 
 export const issueType = [

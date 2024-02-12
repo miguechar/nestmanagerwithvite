@@ -78,7 +78,11 @@ export const CheckPartsEng = ({ selectedFabReq, updateParentState }) => {
 
       // const partsList = currentfab.partsList ;
       const partsList = newPartsList ? newPartsList : currentfab.partsList;
-      if (partsList.length > 0) {
+
+      if(partsList === []) {
+        console.log("No parts")
+      }
+      else if (partsList.length > 0) {
         var newPartsList = [];
 
         // look for each part of fab in nests
@@ -210,6 +214,7 @@ export const CheckPartsEng = ({ selectedFabReq, updateParentState }) => {
                 <PartsListCreate
                   partsList={fabreq.partsList}
                   updatePartsList={updatePartsList}
+                  formatType={"partsList"}
                 />
               </CardBody>
             </Card>

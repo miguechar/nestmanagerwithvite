@@ -93,7 +93,11 @@ export const RequestFab = () => {
           currentCount: count,
           requestedBy: auth?.currentUser?.email,
           newCount: newCount,
-          shipTo: localStorage.getItem("userEmail") === "eric.milbach@us.fincantieri.com" ? "Rollerfield Attn Eric M." : ""
+          shipTo:
+            localStorage.getItem("userEmail") ===
+            "eric.milbach@us.fincantieri.com"
+              ? "Rollerfield Attn Eric M."
+              : "",
         });
       }
       if (Array.isArray(nests)) {
@@ -114,7 +118,9 @@ export const RequestFab = () => {
           </CardBody>
         </Card>
         <Card>
-          <CardHeader>{"Fab Request Form: " + fabreq.frNo + " *new*"}</CardHeader>
+          <CardHeader>
+            {"Fab Request Form: " + fabreq.frNo + " *new*"}
+          </CardHeader>
           <CardBody>
             <div>
               <div className="input-container-3column">
@@ -133,7 +139,10 @@ export const RequestFab = () => {
                     setFabreq({ ...fabreq, project: e.target.value })
                   }>
                   {hullOptions.map((value) => (
-                    <SelectItem value={value.value} key={value.value}>
+                    <SelectItem
+                      value={value.value}
+                      key={value.value}
+                      textValue={value.value}>
                       {value.label}
                     </SelectItem>
                   ))}
@@ -145,7 +154,10 @@ export const RequestFab = () => {
                     setFabreq({ ...fabreq, module: e.target.value })
                   }>
                   {ffgModules.map((value) => (
-                    <SelectItem value={value.name} key={value.name}>
+                    <SelectItem
+                      value={value.name}
+                      key={value.name}
+                      textValue={value.name}>
                       {value.name}
                     </SelectItem>
                   ))}
@@ -251,15 +263,20 @@ export const RequestFab = () => {
             <PartsListCreate
               partsList={fabreq.partsList}
               updatePartsList={updatePartsList}
+              formatType="partsList"
             />
           </CardBody>
         </Card>
-        <Card>
-          <CardHeader>Submit</CardHeader>
-          <CardBody>
-            <SubmitRequest fabreq={fabreq} />
-          </CardBody>
-        </Card>
+        {fabreq.partsList.length > 0 ? (
+          <Card>
+            <CardHeader>Submit</CardHeader>
+            <CardBody>
+              <SubmitRequest fabreq={fabreq} />
+            </CardBody>
+          </Card>
+        ) : (
+          <div></div>
+        )}
       </div>
     </div>
   );
