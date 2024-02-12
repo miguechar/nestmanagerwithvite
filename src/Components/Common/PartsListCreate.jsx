@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ListBox from "./ListBox";
 import { TextField } from "@mui/material";
 import { ReadCSV } from "../Processing/ReadCsv";
+import SnackBarComponent from "./Snackbar";
 
 export const PartsListCreate = ({ partsList, updatePartsList, formatType }) => {
   const [partsListData, setPartsListData] = useState({
@@ -10,9 +11,18 @@ export const PartsListCreate = ({ partsList, updatePartsList, formatType }) => {
     tempName: "",
     tempQty: "1",
   });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: ""
+  })
 
   function updateParent(value) {
     updatePartsList(value);
+  }
+
+  function handleSnackbarClose() {
+    setSnackbar({...snackbar, open: false})
   }
 
   function addPart(e) {
@@ -47,6 +57,7 @@ export const PartsListCreate = ({ partsList, updatePartsList, formatType }) => {
     );
     setPartsListData({ ...partsListData, partsList: filtered });
     updatePartsList(filtered);
+    setSnackbar({open: true, message: part + " deleted", severity: "error"})
   }
 
   useEffect(() => {
@@ -104,6 +115,7 @@ export const PartsListCreate = ({ partsList, updatePartsList, formatType }) => {
                 <ListBox
                   title={formatType === "BOM" ? value.NAME : value.name}
                   subtitle={formatType === "BOM" ? value.QTY : value.qty}
+                  icon="trash"
                   clickEvent={() =>
                     deletePart(formatType === "BOM" ? value.NAME : value.name)
                   }
@@ -114,6 +126,14 @@ export const PartsListCreate = ({ partsList, updatePartsList, formatType }) => {
             <div>No parts available.</div>
           )
         ) : null}
+      </div>
+      <div>
+        <SnackBarComponent 
+          open={snackbar.open}
+          onClose={handleSnackbarClose}
+          message={snackbar.message}
+          severity={snackbar.severity}
+        />
       </div>
     </div>
   );

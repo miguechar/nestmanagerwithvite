@@ -20,7 +20,6 @@ export const CreateStructure = ({
   module,
   project,
   moduleUid,
-  updateParent
 }) => {
   const [structure, setStructure] = useState({
     type: "",

@@ -65,8 +65,11 @@ const PDFParse = ({ updateParentState, formatType }) => {
           });
         }
 
+        if(formatType === "subassy") {
+          createArrayForSubAssy(array)
+        }
+
         setNumPages(pdf.numPages);
-        setReadData(true);
       };
 
       reader.readAsArrayBuffer(file);
@@ -92,6 +95,30 @@ const PDFParse = ({ updateParentState, formatType }) => {
     });
 
     return resultArray;
+  }
+
+  function createArrayForSubAssy(array) {
+    const rawPartsList = array[0];
+
+    const filteredList = [];
+    for (let i = 0; i < rawPartsList.length; i++) {
+      if (rawPartsList[i].length == 12) {
+        filteredList.push({
+          name: rawPartsList[i],
+          qty: 1,
+        });
+      }
+    }
+
+    const partsList = filteredList.splice(1, filteredList.length);
+
+    updateParentState({
+        parent: filteredList[0].name,
+        hull: rawPartsList[58],
+        po: rawPartsList[50],
+        partsList: partsList
+    })
+
   }
 
   return (

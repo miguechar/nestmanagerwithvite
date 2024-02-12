@@ -4,6 +4,7 @@ import { ItemCounter } from "../nextui/ItemCounter";
 import { BugIcon } from "../icons/BugIcon";
 import { IconWrapper } from "../icons/IconWrapper";
 import { VerticalDotsIcon } from "../icons/VerticalDotsIcons";
+import { DeleteIcon } from "../icons/DeleteIcon";
 
 export default function ListBox({ title, edge, clickEvent, icon, subtitle }) {
   return (
@@ -15,11 +16,11 @@ export default function ListBox({ title, edge, clickEvent, icon, subtitle }) {
       }}
       style={{ marginTop: "5px", marginBottom: "5px" }}>
       <ListboxItem
-        key="issues"
-        endContent={<ItemCounter number={edge} clickEvent={clickEvent} />}
+        key={title}
+        endContent={<ItemCounter number={edge} type={"trash"} clickEvent={clickEvent} />}
         startContent={
           <IconWrapper className="bg-success/10 text-success">
-            <VerticalDotsIcon className="text-lg" />
+            <VerticalDotsIcon />
           </IconWrapper>
         }>
         <div className="input-container-2column">

@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardBody, Input, Button } from "@nextui-org/react";
 import LCSjpg from "../../assets/imgs/lcs4.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MailIcon } from "../../Components/icons/MailIcon";
 import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -70,6 +70,13 @@ export default function LogIn() {
       setLoading(false); // Ensure loading is set to false in all cases
     }
   };
+
+  useEffect(() => {
+    // if(auth?.currentUser?.email !== null) {
+    //   navigateTo("/home")
+    //   console.log(auth?.currentUser?.email)
+    // }
+  }, [])
 
   return (
     <div

@@ -23,6 +23,7 @@ import { ChevronDownIcon } from "../../icons/ChevronDownIcon";
 // import {columns, rows, statusOptions} from "./data";
 import { capitalize } from "./utils";
 import Dialog from "../Dialog";
+import { useEffect } from "react";
 
 const statusColorMap = {
   "Cut": "success",
@@ -34,9 +35,9 @@ const statusOptions = [
   { name: "Not Cut", uid: "Not Cut" },
 ];
 
-export default function DataTable({ rows, columns, initialColumns }) {
+export default function DataTable({ rows, columns, initialColumns, updateParent }) {
   const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
+  const [selectedKeys, setSelectedKeys] = useState([]);
   const [visibleColumns, setVisibleColumns] = React.useState(
     new Set(initialColumns)
   );
@@ -48,8 +49,6 @@ export default function DataTable({ rows, columns, initialColumns }) {
   });
   const [page, setPage] = React.useState(1);
   const [selectedFilter, setSelectedFilter] = React.useState(new Set([""]));
-
-
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -195,8 +194,6 @@ export default function DataTable({ rows, columns, initialColumns }) {
 
   function handleSelectedKeys(value) {
     setSelectedKeys(value);
-    
-    console.log(selectedKeys)
   }
 
   const topContent = React.useMemo(() => {
@@ -262,7 +259,7 @@ export default function DataTable({ rows, columns, initialColumns }) {
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {rows.length} nests
+            Total {rows.length} items
           </span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
@@ -325,6 +322,13 @@ export default function DataTable({ rows, columns, initialColumns }) {
     );
   }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
 
+  useEffect(() => {
+    // Convert the Set of selectedKeys to an Array
+    const selectedKeysArray = Array.from(selectedKeys);
+    updateParent(selectedKeysArray);
+  }, [selectedKeys]);
+  
+
   return (
     <Table
       aria-label="Example table with custom cells, pagination and sorting"
@@ -351,7 +355,7 @@ export default function DataTable({ rows, columns, initialColumns }) {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"No nests found"} items={sortedItems}>
+      <TableBody emptyContent={"No items found"} items={sortedItems}>
         {(item) => (
           <TableRow key={item.uid}>
             {(columnKey) => (

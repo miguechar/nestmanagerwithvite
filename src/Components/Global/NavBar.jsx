@@ -346,6 +346,36 @@ export const NavigationBar = () => {
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
+
+        <Dropdown>
+          <NavbarItem>
+            <DropdownTrigger>
+              <Button
+                disableRipple
+                className="p-0 bg-transparent data-[hover=true]:bg-transparent"
+                endContent={icons.chevron}
+                radius="sm"
+                variant="light">
+                Subassemblies
+              </Button>
+            </DropdownTrigger>
+          </NavbarItem>
+          <DropdownMenu
+            aria-label="ACME features"
+            className="w-[340px]"
+            itemClasses={{
+              base: "gap-4",
+            }}>
+            <DropdownItem
+              key="autoscaling"
+              description=""
+              onClick={() => navigateTo("/subassemblies")}
+              startContent={icons.scale}>
+              View / Add
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+
         <NavbarContent>
           <NavbarItem>
             <p

@@ -15,7 +15,6 @@ export const RecentNestsList = () => {
   });
 
   function displayPartsList(value, nest) {
-    console.log(value);
     const body = (
       <div>
         <p>Created On: {nest.addedon}</p>

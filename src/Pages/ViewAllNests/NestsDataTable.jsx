@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import DataTable from "../../Components/Common/DataTable/Index";
 import { getFB } from "../../Components/Global/functions/firebase";
-import ShittyTable from "../../Components/Common/DataTable/ShittyTable";
 
 export const NestsDataTable = () => {
   const [nestsdb, setNestsdb] = useState({ loading: false, nests: [] });

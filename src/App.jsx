@@ -18,6 +18,7 @@ import { ManageUsers } from "./Pages/AvatarPages/ManageUsers/Index";
 import { K2Project } from "./Pages/K2Project/Index";
 import { ProjectManager } from "./Pages/ProjectManager/Index";
 import { ViewModule } from "./Pages/ProjectManager/viewmodule/Index";
+import { Subassemblies } from "./Pages/Subassemblies";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -51,18 +52,18 @@ function App() {
   }, [currentUser]);
 
   function sendUsernameToFlask(username) {
-    fetch("http://10.102.30.12:8080/update_user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username }),
-    })
-      .then((response) => response.json())
-      // .then(data => console.log(data.message))
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    // fetch("http://10.102.30.12:8080/update_user", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ username }),
+    // })
+    //   .then((response) => response.json())
+    //   // .then(data => console.log(data.message))
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //   });
   }
 
   return (
@@ -142,6 +143,14 @@ function App() {
                 title={"Plate Shop Inbox"}
                 component={<PlateshopInbox />}
               />
+            }
+          />
+
+          {/* subassemblies */}
+          <Route
+            path="/subassemblies"
+            element={
+              <WrapNav title={"View / Add Subassemblies"} component={<Subassemblies />} />
             }
           />
 
