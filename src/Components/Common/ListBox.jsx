@@ -17,7 +17,7 @@ export default function ListBox({ title, edge, clickEvent, icon, subtitle }) {
       style={{ marginTop: "5px", marginBottom: "5px" }}>
       <ListboxItem
         key={title}
-        endContent={<ItemCounter number={edge} type={"trash"} clickEvent={clickEvent} />}
+        endContent={<ItemCounter number={edge} type={icon} clickEvent={clickEvent} />}
         startContent={
           <IconWrapper className="bg-success/10 text-success">
             <VerticalDotsIcon />

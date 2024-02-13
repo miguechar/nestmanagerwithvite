@@ -72,6 +72,7 @@ export const RecentNestsList = () => {
                 <ListBox
                   title={value.nestName}
                   edge={value.parts.length}
+                  icon={"not"}
                   clickEvent={() => displayPartsList(value.parts, value)}
                 />
               ))}

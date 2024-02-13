@@ -63,9 +63,44 @@ export const RecordNestData = () => {
   };
 
   async function updateNestData() {
-    const path = ("nests/" + nestdata.uid + "/");
+    const path = nestdata.path + "\\" + nestdata.nestName + ".pdf"; // Assuming this forms your PDF path
+    const text = `\nCut on: ${nestdata.dateCut}\nHeat Number: ${nestdata.heatNumber}\nMic: ${nestdata.micthkns}\nSN: ${nestdata.serialNumber}`;
+    const position = [100, 100]; // Example position, adjust as necessary
+    const page_number = 0; // Example page number
+    
+    const requestBody = {
+        input_pdf_path: path,
+        output_pdf_path: path, // Assuming you're writing back to the same file
+        text: text,
+        position: position,
+        page_number: page_number,
+    };
+
+    try {
+        const response = await fetch('http://10.102.30.12:8080/update_nest_data', { // Update your Flask app's URL
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+        });
+
+        const responseData = await response.json();
+
+        if (responseData.status === 'success') {
+            console.log("PDF updated successfully");
+            // Handle success (e.g., showing a success message)
+        } else {
+            // Handle failure (e.g., showing an error message)
+        }
+    } catch (error) {
+        console.error("Failed to update PDF:", error);
+        // Handle error (e.g., showing an error message)
+    }
+
+    const fbpath = ("nests/" + nestdata.uid + "/");
     const updatedNest = {...nestdata, status: "Cut"}
-    await updateFB(path, nestdata);
+    await updateFB(fbpath, nestdata);
     setNestData()
 
     const footer = (

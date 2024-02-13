@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import DataTable from "../../Components/Common/DataTable/Index";
 import { getFB } from "../../Components/Global/functions/firebase";
-import { Input } from "@nextui-org/react";
+import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { SearchIcon } from "../../Components/icons/SearchIcon";
 
 export const NestsDataTable = () => {
   const [nestsdb, setNestsdb] = useState({ loading: false, nests: [] });
-  const [filtered, setfiltered] = useState([])
+  const [filtered, setfiltered] = useState([]);
+  const [hullFilter, setHullFilter] = useState("");
+  const [viewPdfstatus, setViewPdfstatus] = useState(true);
+  const [selected, setSelected] = useState([]);
 
   const columns = [
     { name: "UID", uid: "uid", sortable: true },
@@ -38,23 +41,64 @@ export const NestsDataTable = () => {
   ];
 
   function handleSelection(value) {
-
+    setSelected(value);
   }
 
   function handlePartSearch(part) {
     const partLowercased = part.toLowerCase(); // Convert the search term to lowercase outside the loop for efficiency
-    const filteredNests = nestsdb.nests.filter((value) =>
-      Array.isArray(value.parts) && // Check if partsList exists and is an array
-      value.parts.some((subvalue) =>
-        subvalue.name.toLowerCase().includes(partLowercased) // Ensure case-insensitive comparison
-      )
+    const filteredNests = nestsdb.nests.filter(
+      (value) =>
+        Array.isArray(value.parts) && // Check if partsList exists and is an array
+        value.parts.some(
+          (subvalue) => subvalue.name.toLowerCase().includes(partLowercased) // Ensure case-insensitive comparison
+        )
     );
     if (part !== "") {
-      setfiltered(filteredNests)
+      setfiltered(filteredNests);
     } else {
-      setfiltered([])
+      setfiltered([]);
     }
   }
+
+  function handleHullSearch(hull) {
+    setHullFilter(hull);
+    if (filtered.length > 0) {
+      const filtered = filtered.filter((value) => value.hull === hull);
+      setfiltered(filtered);
+    } else {
+      const filtered = nestsdb.nests.filter((value) => value.hull === hull);
+      setfiltered(filtered);
+    }
+  }
+
+  function createArrayOfNestPath() {
+    var arrayNestPath = [];
+    for (let i = 0; i < selected.length; i++) {
+      const filtered = nestsdb.nests.filter(
+        (value) => value.uid === selected[i]
+      );
+      arrayNestPath.push(filtered[0].path + "/" + filtered[0].nestName);
+    }
+    handleViewPdfClick(arrayNestPath);
+  }
+
+  const handleViewPdfClick = async (pdfPath) => {
+    const response = await fetch("http://10.102.30.12:8080/merge-pdfs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ paths: pdfPath }),
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      const mergedPdfUrl = URL.createObjectURL(blob);
+      window.open(mergedPdfUrl, "_blank");
+    } else {
+      console.error("Failed to merge PDFs");
+    }
+  };
 
   useEffect(() => {
     setNestsdb({ ...nestsdb, loading: true });
@@ -77,21 +121,67 @@ export const NestsDataTable = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    try {
+      if (selected.length > 0) {
+        setViewPdfstatus(false);
+      } else if (selected.length === 0) {
+        setViewPdfstatus(true);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [selected]);
+
   return (
     <div>
       {nestsdb.nests ? (
         <div>
           <div
-              className="input-container-4column"
-              style={{ marginBottom: "10px" }}>
+            className="input-container-2column"
+            style={{ marginBottom: "10px" }}>
+            <div className="input-container-2column">
               <Input
                 placeholder="Search by Part..."
                 startContent={<SearchIcon />}
                 onChange={(e) => handlePartSearch(e.target.value)}
               />
+
+              <Select
+                label="Filter by Hull"
+                value={hullFilter}
+                onChange={(e) => handleHullSearch(e.target.value)}>
+                <SelectItem value={"0831"} key={"0831"} textValue="0831">
+                  0831
+                </SelectItem>
+                <SelectItem value={"0833"} key={"0833"} textValue="0833">
+                  0833
+                </SelectItem>
+                <SelectItem value={"0835"} key={"0835"} textValue="0835">
+                  0835
+                </SelectItem>
+                <SelectItem value={"0837"} key={"0837"} textValue="0837">
+                  0837
+                </SelectItem>
+                <SelectItem value={"0521"} key={"0521"} textValue="0521">
+                  0521
+                </SelectItem>
+              </Select>
             </div>
+            <div className="input-container-2column">
+              <div></div>
+              <div>
+                <Button
+                  color="secondary"
+                  isDisabled={viewPdfstatus}
+                  onClick={() => createArrayOfNestPath()}>
+                  View PDF
+                </Button>
+              </div>
+            </div>
+          </div>
           <DataTable
-            rows={ filtered.length > 0 ? filtered : nestsdb.nests}
+            rows={filtered.length > 0 ? filtered : nestsdb.nests}
             columns={columns}
             initialColumns={initialColumns}
             updateParent={handleSelection}
