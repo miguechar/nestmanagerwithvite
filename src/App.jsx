@@ -19,6 +19,8 @@ import { K2Project } from "./Pages/K2Project/Index";
 import { ProjectManager } from "./Pages/ProjectManager/Index";
 import { ViewModule } from "./Pages/ProjectManager/viewmodule/Index";
 import { Subassemblies } from "./Pages/Subassemblies";
+import { Inventory } from "./Pages/ProjectManager/inventory/Index";
+import { ProjectSettings } from "./Pages/ProjectManager/projectsettings";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -182,6 +184,18 @@ function App() {
             path="/projectmanager/viewmodule"
             element={
               <WrapNav title={"View Module"} component={<ViewModule />} />
+            }
+          />
+          <Route
+            path="/projectmanager/inventory"
+            element={
+              <WrapNav title={"Inventory"} component={<Inventory />} />
+            }
+          />
+          <Route
+            path="/projectmanager/settings"
+            element={
+              <WrapNav title={"Project Settings"} component={<ProjectSettings />} />
             }
           />
         </Routes>

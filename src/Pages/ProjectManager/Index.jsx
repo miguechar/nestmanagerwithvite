@@ -51,6 +51,9 @@ export const ProjectManager = () => {
 
   return (
     <div>
+      <div style={{textAlign: "right", marginRight: "9px"}}>
+        <Button onClick={() => navigate("/projectmanager/settings", {state: { data: project}})}>Settings</Button>
+      </div>
       <div className="input-container-1column">
         <Card>
           <CardHeader>
@@ -83,7 +86,19 @@ export const ProjectManager = () => {
         </Card>
       </div>
       <div className="input-container-3column">
-        <CreateModule proj={project} />
+        <div>
+          <CreateModule proj={project} />
+        </div>
+        <div>
+          <Card>
+            <CardHeader>Inventory</CardHeader>
+            <CardBody>
+              <div>
+                <Button radius="full" onClick={() => navigate("/projectmanager/inventory", {state: { module: module, data: project, moduleUid: moduleUid}})}>Go To Inventory</Button>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
       </div>
     </div>
   );

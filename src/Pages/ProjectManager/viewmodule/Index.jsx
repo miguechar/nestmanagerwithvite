@@ -25,7 +25,6 @@ export const ViewModule = () => {
     console.log(value);
   }
 
-  function handleEditAssembly() {}
 
   function createTreeview() {
     // Initialize the data structure for the tree view
