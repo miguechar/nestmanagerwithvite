@@ -536,6 +536,9 @@ export const ffgModules = [
     },
     // UPPER MODULES
     {
+        name: "B1U",
+    },
+    {
         name: "E1U",
     },
     {
@@ -558,6 +561,9 @@ export const ffgModules = [
     },
     {
         name: "S2U",
+    },
+    {
+        name: "S3U",
     },
     // DECKHOUSE
     {

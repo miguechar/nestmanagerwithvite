@@ -317,6 +317,13 @@ export const NavigationBar = () => {
             <DropdownItem
               key="autoscaling"
               description=""
+              onClick={() => navigateTo("/fabricationrequests/home")}
+              startContent={icons.activity}>
+              Home
+            </DropdownItem>
+            <DropdownItem
+              key="autoscaling"
+              description=""
               onClick={() => navigateTo("/fabricationrequests/requestfab")}
               startContent={icons.scale}>
               Request Fab Req

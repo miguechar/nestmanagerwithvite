@@ -21,6 +21,8 @@ import { ViewModule } from "./Pages/ProjectManager/viewmodule/Index";
 import { Subassemblies } from "./Pages/Subassemblies";
 import { Inventory } from "./Pages/ProjectManager/inventory/Index";
 import { ProjectSettings } from "./Pages/ProjectManager/projectsettings";
+import { LocalNews } from "./Pages/LocalNews/Index";
+import { FabHome } from "./Pages/FabricationRequests/Home/Index";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -107,7 +109,7 @@ function App() {
             element={
               <WrapNav
                 title={"Fabrication Requests Home"}
-                component={<FabricationRequests />}
+                component={<FabHome />}
               />
             }
           />
@@ -196,6 +198,14 @@ function App() {
             path="/projectmanager/settings"
             element={
               <WrapNav title={"Project Settings"} component={<ProjectSettings />} />
+            }
+          />
+
+          {/* Local News */}
+          <Route
+            path="/localnews"
+            element={
+              <WrapNav title={"Local News"} component={<LocalNews />} />
             }
           />
         </Routes>

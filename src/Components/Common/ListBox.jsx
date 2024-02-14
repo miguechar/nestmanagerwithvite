@@ -17,6 +17,7 @@ export default function ListBox({ title, edge, clickEvent, icon, subtitle }) {
       style={{ marginTop: "5px", marginBottom: "5px" }}>
       <ListboxItem
         key={title}
+        textValue={title}
         endContent={<ItemCounter number={edge} type={icon} clickEvent={clickEvent} />}
         startContent={
           <IconWrapper className="bg-success/10 text-success">
@@ -25,7 +26,7 @@ export default function ListBox({ title, edge, clickEvent, icon, subtitle }) {
         }>
         <div className="input-container-2column">
           <div>{title}</div>
-          {subtitle ? <div>{"qty: " + subtitle}</div> : <div></div>}
+          {subtitle ? <div>{subtitle}</div> : <div></div>}
         </div>
       </ListboxItem>
     </Listbox>
