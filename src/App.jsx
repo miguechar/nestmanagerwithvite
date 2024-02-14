@@ -23,6 +23,7 @@ import { Inventory } from "./Pages/ProjectManager/inventory/Index";
 import { ProjectSettings } from "./Pages/ProjectManager/projectsettings";
 import { LocalNews } from "./Pages/LocalNews/Index";
 import { FabHome } from "./Pages/FabricationRequests/Home/Index";
+import { StandardParts } from "./Pages/ProjectManager/StandardParts/Index";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -198,6 +199,12 @@ function App() {
             path="/projectmanager/settings"
             element={
               <WrapNav title={"Project Settings"} component={<ProjectSettings />} />
+            }
+          />
+          <Route
+            path="/projectmanager/standardparts"
+            element={
+              <WrapNav title={"Standard Parts"} component={<StandardParts />} />
             }
           />
 

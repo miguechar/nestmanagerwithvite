@@ -30,6 +30,10 @@ export const ManageUsers = () => {
     "role",
   ];
 
+  function handleClick(value) {
+
+  }
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -41,6 +45,7 @@ export const ManageUsers = () => {
           columns={columns}
           rows={users}
           initialColumns={initialColumns}
+          updateParent={handleClick}
         />
       </div>
     </div>

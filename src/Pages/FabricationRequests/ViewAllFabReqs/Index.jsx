@@ -9,6 +9,7 @@ import {
   DropdownTrigger,
   DropdownItem,
   DropdownMenu,
+  Image,
 } from "@nextui-org/react";
 import { PDFViewer } from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
@@ -24,6 +25,7 @@ import {
 import { auth } from "../../../Config";
 import SnackBarComponent from "../../../Components/Common/Snackbar";
 import Dialog from "../../../Components/Common/Dialog";
+import shipdiv from "../../../assets/imgs/shipdiv.png";
 
 export const ViewAllFabs = () => {
   const [fabrequests, setFabrequests] = useState([]);
@@ -238,6 +240,11 @@ export const ViewAllFabs = () => {
   return (
     <div>
       <div>
+        <div style={{margin: "10px"}} >
+          <Image 
+              src={shipdiv}
+          />
+        </div>
         <Card>
           <CardHeader>All Fabrication Requests</CardHeader>
           <CardBody>
@@ -479,6 +486,11 @@ export const ViewAllFabs = () => {
             </div>
           </CardBody>
         </Card>
+      </div>
+      <div style={{margin: "10px"}} >
+        <Image 
+            src={shipdiv}
+        />
       </div>
     </div>
   );

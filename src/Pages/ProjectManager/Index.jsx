@@ -94,7 +94,17 @@ export const ProjectManager = () => {
             <CardHeader>Inventory</CardHeader>
             <CardBody>
               <div>
-                <Button radius="full" onClick={() => navigate("/projectmanager/inventory", {state: { module: module, data: project, moduleUid: moduleUid}})}>Go To Inventory</Button>
+                <Button radius="full" onClick={() => navigate("/projectmanager/inventory", {state: { data: project}})}>Go To Inventory</Button>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+        <div>
+          <Card>
+            <CardHeader>Standard Parts</CardHeader>
+            <CardBody>
+              <div>
+                <Button radius="full" onClick={() => navigate("/projectmanager/standardparts", {state: { data: project}})}>Go To Standard Parts</Button>
               </div>
             </CardBody>
           </Card>

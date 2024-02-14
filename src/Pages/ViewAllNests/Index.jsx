@@ -1,6 +1,7 @@
-import { Card, CardBody, CardHeader } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Image } from "@nextui-org/react";
 import { Grid } from "@mui/material";
 import { NestsDataTable } from "./NestsDataTable";
+import  shipdiv from "../../assets/imgs/shipdiv.png";
 
 export function ViewAllNests() {
   return (
@@ -16,6 +17,11 @@ export function ViewAllNests() {
             </Card>
           </Grid>
         </Grid>
+      </div>
+      <div style={{margin: "10px"}} >
+        <Image 
+            src={shipdiv}
+        />
       </div>
     </div>
   );

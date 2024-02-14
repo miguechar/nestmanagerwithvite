@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { getFB, setFB } from "../../../Components/Global/functions/firebase";
-import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Image, Input } from "@nextui-org/react";
 import ListBox from "../../../Components/Common/ListBox";
+import shipdiv from "../../../assets/imgs/shipdiv.png";
 
 export const FabHome = () => {
   const [operators, setOperators] = useState({
-    operators: []
+    operators: [],
   });
   const [newOperator, setNewOperator] = useState({
     name: "",
@@ -14,26 +15,30 @@ export const FabHome = () => {
 
   async function fetchOperators() {
     const operators = await getFB("/fabricationRequests/Operators");
-    getOperatorHours(operators)
-  };
+    getOperatorHours(operators);
+  }
 
   function getOperatorHours(operators) {
     var clocks = [];
     const sumOfHoursArray = [];
-  
+
     for (let i = 0; i < operators.length; i++) {
       clocks.push(operators[i].clock);
 
       let sum = 0;
-  
+
       for (const entry in operators[i].work) {
         const workEntry = operators[i].work[entry];
         sum += parseFloat(workEntry.hoursWorked, 10) || 0; // Convert hoursWorked to an integer
       }
-  
-      sumOfHoursArray.push({ "total": sum, "operator": operators[i].name, "clock": operators[i].clock, });
+
+      sumOfHoursArray.push({
+        total: sum,
+        operator: operators[i].name,
+        clock: operators[i].clock,
+      });
     }
-    setOperators({...operators, operators: sumOfHoursArray});
+    setOperators({ ...operators, operators: sumOfHoursArray });
   }
 
   function handleNewOperator() {
@@ -46,46 +51,56 @@ export const FabHome = () => {
   }, []);
 
   return (
-    <div className="input-container-2column">
-      <div>
-        <Card>
-          <CardHeader>Operators</CardHeader>
-          <CardBody>
-            <div>
-              {operators.operators.map((value) => (
-                <ListBox title={value.operator} subtitle={value.clock + ", " + value.total + " hours"} />
-              ))}
-            </div>
-          </CardBody>
-        </Card>
-      </div>
-      <div>
-        <Card>
-          <CardHeader>Add Operator</CardHeader>
-          <CardBody>
-            <div>
-              <div className="input-container-2column">
-                <Input
-                  label="Name"
-                  onChange={(e) =>
-                    setNewOperator({ ...newOperator, name: e.target.value })
-                  }
-                />
-                <Input
-                  label="Clock"
-                  onChange={(e) =>
-                    setNewOperator({ ...newOperator, clock: e.target.value })
-                  }
-                />
-              </div>
+    <div>
+      <div className="input-container-2column">
+        <div>
+          <Card>
+            <CardHeader>Operators</CardHeader>
+            <CardBody>
               <div>
-                <Button color="primary" onClick={handleNewOperator}>
-                  Enter New
-                </Button>
+                {operators.operators.map((value) => (
+                  <ListBox
+                    title={value.operator}
+                    subtitle={value.clock + ", " + value.total + " hours"}
+                  />
+                ))}
               </div>
-            </div>
-          </CardBody>
-        </Card>
+            </CardBody>
+          </Card>
+        </div>
+        <div>
+          <Card>
+            <CardHeader>Add Operator</CardHeader>
+            <CardBody>
+              <div>
+                <div className="input-container-2column">
+                  <Input
+                    label="Name"
+                    onChange={(e) =>
+                      setNewOperator({ ...newOperator, name: e.target.value })
+                    }
+                  />
+                  <Input
+                    label="Clock"
+                    onChange={(e) =>
+                      setNewOperator({ ...newOperator, clock: e.target.value })
+                    }
+                  />
+                </div>
+                <div>
+                  <Button color="primary" onClick={handleNewOperator}>
+                    Enter New
+                  </Button>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+      </div>
+      <div style={{margin: "10px"}} >
+        <Image 
+            src={shipdiv}
+        />
       </div>
     </div>
   );
