@@ -5,10 +5,23 @@ import {
   CardHeader,
   Divider,
   Input,
+  BreadcrumbItem,
+  Breadcrumbs
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { getFB } from "../../../Components/Global/functions/firebase";
 import { useLocation } from "react-router-dom";
+import { ProjectMaterial } from "./Material";
+import { ProjectSTD } from "./STD";
+
+export const SettingsBC = () => {
+  return (
+    <Breadcrumbs>
+      <BreadcrumbItem href="/projectmanager">Home</BreadcrumbItem>
+      <BreadcrumbItem href="/projectmanager/settings">Settings</BreadcrumbItem>
+    </Breadcrumbs>
+  );
+};
 
 export const ProjectSettings = () => {
   const [settings, setSettings] = useState([]);
@@ -19,10 +32,8 @@ export const ProjectSettings = () => {
     const settings = await getFB(
       "Projects/" + data.data.full.uid + "/Settings/"
     );
-    console.log(settings[0].projectpath);
 
     if (Array.isArray(settings)) {
-      console.log(settings);
       setSettings({
         projectpath: settings[0].projectpath,
       });
@@ -34,7 +45,7 @@ export const ProjectSettings = () => {
   }, []);
   return (
     <div>
-      <div>
+      <div className="input-container-1column">
         <Card>
           <CardHeader>Project File</CardHeader>
           <CardBody>
@@ -48,9 +59,15 @@ export const ProjectSettings = () => {
             </div>
           </CardBody>
         </Card>
-        <div>
-          <Divider />
-        </div>
+      </div>
+      <div className="input-container-1column">
+        <Divider />
+      </div>
+      <div className="input-container-1column">
+        <ProjectMaterial moduleUid = {data.data.full.uid}/>
+      </div>
+      <div className="input-container-1column">
+        <ProjectSTD moduleUid = {data.data.full.uid}/>
       </div>
     </div>
   );

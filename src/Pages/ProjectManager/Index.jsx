@@ -6,6 +6,8 @@ import {
   Button,
   Input,
   SelectItem,
+  Breadcrumbs,
+  BreadcrumbItem,
 } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { getFB, setFB } from "../../Components/Global/functions/firebase";
@@ -14,6 +16,15 @@ import { CreateModule } from "./dashboard/CreateModule";
 import { ToDo } from "./dashboard/ToDo";
 import { ChevronRightIcon } from "../../Components/icons/ChevronRightIcon";
 import { useNavigate } from "react-router-dom";
+import { ProjectMaterial } from "./projectsettings/Material";
+
+export const ProjectManagerBC = () => {
+  return (
+    <Breadcrumbs>
+      <BreadcrumbItem href="/projectmanager">Home</BreadcrumbItem>
+    </Breadcrumbs>
+  );
+};
 
 export const ProjectManager = () => {
   const [project, setProject] = useState({
@@ -29,20 +40,22 @@ export const ProjectManager = () => {
       (value) => value.projectNo === localStorage.getItem("project")
     );
 
-    const moduleNames = Object.values(getCurProj[0].Modules).map(
-      (module) => ({ name: module.moduleName, uid: module.uid })
-    );
+    const moduleNames = Object.values(getCurProj[0].Modules).map((module) => ({
+      name: module.moduleName,
+      uid: module.uid,
+    }));
 
     setProject({
       ...project,
       full: getCurProj[0],
       modules: moduleNames,
     });
-};
-
+  }
 
   function goToViewModule(module, moduleUid) {
-    navigate("/projectmanager/viewmodule", {state: { module: module, data: project, moduleUid: moduleUid}})
+    navigate("/projectmanager/viewmodule", {
+      state: { module: module, data: project, moduleUid: moduleUid },
+    });
   }
 
   useEffect(() => {
@@ -51,8 +64,13 @@ export const ProjectManager = () => {
 
   return (
     <div>
-      <div style={{textAlign: "right", marginRight: "9px"}}>
-        <Button onClick={() => navigate("/projectmanager/settings", {state: { data: project}})}>Settings</Button>
+      <div style={{ textAlign: "right", marginRight: "9px" }}>
+        <Button
+          onClick={() =>
+            navigate("/projectmanager/settings", { state: { data: project } })
+          }>
+          Settings
+        </Button>
       </div>
       <div className="input-container-1column">
         <Card>
@@ -72,9 +90,22 @@ export const ProjectManager = () => {
                   <div style={{ marginTop: "10px" }}>
                     <Card key={index}>
                       <CardHeader>
-                        <div style={{ justifyContent: "space-between", display:"flex",width: "100%"}}>
+                        <div
+                          style={{
+                            justifyContent: "space-between",
+                            display: "flex",
+                            width: "100%",
+                          }}>
                           {value.name}
-                          <Button color="secondary" radius="full" endContent={<ChevronRightIcon/>} onClick={() => goToViewModule(value.name, value.uid)}>View</Button>
+                          <Button
+                            color="secondary"
+                            radius="full"
+                            endContent={<ChevronRightIcon />}
+                            onClick={() =>
+                              goToViewModule(value.name, value.uid)
+                            }>
+                            View
+                          </Button>
                         </div>
                       </CardHeader>
                     </Card>
@@ -94,7 +125,15 @@ export const ProjectManager = () => {
             <CardHeader>Inventory</CardHeader>
             <CardBody>
               <div>
-                <Button radius="full" onClick={() => navigate("/projectmanager/inventory", {state: { data: project}})}>Go To Inventory</Button>
+                <Button
+                  radius="full"
+                  onClick={() =>
+                    navigate("/projectmanager/inventory", {
+                      state: { data: project },
+                    })
+                  }>
+                  Go To Inventory
+                </Button>
               </div>
             </CardBody>
           </Card>
@@ -104,7 +143,15 @@ export const ProjectManager = () => {
             <CardHeader>Standard Parts</CardHeader>
             <CardBody>
               <div>
-                <Button radius="full" onClick={() => navigate("/projectmanager/standardparts", {state: { data: project}})}>Go To Standard Parts</Button>
+                <Button
+                  radius="full"
+                  onClick={() =>
+                    navigate("/projectmanager/standardparts", {
+                      state: { data: project },
+                    })
+                  }>
+                  Go To Standard Parts
+                </Button>
               </div>
             </CardBody>
           </Card>

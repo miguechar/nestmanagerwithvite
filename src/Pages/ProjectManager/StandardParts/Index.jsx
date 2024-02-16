@@ -54,20 +54,33 @@ export const StandardParts = () => {
     },
   ];
 
+  function createPartName() {
+    const first = newStandardParts.std.slice(4,5); //cutout detail
+    const second =  "" //thickness detail
+    const third = ""; //
+
+    const partName = first + second + third + (newStandardParts.tee ? newStandardParts.tee : "");
+    setNewStandardPart({...newStandardParts, name: partName})
+  }
+
   useEffect(() => {
     fetchStandardParts();
   }, []);
+
+  useEffect(() => {
+    createPartName()
+  }, [newStandardParts])
 
   return (
     <div>
       <div className="input-container-1column">
         <Card>
-          <CardHeader>Add Standard Part</CardHeader>
+          <CardHeader>{"Add Standard Part: " + (newStandardParts.name? newStandardParts.name : "")}</CardHeader>
           <CardBody>
             <div>
               <div className="input-container-6column">
                 <Select
-                  label="STD"
+                  label="Cut Out STD"
                   onChange={(e) =>
                     setNewStandardPart({
                       ...newStandardParts,

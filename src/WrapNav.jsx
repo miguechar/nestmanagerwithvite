@@ -1,12 +1,13 @@
 import { Typography } from "@mui/material";
 import { NavigationBar } from "./Components/Global/NavBar";
 
-export const WrapNav = ({ component, title, subtitle }) => {
+export const WrapNav = ({ component, title, subtitle, BC }) => {
   return (
     <div>
       <div style={{ position: "static" }}>
         <NavigationBar />
       </div>
+      
 
       <div style={{ textAlign: "left", marginTop: "50px" }}>
         <Typography
@@ -19,6 +20,9 @@ export const WrapNav = ({ component, title, subtitle }) => {
         <Typography variant="h5" fontWeight="bold" color="green">
           {subtitle}
         </Typography>
+        <div>
+          {BC}
+        </div>
       </div>
       <div style={{ marginTop: "15px" }}>{component}</div>
     </div>

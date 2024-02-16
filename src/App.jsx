@@ -16,11 +16,11 @@ import { EngineeringInbox } from "./Pages/FabricationRequests/EngineeringInbox";
 import { PlateshopInbox } from "./Pages/FabricationRequests/PlateshopInbox";
 import { ManageUsers } from "./Pages/AvatarPages/ManageUsers/Index";
 import { K2Project } from "./Pages/K2Project/Index";
-import { ProjectManager } from "./Pages/ProjectManager/Index";
+import { ProjectManager, ProjectManagerBC } from "./Pages/ProjectManager/Index";
 import { ViewModule } from "./Pages/ProjectManager/viewmodule/Index";
 import { Subassemblies } from "./Pages/Subassemblies";
 import { Inventory } from "./Pages/ProjectManager/inventory/Index";
-import { ProjectSettings } from "./Pages/ProjectManager/projectsettings";
+import { ProjectSettings, SettingsBC } from "./Pages/ProjectManager/projectsettings";
 import { LocalNews } from "./Pages/LocalNews/Index";
 import { FabHome } from "./Pages/FabricationRequests/Home/Index";
 import { StandardParts } from "./Pages/ProjectManager/StandardParts/Index";
@@ -180,6 +180,7 @@ function App() {
               <WrapNav
                 title={"Project Manager"}
                 component={<ProjectManager />}
+                BC={<ProjectManagerBC />}
               />
             }
           />
@@ -198,7 +199,7 @@ function App() {
           <Route
             path="/projectmanager/settings"
             element={
-              <WrapNav title={"Project Settings"} component={<ProjectSettings />} />
+              <WrapNav title={"Project Settings"} component={<ProjectSettings />} BC={<SettingsBC/>} />
             }
           />
           <Route
