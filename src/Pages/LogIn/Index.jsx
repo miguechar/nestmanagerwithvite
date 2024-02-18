@@ -32,9 +32,7 @@ export default function LogIn() {
         localStorage.setItem("userLastName", currentUser.lastName);
         localStorage.setItem("role", currentUser.role);
         localStorage.setItem("avatar", currentUser.avatar);
-        if (
-          auth?.currentUser?.email === "miguel.charry@us.fincantieri.com"
-        ) {
+        if (auth?.currentUser?.email === "miguel.charry@us.fincantieri.com") {
           localStorage.setItem("project", "0434");
         }
       } else {
@@ -50,24 +48,28 @@ export default function LogIn() {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        userDetails.email,
-        userDetails.password
-      );
-      const user = userCredential.user;
-      if (user != null) {
-        const userEmail = auth?.currentUser?.email;
-        await setInitialUserData(userEmail); // Ensure user data is set
-        navigateTo("/home"); // Navigate after successful login and data setup
-      } else {
-        localStorage.removeItem("userEmail");
+    if (auth?.currentUser?.email !== null) {
+      navigateTo("/home");
+    } else {
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          userDetails.email,
+          userDetails.password
+        );
+        const user = userCredential.user;
+        if (user != null) {
+          const userEmail = auth?.currentUser?.email;
+          await setInitialUserData(userEmail); // Ensure user data is set
+          navigateTo("/home"); // Navigate after successful login and data setup
+        } else {
+          localStorage.removeItem("userEmail");
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false); // Ensure loading is set to false in all cases
       }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false); // Ensure loading is set to false in all cases
     }
   };
 
@@ -76,7 +78,7 @@ export default function LogIn() {
     //   navigateTo("/home")
     //   console.log(auth?.currentUser?.email)
     // }
-  }, [])
+  }, []);
 
   return (
     <div
@@ -88,7 +90,8 @@ export default function LogIn() {
         height: "100%",
         overflow: "hidden",
         filter: "blur(0px)",
-      }}>
+      }}
+    >
       <div
         style={{
           position: "fixed",
@@ -98,7 +101,8 @@ export default function LogIn() {
           height: "100%",
           overflow: "hidden",
           filter: "blur(0px)",
-        }}>
+        }}
+      >
         <img
           src={LCSjpg}
           alt="Background"
@@ -117,17 +121,20 @@ export default function LogIn() {
           justifyContent: "center",
           alignItems: "center",
           height: "100vh",
-        }}>
+        }}
+      >
         <Card
           style={{
             zIndex: 1,
-          }}>
+          }}
+        >
           <CardHeader>Log In - Nest Manager</CardHeader>
           <CardBody
             style={{
               padding: "20px", // Add padding all around
               mt: "10px",
-            }}>
+            }}
+          >
             <div>
               <Box>
                 <Input

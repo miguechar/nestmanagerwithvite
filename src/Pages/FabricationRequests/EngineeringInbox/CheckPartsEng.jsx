@@ -79,7 +79,7 @@ export const CheckPartsEng = ({ selectedFabReq, updateParentState }) => {
       // const partsList = currentfab.partsList ;
       const partsList = newPartsList ? newPartsList : currentfab.partsList;
 
-      if(partsList === []) {
+      if(partsList.length < 0) {
         console.log("No parts")
       }
       else if (partsList.length > 0) {

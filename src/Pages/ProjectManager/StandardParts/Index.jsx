@@ -14,6 +14,7 @@ import {
 
 export const StandardParts = () => {
   const [standardParts, setStandardParts] = useState([]);
+  const [standardDetail, setStandardDetail] = useState([])
   const location = useLocation();
   const data = location.state;
   const [project, setProject] = useState({
@@ -32,8 +33,13 @@ export const StandardParts = () => {
 
   async function fetchStandardParts() {
     const projectUid = data.data.full.uid;
-    const path = "Projects/" + projectUid + "/StandardParts";
-    const project = await getFB(path);
+    const standardPartsPath = "Projects/" + projectUid + "/StandardParts";
+    const standardParts = await getFB(standardPartsPath);
+    setStandardParts(standardParts)
+
+    const standardDetailPath = "Projects/" + projectUid + "/StandardDetail";
+    const standardDetails = await getFB(standardDetailPath);
+    setStandardDetail(standardDetails)
   }
 
   const std = [
@@ -78,6 +84,7 @@ export const StandardParts = () => {
           <CardHeader>{"Add Standard Part: " + (newStandardParts.name? newStandardParts.name : "")}</CardHeader>
           <CardBody>
             <div>
+              <p>Hello</p>
               <div className="input-container-6column">
                 <Select
                   label="Cut Out STD"
@@ -87,12 +94,12 @@ export const StandardParts = () => {
                       std: e.target.value,
                     })
                   }>
-                  {std.map((value) => (
+                  {standardDetail.map((value) => (
                     <SelectItem
-                      value={value.name}
-                      key={value.name}
-                      textValue={value.name}>
-                      {value.name}
+                      value={value.viewport}
+                      key={value.viewport}
+                      textValue={value.viewport}>
+                      {value.viewport}
                     </SelectItem>
                   ))}
                 </Select>
