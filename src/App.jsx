@@ -24,6 +24,8 @@ import { ProjectSettings, SettingsBC } from "./Pages/ProjectManager/projectsetti
 import { LocalNews } from "./Pages/LocalNews/Index";
 import { FabHome } from "./Pages/FabricationRequests/Home/Index";
 import { StandardParts } from "./Pages/ProjectManager/StandardParts/Index";
+import { TestingPage } from "./Pages/Testing/Index";
+import { PCPage } from "./Pages/BOM/Index";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -159,6 +161,14 @@ function App() {
             }
           />
 
+          {/* BOM */}
+          <Route
+            path="/bom"
+            element={
+              <WrapNav title={"View All PC's"} component={<PCPage />} />
+            }
+          />
+
           {/* avatar pages */}
           <Route
             path="/manageusers"
@@ -214,6 +224,14 @@ function App() {
             path="/localnews"
             element={
               <WrapNav title={"Local News"} component={<LocalNews />} />
+            }
+          />
+
+          {/* Testing Page */}
+          <Route
+            path="/testing"
+            element={
+              <WrapNav title={"Testing Page"} component={<TestingPage />} />
             }
           />
         </Routes>

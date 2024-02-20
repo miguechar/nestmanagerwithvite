@@ -185,6 +185,7 @@ export const NestsDataTable = () => {
             columns={columns}
             initialColumns={initialColumns}
             updateParent={handleSelection}
+            searchField={true}
           />
         </div>
       ) : (

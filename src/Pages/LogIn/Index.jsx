@@ -74,10 +74,9 @@ export default function LogIn() {
   };
 
   useEffect(() => {
-    // if(auth?.currentUser?.email !== null) {
-    //   navigateTo("/home")
-    //   console.log(auth?.currentUser?.email)
-    // }
+    if(auth?.currentUser?.email !== null) {
+      navigateTo("/home")
+    }
   }, []);
 
   return (

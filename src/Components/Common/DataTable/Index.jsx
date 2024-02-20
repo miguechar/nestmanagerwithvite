@@ -35,7 +35,7 @@ const statusOptions = [
   { name: "Not Cut", uid: "Not Cut" },
 ];
 
-export default function DataTable({ rows, columns, initialColumns, updateParent }) {
+export default function DataTable({ rows, columns, initialColumns, updateParent, searchField }) {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [visibleColumns, setVisibleColumns] = React.useState(
@@ -111,15 +111,15 @@ export default function DataTable({ rows, columns, initialColumns, updateParent 
             {user.email}
           </User>
         );
-      case "name":
-        return (
-          <User
-            avatarProps={{ radius: "lg", src: user.avatar }}
-            description={user.email}
-            name={cellValue}>
-            {user.email}
-          </User>
-        );
+      // case "name":
+      //   return (
+      //     <User
+      //       avatarProps={{ radius: "lg", src: user.avatar }}
+      //       description={user.email}
+      //       name={cellValue}>
+      //       {user.email}
+      //     </User>
+      //   );
       case "role":
         return (
           <div className="flex flex-col">
@@ -203,7 +203,7 @@ export default function DataTable({ rows, columns, initialColumns, updateParent 
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder={"Search by po"}
+            placeholder={"Seach by PO"}
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}
@@ -341,14 +341,14 @@ export default function DataTable({ rows, columns, initialColumns, updateParent 
       selectedKeys={selectedKeys}
       selectionMode="multiple"
       sortDescriptor={sortDescriptor}
-      topContent={topContent}
+      topContent={searchField ? topContent : ""}
       topContentPlacement="outside"
       onSelectionChange={handleSelectedKeys}
       onSortChange={setSortDescriptor}>
       <TableHeader columns={headerColumns}>
         {(column) => (
           <TableColumn
-            key={column.uid}
+            key={column.uid ? column.uid : column.name}
             align={column.uid === "actions" ? "center" : "start"}
             allowsSorting={column.sortable}>
             {column.name}
@@ -357,7 +357,7 @@ export default function DataTable({ rows, columns, initialColumns, updateParent 
       </TableHeader>
       <TableBody emptyContent={"No items found"} items={sortedItems}>
         {(item) => (
-          <TableRow key={item.uid}>
+          <TableRow key={item.uid ? item.uid : item.name}>
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}

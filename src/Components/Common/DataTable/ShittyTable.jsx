@@ -42,7 +42,7 @@ export default function ShittyTable({users, columns}) {
       </TableHeader>
       <TableBody items={items}>
         {(item) => (
-          <TableRow key={item.uid}>
+          <TableRow key={item.uid ? item.uid : item.name}>
             {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
           </TableRow>
         )}

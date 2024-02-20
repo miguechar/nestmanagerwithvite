@@ -363,7 +363,7 @@ export const NavigationBar = () => {
                 endContent={icons.chevron}
                 radius="sm"
                 variant="light">
-                Subassemblies
+                Tools
               </Button>
             </DropdownTrigger>
           </NavbarItem>
@@ -378,7 +378,14 @@ export const NavigationBar = () => {
               description=""
               onClick={() => navigateTo("/subassemblies")}
               startContent={icons.scale}>
-              View / Add
+              View / Add - Subassemblies
+            </DropdownItem>
+            <DropdownItem
+              key="autoscaling"
+              description=""
+              onClick={() => navigateTo("/bom")}
+              startContent={icons.flash}>
+              PC
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>

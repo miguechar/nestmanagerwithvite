@@ -15,7 +15,6 @@ export const SubmitRequest = ({ fabreq }) => {
 
   function handleSubmit() {
     const someFunctionToCallSetFB = () => {
-      console.log(fabreq)
       updateFB("/fabricationRequests/count", {
         count: fabreq.newCount,
       });

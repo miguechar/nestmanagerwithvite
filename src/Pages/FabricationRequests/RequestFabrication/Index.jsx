@@ -54,6 +54,20 @@ export const RequestFab = () => {
   });
 
   function updatePartsList(newPartsList) {
+    var list = [];
+    for(let i = 0; i < newPartsList.length; i++) {
+      const filtered = nests.filter((value) =>
+      value.parts.some(
+        (subvalue) => subvalue.name === (newPartsList[i]) // Ensure case-insensitive comparison
+      ))
+      if(filtered.length > 0) {
+        list.push(filtered)
+      }
+      console.log(filtered)
+    };
+    // F3LD1-00-D09-100
+
+    if(list.length > 0) {console.log("This part exists")}
     setFabreq({ ...fabreq, partsList: newPartsList });
   }
 
