@@ -178,16 +178,12 @@ export const PCPage = () => {
             ))}
           </div>
         );
-        setDialog({
+        
+
+        setDrawer({
           open: true,
-          title: "Results",
-          body: body,
-          footer: (
-            <Button color="danger" onClick={() => handleDialogCLose()}>
-              Close
-            </Button>
-          ),
-        });
+          component: body
+        })
         // Update the search results state with the response data
         // setSearchResults(response.data);
         // // Open the dialog/modal to show the results
