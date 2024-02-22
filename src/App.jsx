@@ -17,10 +17,13 @@ import { PlateshopInbox } from "./Pages/FabricationRequests/PlateshopInbox";
 import { ManageUsers } from "./Pages/AvatarPages/ManageUsers/Index";
 import { K2Project } from "./Pages/K2Project/Index";
 import { ProjectManager, ProjectManagerBC } from "./Pages/ProjectManager/Index";
-import { ViewModule } from "./Pages/ProjectManager/viewmodule/Index";
+import { ViewModule, ViewModuleBC } from "./Pages/ProjectManager/viewmodule/Index";
 import { Subassemblies } from "./Pages/Subassemblies";
 import { Inventory } from "./Pages/ProjectManager/inventory/Index";
-import { ProjectSettings, SettingsBC } from "./Pages/ProjectManager/projectsettings";
+import {
+  ProjectSettings,
+  SettingsBC,
+} from "./Pages/ProjectManager/projectsettings";
 import { LocalNews } from "./Pages/LocalNews/Index";
 import { FabHome } from "./Pages/FabricationRequests/Home/Index";
 import { StandardParts } from "./Pages/ProjectManager/StandardParts/Index";
@@ -31,8 +34,6 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    
-
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -157,16 +158,17 @@ function App() {
           <Route
             path="/subassemblies"
             element={
-              <WrapNav title={"View / Add Subassemblies"} component={<Subassemblies />} />
+              <WrapNav
+                title={"View / Add Subassemblies"}
+                component={<Subassemblies />}
+              />
             }
           />
 
           {/* BOM */}
           <Route
             path="/bom"
-            element={
-              <WrapNav title={"View All PC's"} component={<PCPage />} />
-            }
+            element={<WrapNav title={"View All PC's"} component={<PCPage />} />}
           />
 
           {/* avatar pages */}
@@ -197,19 +199,21 @@ function App() {
           <Route
             path="/projectmanager/viewmodule"
             element={
-              <WrapNav title={"View Module"} component={<ViewModule />} />
+              <WrapNav title={"View Module"} component={<ViewModule />} BC={ViewModuleBC}/>
             }
           />
           <Route
             path="/projectmanager/inventory"
-            element={
-              <WrapNav title={"Inventory"} component={<Inventory />} />
-            }
+            element={<WrapNav title={"Inventory"} component={<Inventory />} />}
           />
           <Route
             path="/projectmanager/settings"
             element={
-              <WrapNav title={"Project Settings"} component={<ProjectSettings />} BC={<SettingsBC/>} />
+              <WrapNav
+                title={"Project Settings"}
+                component={<ProjectSettings />}
+                BC={<SettingsBC />}
+              />
             }
           />
           <Route
@@ -222,9 +226,7 @@ function App() {
           {/* Local News */}
           <Route
             path="/localnews"
-            element={
-              <WrapNav title={"Local News"} component={<LocalNews />} />
-            }
+            element={<WrapNav title={"Local News"} component={<LocalNews />} />}
           />
 
           {/* Testing Page */}

@@ -42,10 +42,8 @@ function CloseSquare(props) {
 
 function TransitionComponent(props) {
   const style = useSpring({
-    to: {
-      opacity: props.in ? 1 : 0,
-      transform: `translate3d(${props.in ? 0 : 20}px,0,0)`,
-    },
+    from: { opacity: 0, transform: 'translate3d(20px,0,0)' },
+    to: { opacity: props.in ? 1 : 0, transform: `translate3d(${props.in ? 0 : 20}px,0,0)` },
   });
 
   return (
@@ -55,9 +53,9 @@ function TransitionComponent(props) {
   );
 }
 
-const CustomTreeItem = React.forwardRef((props, ref) => (
-  <TreeItem {...props} TransitionComponent={TransitionComponent} ref={ref} />
-));
+const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
+  return <TreeItem {...props} TransitionComponent={TransitionComponent} ref={ref} />;
+});
 
 const StyledTreeItem = styled(CustomTreeItem)(({ theme }) => ({
   [`& .${treeItemClasses.iconContainer}`]: {
@@ -72,54 +70,40 @@ const StyledTreeItem = styled(CustomTreeItem)(({ theme }) => ({
   },
 }));
 
+export default function CustomizedTreeView({ data, updateParentState }) {
+  // Function to handle node click, receiving the uid of the clicked node
+  const handleNodeClick = (uid, assyName, event) => {
+    event.preventDefault(); // Prevent the default action
+    updateParentState({uid: uid, assyName: assyName}); // Example action: log uid to the console
+    // Here, you can also update the state or call other functions as needed
+  };
 
+  // Generate TreeItems from data
+  function generateTreeItems(assemblies, parentId = '') {
+    return assemblies.map((assembly) => {
+      const nodeId = parentId ? `${parentId}.${assembly.uid}` : assembly.uid;
 
-
-
-export default function CustomizedTreeView({ data, moduleName, updateParent }) {
-  // Find the module by moduleName
-
-
-  function generateTreeItems(data, parentKey = '') {
-    return Object.entries(data).map(([key, value]) => {
-      // Create a new key for nested items to maintain unique IDs
-      const newParentKey = parentKey ? `${parentKey}.${key}` : key;
-  
-      // Handle clicking on a tree item
-      const handleClick = (e) => {
-        e.stopPropagation(); // Prevent triggering click events on parent items
-        updateParent(newParentKey); // Pass the new parent key for context
-      };
-  
-      // If the value is an object and not an empty one, generate child TreeItems
-      if (typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length > 0) {
-        return (
-          <StyledTreeItem key={newParentKey} nodeId={newParentKey} label={key} >
-            {generateTreeItems(value, newParentKey)}
-          </StyledTreeItem>
-        );
-      } else {
-        // For leaf nodes, directly create a TreeItem with the determined label
-        return (
-          <StyledTreeItem key={newParentKey} nodeId={newParentKey} label={`${key}: ${value}`} onDoubleClick={handleClick} />
-        );
-      }
+      return (
+        <StyledTreeItem
+          key={nodeId}
+          nodeId={nodeId}
+          label={assembly.assyName}
+          onClick={(event) => handleNodeClick(assembly.uid, assembly.assyName, event)} // Add onClick event handler
+        >
+          {assembly.children && assembly.children.length > 0 && generateTreeItems(assembly.children, nodeId)}
+        </StyledTreeItem>
+      );
     });
   }
-  
-  
-  
-  
 
   return (
-    <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: "100%" }}>
+    <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: '100%' }}>
       <TreeView
         aria-label="customized"
-        defaultExpanded={["1"]}
         defaultCollapseIcon={<MinusSquare />}
         defaultExpandIcon={<PlusSquare />}
         defaultEndIcon={<CloseSquare />}
-        sx={{ overflowX: "hidden" }}>
+        sx={{ overflowY: 'auto' }}>
         {generateTreeItems(data)}
       </TreeView>
     </Box>

@@ -14,7 +14,8 @@ import {
 
 export const StandardParts = () => {
   const [standardParts, setStandardParts] = useState([]);
-  const [standardDetail, setStandardDetail] = useState([])
+  const [standardDetail, setStandardDetail] = useState([]);
+  const [standardBT, setStandardBT] = useState([])
   const location = useLocation();
   const data = location.state;
   const [project, setProject] = useState({
@@ -40,6 +41,10 @@ export const StandardParts = () => {
     const standardDetailPath = "Projects/" + projectUid + "/StandardDetail";
     const standardDetails = await getFB(standardDetailPath);
     setStandardDetail(standardDetails)
+
+    const standardBT = "Projects/" + projectUid + "/standardBT";
+    const projectBT = await getFB(standardBT);
+    setStandardBT(projectBT)
   }
 
   const std = [
@@ -99,27 +104,11 @@ export const StandardParts = () => {
                       value={value.viewport}
                       key={value.viewport}
                       textValue={value.viewport}>
-                      {value.viewport}
+                      {value.viewport + " - " + value.title}
                     </SelectItem>
                   ))}
                 </Select>
-                <Select
-                  label="Stock"
-                  onChange={(e) =>
-                    setNewStandardPart({
-                      ...newStandardParts,
-                      stock: e.target.value,
-                    })
-                  }>
-                  {stock.map((value) => (
-                    <SelectItem
-                      value={value.name}
-                      key={value.name}
-                      textValue={value.name}>
-                      {value.name}
-                    </SelectItem>
-                  ))}
-                </Select>
+                <Input label="Stock" onChange={(e) => setNewStandardPart({...newStandardParts, stock: e.target.value})} />
                 <Select
                   label="Tee"
                   onChange={(e) =>
@@ -128,12 +117,12 @@ export const StandardParts = () => {
                       tee: e.target.value,
                     })
                   }>
-                  {tee.map((value) => (
+                  {standardBT.map((value) => (
                     <SelectItem
-                      value={value.name}
-                      key={value.name}
-                      textValue={value.name}>
-                      {value.name}
+                      value={value.bt}
+                      key={value.bt}
+                      textValue={value.bt}>
+                      {value.bt}
                     </SelectItem>
                   ))}
                 </Select>

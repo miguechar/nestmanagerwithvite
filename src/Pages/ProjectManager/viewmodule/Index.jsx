@@ -1,10 +1,28 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Button, Card, CardBody, CardHeader } from "@nextui-org/react";
-import CustomizedTreeView from "../../../Components/Common/TreeView";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Tabs,
+  Tab,
+  Breadcrumbs,
+  BreadcrumbItem,
+} from "@nextui-org/react";
+import { ProductHierarchy } from "./ProductHierarchy";
 import { CreateAssembly } from "./CreateAssembly";
-import { CreateStructure } from "./CreateStructure";
-import { getFB } from "../../../Components/Global/functions/firebase";
+
+export const ViewModuleBC = () => {
+  return (
+    <Breadcrumbs>
+      <BreadcrumbItem href="/projectmanager">Home</BreadcrumbItem>
+      <BreadcrumbItem href="/projectmanager/viewmodule">
+        View Module
+      </BreadcrumbItem>
+    </Breadcrumbs>
+  );
+};
 
 export const ViewModule = () => {
   // use location to get data from Project Manager Index.jsx
@@ -15,167 +33,60 @@ export const ViewModule = () => {
     full: data.data,
     moduleUid: data.moduleUid,
   });
-  const [newAssembly, setNewAssembly] = useState(false);
-  const [newStructure, setNewStructure] = useState(false);
-  const [treeData, setTreeData] = useState();
-  const [selectedAssembly, setSelectedAssembly] = useState("");
+  const [selectedTab, setSelectedTab] = useState("createAssy")
 
-  function getValueClickedTree(value) {
-    setSelectedAssembly(value);
-    console.log(value);
+  let tabs = [
+    {
+      id: "createAssy",
+      label: "Create Assembly",
+      content: (
+        <CreateAssembly
+          selectedModule={project.module}
+          moduleID={project.moduleUid}
+          projectUID={data.data.full.uid}
+        />
+      ),
+    },
+    {
+      id: "viewHierarchy",
+      label: "Product Hierarchy",
+      content: (
+        <ProductHierarchy
+          selectedModule={project.module}
+          moduleID={project.moduleUid}
+          projectUID={data.data.full.uid}
+          updateParentTab={updateParentTab}
+        />
+      ),
+    },
+    {
+      id: "editAssy",
+      label: "Edit Assy",
+      content: (
+        <ProductHierarchy
+          selectedModule={project.module}
+          moduleID={project.moduleUid}
+          projectUID={data.data.full.uid}
+        />
+      ),
+    },
+  ];
+
+  function updateParentTab(value) {
+    setSelectedTab(value)
   }
-
-
-  function createTreeview() {
-    // Initialize the data structure for the tree view
-    const dataForTreeView = {
-      [project.module]: {
-        Assembly: {},
-        Structure: {
-          Frame: {},
-        },
-      },
-    };
-
-    // Function to recursively process assemblies and their children
-    function processAssemblies(assemblyObj, parentObj) {
-      Object.entries(assemblyObj).forEach(([uid, assemblyData]) => {
-        const assemblyName = assemblyData.assemblyName;
-        // Initialize the assembly node
-        const node = { weight: assemblyData.weight };
-
-        // Check for children assemblies
-        if (
-          assemblyData.Assembly &&
-          typeof assemblyData.Assembly === "object"
-        ) {
-          node.Children = {}; // Initialize children container
-          processAssemblies(assemblyData.Assembly, node.Children); // Recursively process children
-        }
-
-        // Add the node to the parent object
-        parentObj[assemblyName] = node;
-      });
-    }
-
-    function processFrameData(structureObj, parentObj) {
-      Object.entries(structureObj).forEach(([uid, structureData]) => {
-        const structure = structureData.description;
-        const node = { Description: structureData.description };
-
-        if (
-          structureData.assemblies &&
-          typeof structureData.assemblies === "object"
-        ) {
-          node.Assemblies = {};
-          processFrameData(structureData.assemblies, node.Assemblies);
-        }
-        parentObj[structure] = node;
-      });
-    }
-
-    // Assuming your data structure contains the necessary module data
-    const moduleAssemblies =
-      project.full.full.Modules[project.moduleUid]["0"].Assembly; // Adjust based on actual data structure
-
-    const FrameList =
-      project.full.full.Modules[project.moduleUid]["0"].Structure.Frame;
-
-    if (moduleAssemblies && typeof moduleAssemblies === "object") {
-      processAssemblies(
-        moduleAssemblies,
-        dataForTreeView[project.module].Assembly
-      );
-    }
-
-    if (FrameList && typeof FrameList === "object") {
-      processFrameData(
-        FrameList,
-        dataForTreeView[project.module].Structure.Frame
-      );
-    }
-
-    setTreeData(dataForTreeView); // Uncomment and use if you're setting state in a framework like React
-    return dataForTreeView;
-  }
-
-  async function fetchProject() {
-    const projectUid = data.data.full.uid;
-    const moduleUid = data.moduleUid;
-    const path = "Projects/" + projectUid;
-    console.log(project.full);
-    const project = await getFB(path);
-    setProject({ ...project, full: project });
-  }
-
-  function handleStructureCreated(value) {
-    fetchProject();
-    setNewStructure(false);
-  }
-
-  function handleAssemblyCreated(value) {
-    fetchProject();
-    setNewAssembly(false);
-  }
-
-  useEffect(() => {
-    createTreeview();
-    fetchProject();
-  }, []);
 
   return (
     <div>
-      <div className="input-container-1column">
-        <Card>
-          <CardHeader>{data.module}</CardHeader>
-          <CardBody>
-            <div className="input-container-2column">
-              <div style={{ gap: "10px", display: "flex" }}>
-                <Button color="primary" onClick={() => setNewAssembly(true)}>
-                  Create Assembly
-                </Button>
-                <Button color="primary" onClick={() => setNewStructure(true)}>
-                  {"Create Structure DWG"}
-                </Button>
-              </div>
-
-              <div>
-                {treeData ? (
-                  <div>
-                    <CustomizedTreeView
-                      data={treeData}
-                      moduleName={project.module}
-                      updateParent={getValueClickedTree}
-                    />
-                  </div>
-                ) : (
-                  <p>loading...</p>
-                )}
-              </div>
-            </div>
-          </CardBody>
-        </Card>
+      <div style={{textAlign: "left"}}>
+        <Tabs aria-label="Dynamic tabs" items={tabs} selectedKey={selectedTab} onClick={(e) => setSelectedTab(e.target.value)}>
+          {(item) => (
+            <Tab key={item.id} title={item.label} value={item.id}>
+              {item.content}
+            </Tab>
+          )}
+        </Tabs>
       </div>
-      {newAssembly ? (
-        <CreateAssembly
-          module={project.module}
-          project={data.data}
-          moduleUid={data.moduleUid}
-          updateParent={handleAssemblyCreated}
-        />
-      ) : (
-        <div></div>
-      )}
-      {newStructure ? (
-        <CreateStructure
-          module={project.module}
-          project={data.data}
-          moduleUid={data.moduleUid}
-          updateParent={handleStructureCreated}
-        />
-      ) : (
-        <div></div>
-      )}
     </div>
   );
 };

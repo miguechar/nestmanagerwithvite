@@ -3,281 +3,145 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Divider,
   Input,
   Select,
   SelectItem,
 } from "@nextui-org/react";
-import { assyType, subModules } from "../pmmenuitems";
 import { useState } from "react";
-import { PartsListCreate } from "../../../Components/Common/PartsListCreate";
-import { setFB } from "../../../Components/Global/functions/firebase";
+import { getFB, setFB } from "../../../Components/Global/functions/firebase";
 import { useEffect } from "react";
-import SnackBarComponent from "../../../Components/Common/Snackbar";
+import { PartsListCreate } from "../../../Components/Common/PartsListCreate";
 
-export const CreateAssembly = ({
-  updateParent,
-  module,
-  project,
-  moduleUid,
-}) => {
-  const [assembly, setAssembly] = useState({
+export const CreateAssembly = ({ module, projectUID }) => {
+  const [newAssembly, setNewAssembly] = useState({
+    assyName: "",
+    assyWeight: "",
+    assyProgress: "",
+    assyParent: "",
     module: module,
-    subModule: "",
-    buildStage: "",
-    assyType: "",
-    assyNo: "",
-    weight: "",
-    progress: "",
+    description: "",
     partsList: [],
-    parentAssembly: "",
   });
   const [allAssemblies, setAllAssemblies] = useState([]);
-  const [snackBar, setSnackBar] = useState({
-    open: false,
-    message: "",
-    severity: "",
-  });
 
-  function updatePartsList(partsList) {
-    console.log(partsList);
-    setAssembly({ ...assembly, partsList: partsList });
+  function handleNewAssy() {
+    setFB("Projects/" + projectUID + "/Assemblies/", newAssembly);
+    getAssemblies();
   }
 
-  function handleAssemblySubmit() {
-    const newAssembly = {
-      ...assembly,
-      assemblyName:
-        assembly.module +
-        assembly.subModule +
-        "-" +
-        assembly.buildStage +
-        "-" +
-        assembly.assyType +
-        assembly.assyNo,
-    };
-
-    if (assembly.parentAssembly !== "") {
-      const path =
-        "Projects/" +
-        project[0].uid +
-        "/Modules/" +
-        moduleUid +
-        "/0/Assembly/" +
-        newAssembly.parentAssembly;
-      setFB(path, newAssembly);
-    } else if (
-      assembly.subModule !== "" &&
-      assembly.buildStage !== "" &&
-      assembly.assyType !== "" &&
-      assembly.assyNo !== ""
-    ) {
-      const path =
-        "Projects/" + project[0].uid + "/Modules/" + moduleUid + "/0/Assembly/";
-      setFB(path, newAssembly);
-    }
-
-    setSnackBar({
-      open: true,
-      message: newAssembly.assemblyName + " created",
-      severity: "success",
-    });
-    updateParent()
+  async function getAssemblies() {
+    const assemblies = await getFB("Projects/" + projectUID + "/Assemblies/");
+    setAllAssemblies(assemblies);
   }
 
-  function fetchParents() {
-    const moduleAssemblies = project.full.Modules[moduleUid]["0"].Assembly;
-
-    var allModuleAssemblies = [];
-
-    function processAssemblies(assemblyObj, currentPath = "") {
-      Object.entries(assemblyObj).forEach(([uid, assemblyData]) => {
-        const newPath = currentPath + uid + "/Assembly/"; // Update the path with the current UID
-
-        // Add the current assembly to the array with its path
-        allModuleAssemblies.push({
-          name: assemblyData.assemblyName,
-          uid: assemblyData.uid,
-          path: newPath,
-        });
-
-        // Check for children assemblies and process them recursively, passing the updated path
-        if (
-          assemblyData.Assembly &&
-          typeof assemblyData.Assembly === "object"
-        ) {
-          processAssemblies(assemblyData.Assembly, newPath);
-        }
-      });
-    }
-
-    if (moduleAssemblies && typeof moduleAssemblies === "object") {
-      processAssemblies(moduleAssemblies);
-    }
-
-    setAllAssemblies(allModuleAssemblies); // Uncomment and use if you're setting state in a framework like React
-    return allModuleAssemblies;
+  function handlePartsListChange(value) {
+    setNewAssembly({ ...newAssembly, partsList: value });
   }
 
   useEffect(() => {
-    fetchParents();
+    getAssemblies();
   }, []);
 
   return (
-    <div>
-      <div className="input-container-1column">
-        <Card>
-          <CardHeader>
-            {"Create Assembly " +
-              assembly.module +
-              assembly.subModule +
-              "-" +
-              assembly.buildStage +
-              "-" +
-              assembly.assyType +
-              assembly.assyNo}
-          </CardHeader>
-          <CardBody>
-            <div>
-              <div className="input-container-6column">
-                <Input label="Module" value={module} isDisabled />
-
-                <Select
-                  label="Submodule"
-                  value={assembly.subModule}
-                  onChange={(e) =>
-                    setAssembly({ ...assembly, subModule: e.target.value })
-                  }
-                >
-                  {subModules.map((value) => (
-                    <SelectItem
-                      key={value.value}
-                      value={value.value}
-                      textValue={value.value}
-                    >
-                      {value.value + "-" + value.name}
-                    </SelectItem>
-                  ))}
-                </Select>
-
-                <Select
-                  label="Build Stage"
-                  value={assembly.buildStage}
-                  onChange={(e) =>
-                    setAssembly({ ...assembly, buildStage: e.target.value })
-                  }
-                >
-                  <SelectItem key={"00"} value={"00"} textValue="00">
-                    {"00"}
-                  </SelectItem>
-                  <SelectItem key={"01"} value={"01"} textValue="01">
-                    {"01"}
-                  </SelectItem>
-                  <SelectItem key={"02"} value={"02"} textValue="02">
-                    {"02"}
-                  </SelectItem>
-                </Select>
-
-                <Select
-                  label="Assy Letter"
-                  onChange={(e) =>
-                    setAssembly({ ...assembly, assyType: e.target.value })
-                  }
-                >
-                  {assyType.map((value) => (
-                    <SelectItem
-                      key={value.value}
-                      value={value.value}
-                      textValue={value.value}
-                    >
-                      {value.value + "-" + value.name}
-                    </SelectItem>
-                  ))}
-                </Select>
-
-                <Input
-                  label="Assy #"
-                  onChange={(e) =>
-                    setAssembly({ ...assembly, assyNo: e.target.value })
-                  }
-                />
-
-                <Input
-                  label="Weight"
-                  endContent={"kg"}
-                  onChange={(e) =>
-                    setAssembly({ ...assembly, weight: e.target.value })
-                  }
-                />
-
-                <Select
-                  label="Progess"
-                  value={assembly.progress}
-                  onChange={(e) =>
-                    setAssembly({ ...assembly, progress: e.target.value })
-                  }
-                >
+    <div className="input-container-1column">
+      <Card>
+        <CardHeader>Create New Assembly</CardHeader>
+        <CardBody>
+          <div>
+            <div className="input-container-6column">
+              <Input
+                label="Assy No."
+                key={"assyNo"}
+                value={newAssembly.assyName}
+                onChange={(e) =>
+                  setNewAssembly({ ...newAssembly, assyName: e.target.value })
+                }
+              />
+              <Input
+                label="Assy Weight"
+                onChange={(e) =>
+                  setNewAssembly({ ...newAssembly, assyWeight: e.target.value })
+                }
+              />
+              <Input
+                label="Progress"
+                onChange={(e) =>
+                  setNewAssembly({
+                    ...newAssembly,
+                    assyProgress: e.target.value,
+                  })
+                }
+              />
+              <Input
+                label="Description"
+                onChange={(e) =>
+                  setNewAssembly({
+                    ...newAssembly,
+                    description: e.target.value,
+                  })
+                }
+              />
+              <Select
+                label="Parent"
+                onChange={(e) =>
+                  setNewAssembly({ ...newAssembly, assyParent: e.target.value })
+                }>
+                {allAssemblies.map((value) => (
                   <SelectItem
-                    key={"Complete"}
-                    value={"Complete"}
-                    textValue={"Complete"}
-                  >
-                    {"Complete"}
+                    value={value.uid}
+                    key={value.uid}
+                    textValue={value.assyName}>
+                    {value.assyName}
                   </SelectItem>
-                  <SelectItem
-                    key={"Not Complete"}
-                    value={"Not Complete"}
-                    textValue={"Not Complete"}
-                  >
-                    {"Not Complete"}
-                  </SelectItem>
-                </Select>
-
-                <Select
-                  label="Parent"
-                  value={assembly.parentAssembly}
-                  onChange={(e) =>
-                    setAssembly({ ...assembly, parentAssembly: e.target.value })
-                  }
-                >
-                  {allAssemblies.map((value) => (
-                    <SelectItem
-                      value={value.path}
-                      textValue={value.name}
-                      key={value.path}
-                    >
-                      {value.name}
-                    </SelectItem>
-                  ))}
-                </Select>
-              </div>
+                ))}
+              </Select>
             </div>
-          </CardBody>
-        </Card>
-      </div>
 
-      <div className="input-container-1column">
-        <Card>
-          <CardHeader>Parts List</CardHeader>
-          <CardBody>
-            <PartsListCreate
-              partsList={assembly.partsList}
-              updatePartsList={updatePartsList}
-              formatType={"BOM"}
-            />
-          </CardBody>
-        </Card>
-      </div>
+            <div style={{ margin: "10px" }}>
+              <Divider />
+            </div>
 
-      <div className="input-container-1column">
-        <Button onClick={handleAssemblySubmit}>Submit Assembly</Button>
-      </div>
-      <div>
-        <SnackBarComponent
-          open={snackBar.open}
-          message={snackBar.message}
-          severity={snackBar.severity}
-        />
-      </div>
+            <div>
+              <PartsListCreate
+                partsList={newAssembly.partsList}
+                updatePartsList={handlePartsListChange}
+                formatType={"BOM"}
+              />
+            </div>
+
+            <div>
+              <Button color="primary" onClick={() => handleNewAssy()}>
+                Submit
+              </Button>
+            </div>
+          </div>
+        </CardBody>
+      </Card>
     </div>
   );
 };
+
+// "assemblies": {
+//     "assemblyId1": {
+//       "name": "Main Assembly",
+//       "type": "assembly",
+//       "parentId": null
+//     },
+//     "subassemblyId1": {
+//       "name": "Subassembly A",
+//       "type": "subassembly",
+//       "parentId": "assemblyId1"
+//     }
+//   }
+
+//   "parts": {
+//     "partId1": {
+//       "name": "Part A1",
+//       "assemblyId": "subassemblyId1"
+//     },
+//     "partId2": {
+//       "name": "Part A2",
+//       "assemblyId": "subassemblyId1"
+//     }
+//   }
