@@ -115,6 +115,7 @@ export const Subassemblies = () => {
 
   function handleSubSubmit() {
     setFB("subs/", newSub)
+    console.log(newSub)
     fetchSubs()
   }
 
@@ -174,6 +175,7 @@ export const Subassemblies = () => {
                   updateParentState={handlePDFParse}
                 />
               </div>
+              <div>{"Hull: " + newSub.hull}</div>
               <div>
                 <PartsListCreate
                   partsList={newSub.partsList}

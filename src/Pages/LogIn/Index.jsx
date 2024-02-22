@@ -48,9 +48,7 @@ export default function LogIn() {
     e.preventDefault();
     setLoading(true);
 
-    if (auth?.currentUser?.email !== null) {
-      navigateTo("/home");
-    } else {
+    
       try {
         const userCredential = await signInWithEmailAndPassword(
           auth,
@@ -70,14 +68,13 @@ export default function LogIn() {
       } finally {
         setLoading(false); // Ensure loading is set to false in all cases
       }
-    }
   };
 
-  useEffect(() => {
-    if(auth?.currentUser?.email !== null) {
-      navigateTo("/home")
-    }
-  }, []);
+  // useEffect(() => {
+  //   if(auth?.currentUser?.email !== null) {
+  //     navigateTo("/home")
+  //   }
+  // }, []);
 
   return (
     <div

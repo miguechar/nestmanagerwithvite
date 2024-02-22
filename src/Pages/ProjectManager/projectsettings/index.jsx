@@ -13,6 +13,7 @@ import { getFB } from "../../../Components/Global/functions/firebase";
 import { useLocation } from "react-router-dom";
 import { ProjectMaterial } from "./Material";
 import { ProjectSTD } from "./STD";
+import { ProjectBT } from "./BT";
 
 export const SettingsBC = () => {
   return (
@@ -68,6 +69,9 @@ export const ProjectSettings = () => {
       </div>
       <div className="input-container-1column">
         <ProjectSTD moduleUid = {data.data.full.uid}/>
+      </div>
+      <div className="input-container-1column">
+        <ProjectBT moduleUid = {data.data.full.uid}/>
       </div>
     </div>
   );
