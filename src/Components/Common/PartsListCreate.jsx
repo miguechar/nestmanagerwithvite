@@ -113,8 +113,8 @@ export const PartsListCreate = ({ partsList, updatePartsList, formatType }) => {
                 key={formatType === "BOM" ? value.BOMKey : value.name}
               >
                 <ListBox
-                  title={formatType === "BOM" ? value.NAME : value.name}
-                  subtitle={formatType === "BOM" ? value.QTY : value.qty}
+                  title={formatType === "BOM" ? value.NAME + ", " +  value.WEIGHT + " kg, Material: " + value.MATERIAL + ", Descr: " + value.DESCR + ", Qty: " + value.QTY: value.name}
+                  subtitle={formatType === "BOM" ? "" : value.qty}
                   icon="trash"
                   clickEvent={() =>
                     deletePart(formatType === "BOM" ? value.NAME : value.name)

@@ -12,6 +12,7 @@ export const ProductHierarchy = ({
 }) => {
   const location = useLocation();
   const data = location.state;
+  const [rawAssemblies, setRawAssemblies] = useState([]);
   const [allAssemblies, setAllAssemblies] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState({
     assyName: "",
@@ -61,6 +62,7 @@ export const ProductHierarchy = ({
     roots.sort((a, b) => a.assyName.localeCompare(b.assyName));
 
     setAllAssemblies(roots);
+    setRawAssemblies(assemblies)
     return roots;
   }
 
@@ -68,8 +70,11 @@ export const ProductHierarchy = ({
     setSelectedProduct({ uid: value.uid, assyName: value.assyName });
   }
 
-  function handleEditButton(value) {
-    updateParentTab("editAssy");
+  function handleEditButton() {
+    const assemblyName = selectedProduct.assyName.split(" ");
+    console.log(assemblyName[0])
+    const selectedAssembly = rawAssemblies.filter((value) => value.assyName === assemblyName[0]);
+    updateParentTab({tab: "editAssy", product: selectedAssembly})
   }
 
   useEffect(() => {

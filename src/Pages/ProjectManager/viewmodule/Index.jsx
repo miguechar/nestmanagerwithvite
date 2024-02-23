@@ -12,6 +12,8 @@ import {
 } from "@nextui-org/react";
 import { ProductHierarchy } from "./ProductHierarchy";
 import { CreateAssembly } from "./CreateAssembly";
+import { EditAssembly } from "./EditAssembly";
+import { CBom } from "./CBom";
 
 export const ViewModuleBC = () => {
   return (
@@ -33,7 +35,10 @@ export const ViewModule = () => {
     full: data.data,
     moduleUid: data.moduleUid,
   });
-  const [selectedTab, setSelectedTab] = useState("createAssy")
+  const [selectedTab, setSelectedTab] = useState({
+    tab: "createAssy",
+    product: "",
+  });
 
   let tabs = [
     {
@@ -63,23 +68,40 @@ export const ViewModule = () => {
       id: "editAssy",
       label: "Edit Assy",
       content: (
-        <ProductHierarchy
-          selectedModule={project.module}
-          moduleID={project.moduleUid}
+        <EditAssembly
+          assy={selectedTab.product}
           projectUID={data.data.full.uid}
+          updateParentTab={updateParentTab}
+        />
+      ),
+    },
+    {
+      id: "cbom",
+      label: "CBOM",
+      content: (
+        <CBom
+          projectUID={data.data.full.uid}
+          selectedModule={project.module}
+          updateParentTab={updateParentTab}
         />
       ),
     },
   ];
 
   function updateParentTab(value) {
-    setSelectedTab(value)
+    setSelectedTab({ tab: value.tab, product: value.product });
   }
 
   return (
     <div>
-      <div style={{textAlign: "left"}}>
-        <Tabs aria-label="Dynamic tabs" items={tabs} selectedKey={selectedTab} onClick={(e) => setSelectedTab(e.target.value)}>
+      <div style={{ textAlign: "left" }}>
+        <Tabs
+          aria-label="Dynamic tabs"
+          items={tabs}
+          selectedKey={selectedTab.tab}
+          onClick={(e) =>
+            setSelectedTab({ ...selectedTab, tab: e.target.value })
+          }>
           {(item) => (
             <Tab key={item.id} title={item.label} value={item.id}>
               {item.content}
