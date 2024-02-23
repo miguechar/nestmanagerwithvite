@@ -4,13 +4,18 @@ import { getFB } from "../../../Components/Global/functions/firebase";
 import { Button, Card, CardBody, CardHeader } from "@nextui-org/react";
 import CustomizedTreeView from "../../../Components/Common/TreeView";
 
-export const ProductHierarchy = ({ selectedModule, moduleID, projectUID, updateParentTab }) => {
+export const ProductHierarchy = ({
+  selectedModule,
+  moduleID,
+  projectUID,
+  updateParentTab,
+}) => {
   const location = useLocation();
   const data = location.state;
   const [allAssemblies, setAllAssemblies] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState({
     assyName: "",
-    uid: ""
+    uid: "",
   });
 
   async function fetchAssemblies() {
@@ -24,28 +29,47 @@ export const ProductHierarchy = ({ selectedModule, moduleID, projectUID, updateP
     let map = {};
     let roots = [];
 
-    // Initialize map with all items and find root items
+    // Initialize map with all items and find root items, including description in the name
     assemblies.forEach((item) => {
-      map[item.uid] = { ...item, children: [] };
+      // Concatenate assyName and description
+      const nameWithDescription = `${item.assyName} (${item.description})`;
+
+      map[item.uid] = { ...item, assyName: nameWithDescription, children: [] };
       if (item.assyParent === "") roots.push(map[item.uid]);
     });
 
     // Populate children assemblies
     assemblies.forEach((item) => {
       if (item.assyParent !== "") {
-        map[item.assyParent].children.push(map[item.uid]);
+        // Ensure children also have their names updated to include descriptions
+        const updatedChild = {
+          ...map[item.uid],
+          assyName: `${item.assyName} (${item.description})`,
+        };
+        map[item.assyParent].children.push(updatedChild);
       }
     });
+
+    // Sort children of each assembly by assyName (including description)
+    Object.values(map).forEach((assembly) => {
+      if (assembly.children.length > 1) {
+        assembly.children.sort((a, b) => a.assyName.localeCompare(b.assyName));
+      }
+    });
+
+    // Optionally, sort roots if needed
+    roots.sort((a, b) => a.assyName.localeCompare(b.assyName));
+
     setAllAssemblies(roots);
     return roots;
   }
 
   function handleChildClick(value) {
-    setSelectedProduct({uid: value.uid, assyName: value.assyName})
-  };
+    setSelectedProduct({ uid: value.uid, assyName: value.assyName });
+  }
 
   function handleEditButton(value) {
-    updateParentTab("editAssy")
+    updateParentTab("editAssy");
   }
 
   useEffect(() => {
@@ -66,7 +90,9 @@ export const ProductHierarchy = ({ selectedModule, moduleID, projectUID, updateP
             </div>
             {selectedProduct.assyName ? (
               <div>
-                <Button onClick={() => handleEditButton()}>{"View: " + selectedProduct.assyName}</Button>
+                <Button onClick={() => handleEditButton()}>
+                  {"View: " + selectedProduct.assyName}
+                </Button>
               </div>
             ) : (
               <div></div>

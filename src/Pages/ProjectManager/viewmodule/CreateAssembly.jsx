@@ -26,7 +26,6 @@ export const CreateAssembly = ({ selectedModule, projectUID }) => {
   const [allAssemblies, setAllAssemblies] = useState([]);
 
   function handleNewAssy() {
-    console.log(newAssembly)
     setFB("Projects/" + projectUID + "/Assemblies/", newAssembly);
     getAssemblies();
   }
