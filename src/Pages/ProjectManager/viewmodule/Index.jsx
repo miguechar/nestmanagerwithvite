@@ -41,7 +41,7 @@ export const ViewModule = () => {
       label: "Create Assembly",
       content: (
         <CreateAssembly
-          selectedModule={project.module}
+          selectedModule={data.module}
           moduleID={project.moduleUid}
           projectUID={data.data.full.uid}
         />

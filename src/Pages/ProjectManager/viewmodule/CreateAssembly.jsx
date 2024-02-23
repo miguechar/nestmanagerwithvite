@@ -13,19 +13,20 @@ import { getFB, setFB } from "../../../Components/Global/functions/firebase";
 import { useEffect } from "react";
 import { PartsListCreate } from "../../../Components/Common/PartsListCreate";
 
-export const CreateAssembly = ({ module, projectUID }) => {
+export const CreateAssembly = ({ selectedModule, projectUID }) => {
   const [newAssembly, setNewAssembly] = useState({
     assyName: "",
     assyWeight: "",
     assyProgress: "",
     assyParent: "",
-    module: module,
+    module: selectedModule,
     description: "",
     partsList: [],
   });
   const [allAssemblies, setAllAssemblies] = useState([]);
 
   function handleNewAssy() {
+    console.log(newAssembly)
     setFB("Projects/" + projectUID + "/Assemblies/", newAssembly);
     getAssemblies();
   }
