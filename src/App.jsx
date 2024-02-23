@@ -26,7 +26,7 @@ import {
 } from "./Pages/ProjectManager/projectsettings";
 import { LocalNews } from "./Pages/LocalNews/Index";
 import { FabHome } from "./Pages/FabricationRequests/Home/Index";
-import { StandardParts } from "./Pages/ProjectManager/StandardParts/Index";
+import { StandardParts, StandardPartsBC } from "./Pages/ProjectManager/StandardParts/Index";
 import { TestingPage } from "./Pages/Testing/Index";
 import { PCPage } from "./Pages/BOM/Index";
 
@@ -199,7 +199,7 @@ function App() {
           <Route
             path="/projectmanager/viewmodule"
             element={
-              <WrapNav title={"View Module"} component={<ViewModule />} BC={ViewModuleBC}/>
+              <WrapNav title={"View Module"} component={<ViewModule />} BC={<ViewModuleBC/>}/>
             }
           />
           <Route
@@ -219,7 +219,7 @@ function App() {
           <Route
             path="/projectmanager/standardparts"
             element={
-              <WrapNav title={"Standard Parts"} component={<StandardParts />} />
+              <WrapNav title={"Standard Parts"} component={<StandardParts />} BC={<StandardPartsBC />} />
             }
           />
 

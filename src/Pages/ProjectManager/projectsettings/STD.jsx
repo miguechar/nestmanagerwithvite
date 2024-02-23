@@ -19,7 +19,10 @@ export const ProjectSTD = ({ moduleUid }) => {
   const [newStandardDetail, setNewStandardDetail] = useState({
     viewport: "",
     category: "",
-    title: ""
+    title: "",
+    lap064: "",
+    lap64159: "",
+    lap159254: ""
   });
 
   async function fetchStandardDetails() {
@@ -38,11 +41,7 @@ export const ProjectSTD = ({ moduleUid }) => {
     fetchStandardDetails();
   }
 
-  const initialColumns = [    
-    "title",
-    "viewport",
-    "category",
-  ];
+  const initialColumns = ["title", "viewport", "category"];
 
   const columns = [
     { name: "UID", uid: "uid", sortable: true },
@@ -77,47 +76,85 @@ export const ProjectSTD = ({ moduleUid }) => {
           <CardHeader>Standard Details</CardHeader>
           <CardBody>
             <div>
-              <div className="input-container-6column">
-                <Input
-                  label="Viewport"
-                  onChange={(e) =>
-                    setNewStandardDetail({
-                      ...newStandardDetail,
-                      viewport: e.target.value,
-                    })
-                  }
-                />
-                <Select
-                  label="Category"
-                  onChange={(e) =>
-                    setNewStandardDetail({
-                      ...newStandardDetail,
-                      category: e.target.value,
-                    })
-                  }
-                >
-                  {category.map((value) => (
-                    <SelectItem
-                      key={value.name}
-                      value={value.name}
-                      textValue={value.name}
-                    >
-                      {value.name}
-                    </SelectItem>
-                  ))}
-                </Select>
-                <Input
-                  label="Title"
-                  onChange={(e) =>
-                    setNewStandardDetail({
-                      ...newStandardDetail,
-                      title: e.target.value,
-                    })
-                  }
-                />
+              <div className="input-container-2column">
+                <div>
+                  <div className="input-container-3column">
+                    <Input
+                      label="Viewport"
+                      onChange={(e) =>
+                        setNewStandardDetail({
+                          ...newStandardDetail,
+                          viewport: e.target.value,
+                        })
+                      }
+                    />
+                    <Select
+                      label="Category"
+                      onChange={(e) =>
+                        setNewStandardDetail({
+                          ...newStandardDetail,
+                          category: e.target.value,
+                        })
+                      }>
+                      {category.map((value) => (
+                        <SelectItem
+                          key={value.name}
+                          value={value.name}
+                          textValue={value.name}>
+                          {value.name}
+                        </SelectItem>
+                      ))}
+                    </Select>
+                    <Input
+                      label="Title"
+                      onChange={(e) =>
+                        setNewStandardDetail({
+                          ...newStandardDetail,
+                          title: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  
+                  <div>
+                    {newStandardDetail.category === "Collar Plate" && (
+                      <div className="input-container-3column">
+                        <Input
+                          label="Lap (0-6.4)"
+                          onChange={(e) =>
+                            setNewStandardDetail({
+                              ...newStandardDetail,
+                              lap064: e.target.value,
+                            })
+                          }
+                        />
+                        <Input
+                          label="Lap (6.5 - 15.9)"
+                          onChange={(e) =>
+                            setNewStandardDetail({
+                              ...newStandardDetail,
+                              lap64159: e.target.value,
+                            })
+                          }
+                        />
+                        <Input
+                          label="Lap (15.9 - 25.4)"
+                          onChange={(e) =>
+                            setNewStandardDetail({
+                              ...newStandardDetail,
+                              lap159254: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
               <div style={{ textAlign: "right" }}>
-                <Button color="primary" onClick={() => handleNewStandardDetail()}>
+                <Button
+                  color="primary"
+                  onClick={() => handleNewStandardDetail()}>
                   Enter
                 </Button>
               </div>
