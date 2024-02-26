@@ -2,7 +2,8 @@ import { useState } from "react";
 import { getFB } from "../../../Components/Global/functions/firebase";
 import { useEffect } from "react";
 import DataTable from "../../../Components/Common/DataTable/Index";
-import { Card, CardBody, CardHeader } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader } from "@nextui-org/react";
+import { downloadObjectAsCsv } from "../../../Components/Processing/ObjToCsv";
 
 export const CBom = ({ selectedModule, projectUID, updateParentTab }) => {
   const [cbom, setcbom] = useState([]);
@@ -53,6 +54,10 @@ export const CBom = ({ selectedModule, projectUID, updateParentTab }) => {
 
   function handleSelected(value) {}
 
+  function downloadCsv() {
+    downloadObjectAsCsv(cbom, selectedModule + " - CBom")
+  }
+
   useEffect(() => {
     fetchCBom();
   }, []);
@@ -62,6 +67,9 @@ export const CBom = ({ selectedModule, projectUID, updateParentTab }) => {
       <Card>
         <CardHeader>CBOM</CardHeader>
         <CardBody>
+          <div style={{marginBottom: "10px"}}>
+            <Button color="secondary" onClick={() => downloadCsv()}>Download As CSV</Button>
+          </div>
           <div>
             <DataTable
               initialColumns={initialColumns}

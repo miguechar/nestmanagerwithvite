@@ -24,10 +24,12 @@ export const ProductHierarchy = ({
   async function fetchAssemblies() {
     const assemblies = await getFB(
       "Projects/" + data.data.full.uid + "/Assemblies"
-    );
-    createHierarchy(assemblies);
+    );    
+    const moduleAssys = assemblies.filter((value) => value.module === selectedModule)
+
+    createHierarchy(moduleAssys);
     
-    const weight = CalcWeight(assemblies)
+    const weight = CalcWeight(moduleAssys)
     setAssemblyWeight(weight);
   }
 

@@ -14,6 +14,7 @@ import { ProductHierarchy } from "./ProductHierarchy";
 import { CreateAssembly } from "./CreateAssembly";
 import { EditAssembly } from "./EditAssembly";
 import { CBom } from "./CBom";
+import { CreateNest } from "./CreateNest";
 
 export const ViewModuleBC = () => {
   return (
@@ -83,6 +84,16 @@ export const ViewModule = () => {
           projectUID={data.data.full.uid}
           selectedModule={project.module}
           updateParentTab={updateParentTab}
+        />
+      ),
+    },
+    {
+      id: "createNest",
+      label: "Create Nest",
+      content: (
+        <CreateNest
+          projectUID={data.data.full.uid}
+          selectedModule={project.module}
         />
       ),
     },
