@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import { BreadcrumbItem, Breadcrumbs, Tabs, Tab } from "@nextui-org/react";
+import { PMAddPlate } from "./AddPlate";
+import { useLocation } from "react-router-dom";
+import { PlateChart } from "./PlateChart";
 
 export const InventoryBC = () => {
   <Breadcrumbs>
@@ -12,16 +15,24 @@ export const Inventory = () => {
   const [selectedTab, setSelectedTab] = useState({
     tab: "inventory",
   });
+  const location = useLocation();
+  const data = location.state
+  const [project, setProject] = useState({
+    module: data.module,
+    full: data.data,
+    moduleUid: data.moduleUid,
+  });
+
   let tabs = [
     {
       id: "inventory",
       label: "Inventory",
-      content: <div></div>,
+      content: <PlateChart projectUID={data.data.full.uid}/>,
     },
     {
         id: "addPlate",
         label: "Add Plate",
-        content: <div></div>,
+        content: <PMAddPlate projectUID={data.data.full.uid}/>,
       },
   ];
   return (

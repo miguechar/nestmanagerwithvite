@@ -78,6 +78,29 @@ export default function CustomizedTreeView({ data, updateParentState }) {
     // Here, you can also update the state or call other functions as needed
   };
 
+  function handleNodeDoubleClick(nodeId, event) {
+    event.preventDefault(); // Prevent the default action
+    event.stopPropagation(); // Stop the event from propagating further
+    console.log('//Fmmfs005/ENG_SHIPCONSTRUCTOR/FFG/FFG62/Units/' + nodeId + '.dwg');
+
+
+    fetch(`http://10.102.30.12:8080/openfile`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ filePath: '//Fmmfs005/ENG_SHIPCONSTRUCTOR/FFG/FFG62/Units/' +  nodeId }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('File opened successfully', data);
+    })
+    .catch((error) => {
+      console.error('Error opening file:', error);
+    });
+  }
+  
+
   // Generate TreeItems from data
   function generateTreeItems(assemblies, parentId = '') {
     return assemblies.map((assembly) => {
@@ -89,6 +112,7 @@ export default function CustomizedTreeView({ data, updateParentState }) {
           nodeId={nodeId}
           label={assembly.assyName}
           onClick={(event) => handleNodeClick(assembly.uid, assembly.assyName, event)} // Add onClick event handler
+          onDoubleClick={(event) => handleNodeDoubleClick(assembly.assyName, event)} // Add this line
         >
           {assembly.children && assembly.children.length > 0 && generateTreeItems(assembly.children, nodeId)}
         </StyledTreeItem>
