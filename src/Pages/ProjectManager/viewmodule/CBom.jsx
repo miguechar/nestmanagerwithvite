@@ -26,7 +26,6 @@ export const CBom = ({ selectedModule, projectUID, updateParentTab }) => {
         cbom = cbom.concat(updatedPartsList); // Concatenate to flatten into cbom
       }
     }
-    console.log(cbom);
     setcbom(cbom); // Set the entire flattened array
   }
   

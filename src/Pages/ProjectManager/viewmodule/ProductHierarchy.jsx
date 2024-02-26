@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { getFB } from "../../../Components/Global/functions/firebase";
 import { Button, Card, CardBody, CardHeader } from "@nextui-org/react";
 import CustomizedTreeView from "../../../Components/Common/TreeView";
+import { CalcWeight } from "./CalcWeight";
 
 export const ProductHierarchy = ({
   selectedModule,
@@ -18,13 +19,18 @@ export const ProductHierarchy = ({
     assyName: "",
     uid: "",
   });
+  const [assemblyWeight, setAssemblyWeight] = useState("");
 
   async function fetchAssemblies() {
     const assemblies = await getFB(
       "Projects/" + data.data.full.uid + "/Assemblies"
     );
     createHierarchy(assemblies);
+    
+    const weight = CalcWeight(assemblies)
+    setAssemblyWeight(weight);
   }
+
 
   function createHierarchy(assemblies) {
     let map = {};
@@ -62,7 +68,7 @@ export const ProductHierarchy = ({
     roots.sort((a, b) => a.assyName.localeCompare(b.assyName));
 
     setAllAssemblies(roots);
-    setRawAssemblies(assemblies)
+    setRawAssemblies(assemblies);
     return roots;
   }
 
@@ -72,9 +78,11 @@ export const ProductHierarchy = ({
 
   function handleEditButton() {
     const assemblyName = selectedProduct.assyName.split(" ");
-    console.log(assemblyName[0])
-    const selectedAssembly = rawAssemblies.filter((value) => value.assyName === assemblyName[0]);
-    updateParentTab({tab: "editAssy", product: selectedAssembly})
+    console.log(assemblyName[0]);
+    const selectedAssembly = rawAssemblies.filter(
+      (value) => value.assyName === assemblyName[0]
+    );
+    updateParentTab({ tab: "editAssy", product: selectedAssembly });
   }
 
   useEffect(() => {
@@ -95,9 +103,14 @@ export const ProductHierarchy = ({
             </div>
             {selectedProduct.assyName ? (
               <div>
-                <Button onClick={() => handleEditButton()}>
-                  {"View: " + selectedProduct.assyName}
-                </Button>
+                <div>
+                  <Button onClick={() => handleEditButton()}>
+                    {"View: " + selectedProduct.assyName}
+                  </Button>
+                </div>
+                <div style={{textAlign: "right"}}>
+                  <p>{assemblyWeight + " kg"}</p>
+                </div>
               </div>
             ) : (
               <div></div>
