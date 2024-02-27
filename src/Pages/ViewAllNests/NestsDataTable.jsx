@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import DataTable from "../../Components/Common/DataTable/Index";
-import { getFB } from "../../Components/Global/functions/firebase";
+import { getFB, getTodayDate } from "../../Components/Global/functions/firebase";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { SearchIcon } from "../../Components/icons/SearchIcon";
+import RightDrawer from "../../Components/Common/Drawer";
+import NestReport from "../../Components/Common/NestReport";
 
 export const NestsDataTable = () => {
   const [nestsdb, setNestsdb] = useState({ loading: false, nests: [] });
@@ -10,6 +12,19 @@ export const NestsDataTable = () => {
   const [hullFilter, setHullFilter] = useState("");
   const [viewPdfstatus, setViewPdfstatus] = useState(true);
   const [selected, setSelected] = useState([]);
+  const [report, setReport] = useState({
+    startDate: "",
+    endDate: "",
+  });
+  const [drawer, setDrawer] = useState({
+    open: false,
+    title: "",
+    component: "",
+  });
+
+  function handleDrawerClose() {
+    setDrawer({ ...drawer, open: false });
+  }
 
   const columns = [
     { name: "UID", uid: "uid", sortable: true },
@@ -100,6 +115,42 @@ export const NestsDataTable = () => {
     }
   };
 
+  function generateReport() {
+    const filteredData = nestsdb.nests.filter((item) => {
+      const addedOn = new Date(item["addedon"]);
+      const startFilterDate = report.startDate
+        ? new Date(report.startDate)
+        : null;
+      const endFilterDate = report.endDate ? new Date(report.endDate) : null;
+
+      return (
+        (!startFilterDate || addedOn >= startFilterDate) &&
+        (!endFilterDate || addedOn <= endFilterDate)
+      );
+    });
+
+    var data = [];
+    for (let i = 0; i < filteredData.length; i++) {
+      const parts = filteredData[i].parts;
+      for (let t = 0; t < parts.length; t++) {
+        data.push({
+          name: parts[t].name,
+          qty: parts[t].qty,
+          heatNumber: filteredData[i].heatNumber,
+          serialNumber: filteredData[i].serialNumber,
+          stock: filteredData[i].stock,
+          dateCut: filteredData[i].dateCut,
+          shipTo: filteredData[i].shipTo,
+          nest: filteredData[i].nestName,
+        });
+      }
+    }
+
+    const date = getTodayDate()
+
+    setDrawer({ open: true, title: "Nest", component: <NestReport data={data} date={date} /> });
+  }
+
   useEffect(() => {
     setNestsdb({ ...nestsdb, loading: true });
     const fetchData = async () => {
@@ -168,16 +219,32 @@ export const NestsDataTable = () => {
                 </SelectItem>
               </Select>
             </div>
-            <div className="input-container-2column">
-              <div></div>
-              <div>
-                <Button
-                  color="secondary"
-                  isDisabled={viewPdfstatus}
-                  onClick={() => createArrayOfNestPath()}>
-                  View PDF
-                </Button>
-              </div>
+            <div className="input-container-4column">
+              <Input
+                label="Start Date"
+                type="date"
+                onChange={(e) =>
+                  setReport({ ...report, startDate: e.target.value })
+                }
+              />
+              <Input
+                label="End Date"
+                type="date"
+                onChange={(e) =>
+                  setReport({ ...report, endDate: e.target.value })
+                }
+              />
+
+              <Button color="primary" onClick={() => generateReport()}>
+                Generate Report
+              </Button>
+
+              <Button
+                color="secondary"
+                isDisabled={viewPdfstatus}
+                onClick={() => createArrayOfNestPath()}>
+                View PDF
+              </Button>
             </div>
           </div>
           <DataTable
@@ -191,6 +258,13 @@ export const NestsDataTable = () => {
       ) : (
         <div></div>
       )}
+      <RightDrawer
+        open={drawer.open}
+        title={drawer.title}
+        component={drawer.component}
+        onClose={handleDrawerClose}
+        width={"900px"}
+      />
     </div>
   );
 };

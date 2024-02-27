@@ -401,15 +401,7 @@ export const NavigationBar = () => {
           </NavbarItem>
         </NavbarContent>
         <NavbarContent justify="end">
-          <NavbarItem>
-            <PopOver
-              buttonTitle={"About this App"}
-              title={"Nest Manager"}
-              message={
-                "This app tries to improve traceability in SOC 1 implementing a 'Nest Manager' where Waterfront Engineers can upload their nest data and be able to record data such as heat# & SN. This can be done by uploading a PDF and 'Nest Manager' can automatically read the PDF and populate entry, The app does not store the PDF in any way just stores information such as part # and stock in a secure database backed by Google, otherwise known as 'Firebase'. This app also does not store pictures of any format or any sensitive information \n This app has other features such under 'Fabrication Requests' that looks to eliminate down time on messer table due to having to locate all code files for fab requests. "
-              }
-            />
-          </NavbarItem>
+          
           <NavbarItem>
             <ProfileIconDrop />
           </NavbarItem>
