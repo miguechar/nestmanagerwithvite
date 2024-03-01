@@ -26,6 +26,8 @@ export const NestsDataTable = () => {
     setDrawer({ ...drawer, open: false });
   }
 
+  const [userTargetPath, setUserTargetPath] = useState("Z:\\Plate Shop\\Waterfront Engineering\\Plate Shop - B30 Messer\\MC\\All Fabs")
+
   const columns = [
     { name: "UID", uid: "uid", sortable: true },
     { name: "Nest Name", uid: "nestName", sortable: true },
@@ -151,6 +153,47 @@ export const NestsDataTable = () => {
     setDrawer({ open: true, title: "Nest", component: <NestReport data={data} date={date} /> });
   }
 
+  async function makeCopy() {
+    const nests = nestsdb.nests;
+    const fabrequest = await getFB("/fabricationRequests/fabricationRequests")
+    var nestpaths = []
+    for(let i = 0; i < selected.length; i++) {
+      const selectedNests = nests.filter((value) => value.uid === selected[i])
+      const selectedNestPath = selectedNests[0].path + "\\" + selectedNests[0].nestName + ".pdf";
+      const frNumber = extractFR(selectedNests[0].nestName);
+      const module = fabrequest.filter((value) => value.frNo === frNumber)
+      const selectedHull = selectedNests[0].hull;
+      const targetPath = userTargetPath + "\\" + selectedHull; 
+      if(selectedHull !=="" && selectedNests[0].status === "Cut" && selectedNests[0].path !== "" && module[0].module.length === 3 ) {
+        nestpaths.push({nestPath: selectedNestPath, targetPath: targetPath + "/" + module[0].module})
+      }
+    }
+    console.log(nestpaths);
+    sendToFlask(nestpaths)
+  }
+
+  function sendToFlask(nestpaths) {
+    fetch('http://10.102.30.12:8080/copy_documents', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({nestpaths: nestpaths}),
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch((error) => console.error('Error:', error));
+  }
+
+  function extractFR(nestName) {
+    const pattern = /(FR.*)/;
+    const match = nestName.match(pattern);
+    if (match) {
+      return match[1]; // The first capturing group which contains everything after "FR"
+    }
+    return null; // Return null if no match is found
+  }  
+
   useEffect(() => {
     setNestsdb({ ...nestsdb, loading: true });
     const fetchData = async () => {
@@ -258,6 +301,10 @@ export const NestsDataTable = () => {
       ) : (
         <div></div>
       )}
+      <div>
+        <Button color="primary" onClick={makeCopy}>Make Copy</Button>
+        <Input value={userTargetPath} label="Target Path" onChange={(e) => setUserTargetPath(e.target.value)} />
+      </div>
       <RightDrawer
         open={drawer.open}
         title={drawer.title}

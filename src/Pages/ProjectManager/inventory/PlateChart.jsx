@@ -10,6 +10,7 @@ export const PlateChart = ({ projectUID }) => {
   const initialColumns = [
     "stock",
     "heatNumber",
+    "serialNumber",
     "size",
     "utilization",
     "plateNumber",
@@ -19,6 +20,7 @@ export const PlateChart = ({ projectUID }) => {
     { name: "UID", uid: "uid", sortable: true },
     { name: "Stock", uid: "stock", sortable: true },
     { name: "Heat Number", uid: "heatNumber", sortable: true },
+    { name: "Serial Number", uid: "serialNumber", sortable: true },
     { name: "Size", uid: "size", sortable: true },
     { name: "Utilization", uid: "utilization", sortable: true },
     { name: "Plate Number", uid: "plateNumber", sortable: true },

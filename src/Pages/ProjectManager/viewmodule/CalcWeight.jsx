@@ -4,7 +4,7 @@ export function CalcWeight(assemblies) {
     const partsList = assemblies[i].partsList;
     if (partsList) {
       for (let r = 0; r < partsList.length; r++) {
-        sum += parseFloat(partsList[r].WEIGHT);
+        sum += parseFloat(partsList[r].WEIGHT * partsList[r].QTY);
       }
     }
   }

@@ -19,7 +19,8 @@ export const CBom = ({ selectedModule, projectUID, updateParentTab }) => {
             part.uid = part.BOMKEY; // Change BOMKEY to uid
             delete part.BOMKEY;
           }
-          part.assyParent = moduleAssys[i].assyParent; 
+          const parent = moduleAssys.filter((value) => value.uid === moduleAssys[i].assyParent)
+          part.assyParent =  parent[0].assyName
           part.assyName = moduleAssys[i].assyName;
           return part;
         });

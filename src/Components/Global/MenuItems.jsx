@@ -525,6 +525,9 @@ export const ffgModules = [
         name: "A1L",
     },
     {
+        name: "E2D",
+    },
+    {
         name: "A2L",
     },
     {
