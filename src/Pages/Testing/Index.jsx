@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import CustomizedTreeView from "../../Components/Common/TreeView";
 import { CircularProgress } from "@nextui-org/react";
 import { TextField } from "@mui/material";
+import { OCR } from "./OCR";
 
 export const TestingPage = () => {
   const [folders, setFolders] = useState([]);
@@ -120,7 +121,7 @@ export const TestingPage = () => {
 
   return (
     <div className="input-container-1column">
-      <div>
+      {/* <div>
         <Card>
           <CardHeader>Navigator</CardHeader>
           <CardBody>
@@ -141,12 +142,16 @@ export const TestingPage = () => {
         <Card>
           <CardHeader>TESTING ONLY</CardHeader>
           <CardBody>
-            {/* <Button onClick={createPDF} color="success">Press Me</Button> */}
             <TextField type="file" onChange={handleFileChange} />
             <Button color="secondary" onClick={uploadFile}>Upload</Button>
           </CardBody>
         </Card>
+      </div> */}
+
+      <div>
+        <OCR />
       </div>
+      
     </div>
   );
 };

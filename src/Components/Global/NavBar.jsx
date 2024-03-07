@@ -387,6 +387,13 @@ export const NavigationBar = () => {
               startContent={icons.flash}>
               PC
             </DropdownItem>
+            <DropdownItem
+              key="autoscaling"
+              description=""
+              onClick={() => navigateTo("/teeInfo")}
+              startContent={icons.flash}>
+              Tee Info
+            </DropdownItem>
           </DropdownMenu>
         </Dropdown>
 
