@@ -20,3 +20,6 @@ export const auth = getAuth(app)
 export const googleProvider = new GoogleAuthProvider();
 export const db = getDatabase(app);
 export const storage = getStorage(app);
+
+export const ip = "10.102.13.68";
+export const port = "8070";

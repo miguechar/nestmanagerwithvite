@@ -26,6 +26,7 @@ import { auth } from "../../../Config";
 import SnackBarComponent from "../../../Components/Common/Snackbar";
 import Dialog from "../../../Components/Common/Dialog";
 import shipdiv from "../../../assets/imgs/shipdiv.png";
+import { ip, port } from "../../../Config";
 
 export const ViewAllFabs = () => {
   const [fabrequests, setFabrequests] = useState([]);
@@ -157,7 +158,7 @@ export const ViewAllFabs = () => {
       }
     }
 
-    const response = await fetch("http://10.102.30.12:8080/merge-pdfs", {
+    const response = await fetch("http://" + ip + ":" + port +"/merge-pdfs", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -202,7 +203,7 @@ export const ViewAllFabs = () => {
       footer: footer,
     });
 
-    fetch("http://10.102.30.12:8080/receive_fab_req_stickers", {
+    fetch("http://" + ip + ":" + port +"/receive_fab_req_stickers", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

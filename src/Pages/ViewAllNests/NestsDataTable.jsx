@@ -5,6 +5,7 @@ import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { SearchIcon } from "../../Components/icons/SearchIcon";
 import RightDrawer from "../../Components/Common/Drawer";
 import NestReport from "../../Components/Common/NestReport";
+import { port, ip } from "../../Config";
 
 export const NestsDataTable = () => {
   const [nestsdb, setNestsdb] = useState({ loading: false, nests: [] });
@@ -100,7 +101,7 @@ export const NestsDataTable = () => {
   }
 
   const handleViewPdfClick = async (pdfPath) => {
-    const response = await fetch("http://10.102.30.12:8080/merge-pdfs", {
+    const response = await fetch("http://" + ip + ":" + port + "/merge-pdfs", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -173,7 +174,7 @@ export const NestsDataTable = () => {
   }
 
   function sendToFlask(nestpaths) {
-    fetch('http://10.102.30.12:8080/copy_documents', {
+    fetch("http://" + ip + ":" + port +"/copy_documents", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

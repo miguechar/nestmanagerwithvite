@@ -35,6 +35,7 @@ import {
 } from "./Pages/ProjectManager/StandardParts/Index";
 import { TestingPage } from "./Pages/Testing/Index";
 import { PCPage } from "./Pages/BOM/Index";
+import { TeeInfo } from "./Pages/TeeInfo/Index";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -169,6 +170,11 @@ function App() {
                 component={<Subassemblies />}
               />
             }
+          />
+
+          <Route
+            path="/teeInfo"
+            element={<WrapNav title={"View T's"} component={<TeeInfo />} />}
           />
 
           {/* BOM */}

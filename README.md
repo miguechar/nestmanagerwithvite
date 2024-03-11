@@ -1,8 +1,12 @@
-# React + Vite
+install all dependencies via npm listed onder package.json
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Under src/Config.jsx line 24-25 enter IPv4 address and 8080 as port (the only one that seems to work for me)
+This will the port that the backend server will run off of. 
 
-Currently, two official plugins are available:
+In vite.config.js change line 11 to IPv4 and maintain the same port (the port on client side will not make a difference in the rest of code)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+To run client side server run
+
+```
+npm run dev
+```

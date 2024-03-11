@@ -28,7 +28,7 @@ import {
 import { AcmeLogo } from "./AcmeLogo.jsx";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth } from "../../Config.jsx";
+import { auth, ip, port } from "../../Config.jsx";
 import PopOver from "../Common/PopOver.jsx";
 import Dialog from "../Common/Dialog.jsx";
 import { userAvatarts } from "../icons/AvatarPP.jsx";
@@ -214,7 +214,7 @@ export const NavigationBar = () => {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      fetch("http://10.102.30.12:8080/api/status")
+      fetch("http://" + ip + ":" + port +"/api/status")
         .then((response) => response.json())
         .then((data) => setServerMessage(data.status))
         .catch(() => setServerMessage("Server is Down"));
@@ -386,6 +386,13 @@ export const NavigationBar = () => {
               onClick={() => navigateTo("/bom")}
               startContent={icons.flash}>
               PC
+            </DropdownItem>
+            <DropdownItem
+              key="autoscaling"
+              description=""
+              onClick={() => navigateTo("/teeInfo")}
+              startContent={icons.flash}>
+              Tee Info
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>

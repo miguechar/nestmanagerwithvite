@@ -7,6 +7,7 @@ import PDFParse from "../../Components/Processing/PDFParse";
 import { PartsListCreate } from "../../Components/Common/PartsListCreate";
 import { deleteFB } from "../../Components/Global/functions/firebase";
 import Dialog from "../../Components/Common/Dialog";
+import { ip, port } from "../../Config";  
 
 export const Subassemblies = () => {
   const [subs, setSubs] = useState([]);
@@ -92,7 +93,7 @@ export const Subassemblies = () => {
     })
 
 
-    fetch("http://10.102.30.12:8080/receive_array", {
+    fetch("http://" + ip + ":" + port +"/receive_array", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

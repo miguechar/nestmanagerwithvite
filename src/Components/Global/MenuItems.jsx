@@ -43,6 +43,14 @@ export const searchOptions = [
 
 export const hullOptions = [
     {
+        value: "0489",
+        label: "0489 - LCS 29",
+    },
+    {
+        value: "0491",
+        label: "0491 - LCS 31",
+    },
+    {
         value: "0831",
         label: "0831 - MMSC 1",
     },
@@ -526,6 +534,9 @@ export const ffgModules = [
     },
     {
         name: "E2D",
+    },
+    {
+        name: "A2D",
     },
     {
         name: "A2L",

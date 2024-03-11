@@ -84,7 +84,7 @@ export default function CustomizedTreeView({ data, updateParentState }) {
     console.log('//Fmmfs005/ENG_SHIPCONSTRUCTOR/FFG/FFG62/Units/' + nodeId + '.dwg');
 
 
-    fetch(`http://10.102.30.12:8080/openfile`, {
+    fetch("http://" + ip + ":" + port +"/openfile", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

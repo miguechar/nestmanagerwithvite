@@ -20,6 +20,7 @@ import {
 } from "../../Components/Global/functions/firebase";
 import RightDrawer from "../../Components/Common/Drawer";
 import PCPartsList from "../../Components/Common/PCPartsList";
+import { ip, port } from "../../Config";
 
 export const PCPage = () => {
   const [folders, setFolders] = useState([]);
@@ -115,7 +116,7 @@ export const PCPage = () => {
 
   function handleOpenDirectories() {
     axios
-      .post("http://10.102.30.12:8080/open-directories", { selectedPCs })
+      .post("http://" + ip + ":" + port +"/open-directories", { selectedPCs })
       .then((response) => {
         alert("Directories should now be open in File Explorer.");
       })
@@ -162,7 +163,7 @@ export const PCPage = () => {
     });
     setLoading(true);
     axios
-      .post("http://10.102.30.12:8080/search-part", {
+      .post("http://" + ip + ":" + port +"/search-part", {
         selectedPCs: selectedPCs, // Make sure this state contains the paths of selected directories
         part: searchTerm,
       })
@@ -200,7 +201,7 @@ export const PCPage = () => {
 
   function handlePartsListSearch() {
     axios
-      .post("http://10.102.30.12:8080/search-parts-list", {
+      .post("http://" + ip + ":" + port +"/search-parts-list", {
         selectedPCs: selectedPCs,
       })
       .then((response) => {
@@ -263,7 +264,7 @@ export const PCPage = () => {
   }
 
   useEffect(() => {
-    fetch("http://10.102.30.12:8080/get-folders")
+    fetch("http://" + ip + ":" + port +"/get-folders")
       .then((response) => response.json())
       .then((data) => setFolders(data))
       .catch((error) => console.error("Error fetching folders:", error));

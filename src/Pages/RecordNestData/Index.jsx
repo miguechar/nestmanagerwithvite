@@ -10,6 +10,7 @@ import {
 } from "@nextui-org/react";
 import { getFB, updateFB } from "../../Components/Global/functions/firebase";
 import Dialog from "../../Components/Common/Dialog";
+import { ip, port } from "../../Config";
 
 export const RecordNestData = () => {
   const [message, setMessage] = useState("Server loading...");
@@ -77,7 +78,7 @@ export const RecordNestData = () => {
     };
 
     try {
-        const response = await fetch('http://10.102.30.12:8080/update_nest_data', { // Update your Flask app's URL
+        const response = await fetch("http://" + ip + ":" + port + "/update_nest_data", { // Update your Flask app's URL
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -100,7 +101,7 @@ export const RecordNestData = () => {
 
     const fbpath = ("nests/" + nestdata.uid + "/");
     const updatedNest = {...nestdata, status: "Cut"}
-    await updateFB(fbpath, nestdata);
+    updateFB(fbpath, nestdata);
     setNestData()
 
     const footer = (
