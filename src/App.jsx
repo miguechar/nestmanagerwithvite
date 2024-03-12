@@ -27,7 +27,6 @@ import {
   ProjectSettings,
   SettingsBC,
 } from "./Pages/ProjectManager/projectsettings";
-import { LocalNews } from "./Pages/LocalNews/Index";
 import { FabHome } from "./Pages/FabricationRequests/Home/Index";
 import {
   StandardParts,
@@ -36,6 +35,7 @@ import {
 import { TestingPage } from "./Pages/Testing/Index";
 import { PCPage } from "./Pages/BOM/Index";
 import { TeeInfo } from "./Pages/TeeInfo/Index";
+import { TrialCards } from "./Pages/TrialCards/Index";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -249,17 +249,18 @@ function App() {
             }
           />
 
-          {/* Local News */}
-          <Route
-            path="/localnews"
-            element={<WrapNav title={"Local News"} component={<LocalNews />} />}
-          />
-
           {/* Testing Page */}
           <Route
             path="/testing"
             element={
               <WrapNav title={"Testing Page"} component={<TestingPage />} />
+            }
+          />
+
+          <Route
+            path="/trialcards"
+            element={
+              <WrapNav title={"Trial Cards"} component={<TrialCards />} />
             }
           />
         </Routes>

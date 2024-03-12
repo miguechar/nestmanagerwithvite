@@ -26,16 +26,23 @@ import Dialog from "../Dialog";
 import { useEffect } from "react";
 
 const statusColorMap = {
-  "Cut": "success",
+  Cut: "success",
   "Not Cut": "danger",
-};``
+};
+``;
 
 const statusOptions = [
   { name: "Cut", uid: "Cut" },
   { name: "Not Cut", uid: "Not Cut" },
 ];
 
-export default function DataTable({ rows, columns, initialColumns, updateParent, searchField }) {
+export default function DataTable({
+  rows,
+  columns,
+  initialColumns,
+  updateParent,
+  searchField,
+}) {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [visibleColumns, setVisibleColumns] = React.useState(
@@ -105,9 +112,7 @@ export default function DataTable({ rows, columns, initialColumns, updateParent,
     switch (columnKey) {
       case "avatar":
         return (
-          <User
-            avatarProps={{ radius: "lg", src: user.avatar }}
-            >
+          <User avatarProps={{ radius: "lg", src: user.avatar }}>
             {user.email}
           </User>
         );
@@ -327,7 +332,6 @@ export default function DataTable({ rows, columns, initialColumns, updateParent,
     const selectedKeysArray = Array.from(selectedKeys);
     updateParent(selectedKeysArray);
   }, [selectedKeys]);
-  
 
   return (
     <Table
@@ -356,13 +360,21 @@ export default function DataTable({ rows, columns, initialColumns, updateParent,
         )}
       </TableHeader>
       <TableBody emptyContent={"No items found"} items={sortedItems}>
-        {(item) => (
-          <TableRow key={item.uid ? item.uid : item.name}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
+        {(item, itemIndex) => {
+          if (!item.uid) {
+            console.error("Item missing UID:", item);
+          }
+          // Use itemIndex as a fallback key. It's less optimal but better than having duplicate or undefined keys.
+          // Preferably, ensure every item has a unique 'uid' to use as a key.
+          const key = item.uid || `fallback-key-${itemIndex}`;
+          return (
+            <TableRow key={key}>
+              {(columnKey) => (
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          );
+        }}
       </TableBody>
     </Table>
   );
