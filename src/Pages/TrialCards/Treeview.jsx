@@ -1,21 +1,39 @@
 import { useEffect } from "react";
 import LCSTreeComponent from "./TreeComponent";
-import { useState } from "react";
-import { Card, CardBody, CardHeader } from "@nextui-org/react";
+import { useState, useMemo } from "react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Divider,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Input,
+  Switch,
+} from "@nextui-org/react";
+import { paths } from "./paths";
 
 export const LCSTreeView = ({ data, updateParentTab }) => {
   const [tree, setTree] = useState(null);
+  const [filterTree, setFilterTree] = useState(null);
+  const [switchState, setSwitchState] = useState(false);
+  const [selectedHulls, setSelectedHulls] = useState([]);
+  const [selectedHullData, setSelectedHullData] = useState([]);
+  const [allData, setAllData] = useState(null)
 
-  function transformDataForTreeView() {
+  function transformDataForTreeView(x) {
     // Check if data is undefined or null
-    if (!data) {
+    if (!x) {
       console.error("Data is undefined or not yet available.");
       return; // Exit the function if data is not available
     }
-  
+
     const compartments = {};
-  
-    data.forEach((vessel) => {
+
+    x.forEach((vessel) => {
       vessel.data.forEach((item) => {
         if (!compartments[item.COMPARTMENT]) {
           compartments[item.COMPARTMENT] = {
@@ -33,7 +51,7 @@ export const LCSTreeView = ({ data, updateParentTab }) => {
         });
       });
     });
-  
+
     const treeData = Object.keys(compartments).map((key) => {
       const comp = compartments[key];
       return {
@@ -41,7 +59,7 @@ export const LCSTreeView = ({ data, updateParentTab }) => {
         name: comp.name,
         children: comp.vessels.map((v) => ({
           id: `vessel-${v.uid}`,
-          name: `${v.vessel}: ${v.COMPARTMENT}`,
+          name: `${v.vessel}: ${v.COMPARTMENT},  ${v["Current State"]}`,
           children: [
             {
               id: `narrative-${v.uid}`,
@@ -51,32 +69,139 @@ export const LCSTreeView = ({ data, updateParentTab }) => {
         })),
       };
     });
-  
-    setTree(treeData);
+
+    // setTree(treeData);
+    return treeData;
   }
-  
+
+  function handleCompartmentSearch(filter) {
+    const filtered = tree.filter((value) =>
+      value.name.toLowerCase().includes(filter.toLowerCase())
+    );
+    setFilterTree(filtered);
+    console.log(filterTree);
+  }
+
+  function findSimilarNarratives() {}
+
+  const selectedValue = useMemo(
+    () => Array.from(selectedHulls).join(", ").replaceAll("_", " "),
+    [selectedHulls]
+  );
 
   useEffect(() => {
-    console.log(data);
-    if(data !== null) {
-        transformDataForTreeView()
-    } else {
-        updateParentTab({ tab: "viewAllTC" })
+    const selected = selectedValue.split(", ");
+
+    let datafromS = [];
+    for (let i = 0; i < data.length; i++) {
+      for (let t = 0; t < selected.length; t++) {
+        if (data[i].vessel === selected[t]) {
+          datafromS.push(data[i]);
+        }
+      }
     }
-    
-    
-  }, []); 
-  
-  return (<div>
+
+    if (datafromS !== null) {
+      let notCompleted = [];
+      for (let i = 0; i < datafromS.length; i++) {
+        const notCompletedFilter = datafromS[i].data.filter(
+          (value) => value["Current State"] !== "Card Complete"
+        );
+        notCompleted.push({
+          data: notCompletedFilter,
+          vessel: datafromS[i].vessel,
+        });
+      }
+      const value = transformDataForTreeView(notCompleted);
+      setTree(value);
+
+      setSelectedHullData(datafromS)
+    } else {
+      updateParentTab({ tab: "viewAllTC" });
+    }
+  }, [selectedHulls]);
+
+  useEffect(() => {
+    if (switchState && selectedHullData) {
+      const ref = transformDataForTreeView(selectedHullData);
+      setTree(ref);
+    }
+    if (!switchState) {
+      let notCompleted = [];
+      for (let i = 0; i < selectedHullData.length; i++) {
+        const notCompletedFilter = selectedHullData[i].data.filter(
+          (value) => value["Current State"] !== "Card Complete"
+        );
+        notCompleted.push({ data: notCompletedFilter, vessel: selectedHullData[i].vessel });
+      }
+      const value = transformDataForTreeView(notCompleted);
+      setTree(value);
+    }
+  }, [switchState]);
+
+  useEffect(() => {
+    setAllData(data)
+  }, [])
+  return (
     <div>
+      <div>
         <Card>
-            <CardHeader>By Compartment</CardHeader>
-            <CardBody>
-                <div className="input-container-1column">
-                    {tree ? <LCSTreeComponent data={tree} /> : ""}
-                </div>
-            </CardBody>
+          <CardHeader>By Compartment</CardHeader>
+          <CardBody>
+            <div>
+              <div className="input-container-4column">
+                <Input
+                  label="Compartment"
+                  onChange={(e) => handleCompartmentSearch(e.target.value)}
+                />
+                <Switch
+                  isSelected={switchState}
+                  onValueChange={setSwitchState}
+                  color="primary">
+                  {switchState ? "Showing All" : "Showing Not Completed"}
+                </Switch>
+                <Dropdown>
+                  <DropdownTrigger>
+                    <Button variant="bordered">{selectedValue}</Button>
+                  </DropdownTrigger>
+                  <DropdownMenu
+                    selectionMode="multiple"
+                    selectedKeys={selectedHulls}
+                    aria-label="Multiple selection example"
+                    closeOnSelect={false}
+                    variant="flat"
+                    onSelectionChange={setSelectedHulls}>
+                    {paths.map((value) => (
+                      <DropdownItem key={value.vessel}>
+                        {value.vessel}
+                      </DropdownItem>
+                    ))}
+                  </DropdownMenu>
+                </Dropdown>
+              </div>
+
+              <div style={{ margin: "10px" }}>
+                <Divider />
+              </div>
+
+              <div className="input-container-1column">
+                {tree ? (
+                  filterTree ? (
+                    <LCSTreeComponent data={filterTree} />
+                  ) : (
+                    <LCSTreeComponent data={tree} />
+                  )
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          </CardBody>
         </Card>
+      </div>
+      <div>
+        <Button color="primary">Testing Only</Button>
+      </div>
     </div>
-  </div>);
+  );
 };

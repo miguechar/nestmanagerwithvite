@@ -25,6 +25,7 @@
     "firebase": "^10.7.2",
     "framer-motion": "^11.0.3",
     "moment": "^2.30.1",
+    "natural": "^6.11.1",
     "pdfjs-dist": "^4.0.379",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

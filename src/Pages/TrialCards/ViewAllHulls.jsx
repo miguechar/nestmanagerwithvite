@@ -25,7 +25,6 @@ export const LCSViewAllTC = ({updateParentState}) => {
         body: JSON.stringify(paths),
       });
       const data = await response.json();
-      console.log(data); 
       setData(data);
       setLoading(false);
       updateParentState(data);
@@ -68,7 +67,7 @@ export const LCSViewAllTC = ({updateParentState}) => {
               <CardHeader>{value.vessel + " Trial Cards"}</CardHeader>
               <CardBody>
                 <div className="input-container-1column">
-                  {value.data.length > 0 ? (
+                  {value.data ? (
                     <DataTable
                       rows={value.data}
                       initialColumns={initialColumns}
