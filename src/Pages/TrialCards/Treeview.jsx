@@ -15,6 +15,7 @@ import {
   Switch,
 } from "@nextui-org/react";
 import { paths } from "./paths";
+import { trades } from "./trades";
 
 export const LCSTreeView = ({ data, updateParentTab }) => {
   const [tree, setTree] = useState(null);
@@ -79,7 +80,6 @@ export const LCSTreeView = ({ data, updateParentTab }) => {
       value.name.toLowerCase().includes(filter.toLowerCase())
     );
     setFilterTree(filtered);
-    console.log(filterTree);
   }
 
   function findSimilarNarratives() {}
