@@ -86,7 +86,6 @@ export default function LCSTreeComponent({ data, updateParentState }) {
         key={node.id}
         nodeId={node.id}
         label={node.name}
-        onDoubleClick={() => console.log(node.id)}
       >
         {node.children && generateTreeItems(node.children)}
       </StyledTreeItem>
