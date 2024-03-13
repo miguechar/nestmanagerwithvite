@@ -1,8 +1,16 @@
-# React + Vite
+Nest Manager Server Side
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Create virtual environment before installing any packages(@route directory) with:
+```
+python -m venv env
+```
 
-Currently, two official plugins are available:
+To activate venv run env\scripts\activate.bat (activate before next step)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+Go to root directory of repo and run
+```
+pip install -r requirements.txt
+```
+
+Run server with 
