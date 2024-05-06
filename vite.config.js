@@ -7,8 +7,8 @@ export default defineConfig({
   logLevel: 'info',
   plugins: [
     react()],
-  server: {
-    host: '10.102.13.68',
-    port: 5173,
-  },
+    // server: {
+    //   host: '10.102.13.106',
+    //   port: 8070,
+    // },
 })

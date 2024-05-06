@@ -8,6 +8,7 @@ import {
 import { useState, useEffect } from "react";
 import DataTable from "../../Components/Common/DataTable/Index";
 import { paths } from "./paths";
+import { ip, port } from "../../Config";
 
 export const LCSViewAllTC = ({updateParentState}) => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -17,7 +18,7 @@ export const LCSViewAllTC = ({updateParentState}) => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://10.102.13.68:8070/lcstrialcards", {
+      const response = await fetch("http://" + ip + ":" + port + "/lcstrialcards", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

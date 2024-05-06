@@ -16,22 +16,22 @@ import { EngineeringInbox } from "./Pages/FabricationRequests/EngineeringInbox";
 import { PlateshopInbox } from "./Pages/FabricationRequests/PlateshopInbox";
 import { ManageUsers } from "./Pages/AvatarPages/ManageUsers/Index";
 import { K2Project } from "./Pages/K2Project/Index";
-import { ProjectManager, ProjectManagerBC } from "./Pages/ProjectManager/Index";
-import {
-  ViewModule,
-  ViewModuleBC,
-} from "./Pages/ProjectManager/viewmodule/Index";
+// import { ProjectManager, ProjectManagerBC } from "./Pages/ProjectManager/Index";
+// import {
+//   ViewModule,
+//   ViewModuleBC,
+// } from "./Pages/ProjectManager/viewmodule/Index";
 import { Subassemblies } from "./Pages/Subassemblies";
-import { Inventory, InventoryBC } from "./Pages/ProjectManager/inventory/Index";
-import {
-  ProjectSettings,
-  SettingsBC,
-} from "./Pages/ProjectManager/projectsettings";
+// import { Inventory, InventoryBC } from "./Pages/ProjectManager/inventory/Index";
+// import {
+//   ProjectSettings,
+//   SettingsBC,
+// } from "./Pages/ProjectManager/projectsettings";
 import { FabHome } from "./Pages/FabricationRequests/Home/Index";
-import {
-  StandardParts,
-  StandardPartsBC,
-} from "./Pages/ProjectManager/StandardParts/Index";
+// import {
+//   StandardParts,
+//   StandardPartsBC,
+// } from "./Pages/ProjectManager/StandardParts/Index";
 import { TestingPage } from "./Pages/Testing/Index";
 import { PCPage } from "./Pages/BOM/Index";
 import { TeeInfo } from "./Pages/TeeInfo/Index";
@@ -198,7 +198,7 @@ function App() {
           />
 
           {/* Project Manage */}
-          <Route
+          {/* <Route
             path="/projectmanager"
             element={
               <WrapNav
@@ -247,7 +247,7 @@ function App() {
                 BC={<StandardPartsBC />}
               />
             }
-          />
+          /> */}
 
           {/* Testing Page */}
           <Route
