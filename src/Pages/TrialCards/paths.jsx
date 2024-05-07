@@ -14,14 +14,14 @@ export const paths = [
     },
     {
         vessel: "LCS 27",
-        path: "Y:/Trial Cards/LCS 27/(a) Trial Card Master/27 Cards 3-12-24.xlsx"
+        path: "Y:/Trial Cards/LCS 27/(a) Trial Card Master/27 Cards 5-3-24.xlsx"
     },
     {
         vessel: "LCS 29",
-        path: "Y:/Trial Cards/LCS 29/(a) Trial Card Master/29 Cards 3-12-24.xlsx"
+        path: "Y:/Trial Cards/LCS 29/(a) Trial Card Master/29 Cards 5-3-24.xlsx"
     },
     {
         vessel: "LCS 31",
-        path: "Y:/Trial Cards/LCS 31/(a) Trial Card Master/31 Cards 3-11-24.xlsx"
+        path: "Y:/Trial Cards/LCS 31/(a) Trial Card Master/31 Cards 5-6-24.xlsx"
     },
 ]

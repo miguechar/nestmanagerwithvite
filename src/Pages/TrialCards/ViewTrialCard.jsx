@@ -28,7 +28,6 @@ export const ViewTrialCard = () => {
 
   useEffect(() => {
     setTrialCard(data.data);
-    console.log(data.data)
   }, []);
 
   return (
