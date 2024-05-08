@@ -28,6 +28,7 @@ export const ViewTrialCard = () => {
 
   useEffect(() => {
     setTrialCard(data.data);
+    console.log(data.data)
   }, []);
 
   return (
@@ -38,9 +39,9 @@ export const ViewTrialCard = () => {
             <Typography
               variant="h5"
               fontWeight="bold"
-              color={trialCard.trialcard[0]["Status"] === "O" ? "green" : "red"}
+              color={trialCard["Status"] === "O" ? "green" : "red"}
               sx={{ marginBOttom: "5px" }}>
-              {trialCard.trialcard[0]["Status"] === "O"
+              {trialCard["Status"] === "O"
                 ? "Status: Open"
                 : "Status: Closed"}
             </Typography>
@@ -49,38 +50,38 @@ export const ViewTrialCard = () => {
             <div className="input-container-2column">
               <Card>
                 <CardHeader>
-                  {trialCard.trialcard[0]["Trial Card #"] +
+                  {trialCard["Trial Card #"] +
                     ": " +
-                    trialCard.trialcard[0]["Title"]}
+                    trialCard["Title"]}
                 </CardHeader>
                 <CardBody>
                   <p>{trialCard.vessel}</p>
-                  <p>{"Department: " + trialCard.trialcard[0]["Dept"]} </p>
+                  <p>{"Department: " + trialCard["Dept"]} </p>
                   <p>
-                    {"Compartment: " + trialCard.trialcard[0]["COMPARTMENT"]}{" "}
+                    {"Compartment: " + trialCard["COMPARTMENT"]}{" "}
                   </p>
                   <p>
-                    {"Action Taken: " + trialCard.trialcard[0]["Action Taken"]}{" "}
+                    {"Action Taken: " + trialCard["Action Taken"]}{" "}
                   </p>
 
                   <p>
-                    {"Originator: " + trialCard.trialcard[0]["Originator Name"]}{" "}
+                    {"Originator: " + trialCard["Originator Name"]}{" "}
                   </p>
 
                   <div style={{ marginTop: "10px", marginBottom: "10px" }}>
                     <Divider />
                   </div>
 
-                  <p>{"Narrative: " + trialCard.trialcard[0]["Narrative"]}</p>
+                  <p>{"Narrative: " + trialCard["Narrative"]}</p>
 
                   <div style={{ marginTop: "10px", marginBottom: "10px" }}>
                     <Divider />
                   </div>
 
                   <p>
-                    {trialCard.trialcard[0]["Corrective Action"]
+                    {trialCard["Corrective Action"]
                       ? "Corrective Action: " +
-                        trialCard.trialcard[0]["Corrective Action"]
+                        trialCard["Corrective Action"]
                       : "No Corrective Action"}
                   </p>
                 </CardBody>
@@ -91,7 +92,7 @@ export const ViewTrialCard = () => {
                 <Divider />
                 <CardBody>
                   <div>
-                    <div>{trialCard.trialcard[0]["Task Notes"]}</div>
+                    <div>{trialCard["Task Notes"]}</div>
                   </div>
                 </CardBody>
               </Card>
@@ -101,7 +102,7 @@ export const ViewTrialCard = () => {
                 <CardHeader>References</CardHeader>
                 <CardBody>
                   <div>
-                    <p>{trialCard.trialcard[0]["References"]} </p>
+                    <p>{trialCard["References"]} </p>
                   </div>
                 </CardBody>
               </Card>

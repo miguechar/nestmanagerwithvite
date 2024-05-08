@@ -24,12 +24,21 @@ import lcs21 from "../../assets/imgs/lcs21.png";
 import lcs27 from "../../assets/imgs/lcs27.png";
 import lcs29 from "../../assets/imgs/lcs29.jpg";
 import lcs31 from "../../assets/imgs/lcs31.jpg";
+import { trades } from "./trades";
 
 export const SearchTrialCard = ({ dataset }) => {
   const [filter, setFilter] = useState("");
   const [searched, setSearched] = useState([]);
   const navigate = useNavigate();
   const [totalTrialCards, setTotalTrialCards] = useState(0);
+
+  // FILTERS
+  const [showAllFilters, setShowShowAllFilters] = useState(false);
+  const [selectedTrades, setSelectedTrades] = useState(new Set(["Trades:"]));
+  const [originatorFilter, setOriginatorFilter] = useState("");
+  const [narrativeFilter, setNarrativeFilter] = useState("");
+  const [compartmentFilter, setCompartmentFilter] = useState("");
+  const [openOnlyFilter, setOpenOnlyFilter] = useState(false);
 
   const selectedValue = useMemo(
     () => Array.from(filter).join(", ").replaceAll("_", " "),
@@ -65,9 +74,57 @@ export const SearchTrialCard = ({ dataset }) => {
     }
   }
 
+  function handleMultipleFilter() {
+    setSearched([]);
+
+    let filteredCards = [];
+    for (let i = 0; i < dataset.length; i++) {
+      const filteredData = dataset[i].data.filter((item) => {
+        const narrativeMatch =
+          !narrativeFilter ||
+          (item["Narrative"] &&
+            item["Narrative"]
+              .toLowerCase()
+              .includes(narrativeFilter.toLowerCase()));
+        const originatorMatch =
+          !originatorFilter ||
+          (item["Originator Name"] &&
+            item["Originator Name"]
+              .toLowerCase()
+              .includes(originatorFilter.toLowerCase()));
+        const compartmentMatch =
+          !compartmentFilter ||
+          (item["COMPARTMENT"] &&
+            item["COMPARTMENT"]
+              .toLowerCase()
+              .includes(compartmentFilter.toLowerCase()));
+        const openOnlyMatch = !openOnlyFilter || item["Status"] !== "X";
+        return (
+          narrativeMatch && originatorMatch && compartmentMatch && openOnlyMatch
+        );
+      });
+
+      if (filteredData.length > 0) {
+        filteredCards.push({ data: filteredData, vessel: dataset[i].vessel });
+      }
+    }
+
+    console.log(filteredCards);
+    setSearched(filteredCards);
+  }
+
   function handleViewTrialCard(value, e) {
     e.stopPropagation();
     navigate("viewTrialCard", { state: { data: value } });
+  }
+
+  const selectTrades = useMemo(
+    () => Array.from(selectedTrades).join(" || ").replaceAll("_", " "),
+    [selectedTrades]
+  );
+
+  function clearFilters() {
+    setSelectedTrades([]);
   }
 
   const lcsimages = [
@@ -111,7 +168,7 @@ export const SearchTrialCard = ({ dataset }) => {
 
   useEffect(() => {
     const totalCount = searched.reduce(
-      (sum, item) => sum + item.trialcard.length,
+      (sum, item) => sum + item.data.length,
       0
     );
     setTotalTrialCards(totalCount);
@@ -125,6 +182,7 @@ export const SearchTrialCard = ({ dataset }) => {
           <div>
             <div className="input-container-2column">
               <Input
+                isDisabled={showAllFilters}
                 label={
                   filter !== ""
                     ? "Search Trial cards by " + selectedValue
@@ -133,7 +191,7 @@ export const SearchTrialCard = ({ dataset }) => {
                 onChange={(e) => handleFilter(e.target.value)}
               />
               <div className="input-container-2column">
-                <Dropdown>
+                <Dropdown isDisabled={showAllFilters}>
                   <DropdownTrigger>
                     <Button
                       variant="bordered"
@@ -164,13 +222,83 @@ export const SearchTrialCard = ({ dataset }) => {
               </div>
             </div>
 
+            <div className="input-container-3column">
+              <Switch
+                isSelected={showAllFilters}
+                onValueChange={setShowShowAllFilters}>
+                Show More Filters
+              </Switch>
+            </div>
+            <div className="input-container-1column">
+              {showAllFilters ? (
+                <div className="input-container-3column">
+                  <Dropdown backdrop="blur" shouldBlockScroll={false}>
+                    <DropdownTrigger>
+                      <Button variant="bordered" className="capitalize">
+                        {selectTrades ? selectTrades : "Trades"}
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                      aria-label="Select Trades"
+                      variant="flat"
+                      closeOnSelect={false}
+                      selectionMode="multiple"
+                      selectedKeys={selectedTrades}
+                      onSelectionChange={setSelectedTrades}>
+                      {trades.map((value) => (
+                        <DropdownItem
+                          description={value.Code + ", POC: " + value.POC}
+                          key={value.Code}>
+                          {value.Trade}
+                        </DropdownItem>
+                      ))}
+                    </DropdownMenu>
+                  </Dropdown>
+
+                  <Input
+                    label="Originator"
+                    onChange={(e) => setOriginatorFilter(e.target.value)}
+                  />
+                  <Input
+                    label="Compartment"
+                    onChange={(e) => setCompartmentFilter(e.target.value)}
+                  />
+                  <Input
+                    label="Narrative Includes"
+                    onChange={(e) => setNarrativeFilter(e.target.value)}
+                  />
+                  <Switch
+                    isSelected={openOnlyFilter}
+                    onValueChange={setOpenOnlyFilter}>
+                    {openOnlyFilter ? "Show Only Open" : "Show All"}
+                  </Switch>
+
+                  <div>
+                    <Button color="danger" onClick={() => clearFilters()}>
+                      Clear Filters
+                    </Button>
+                    <Button color="danger" onClick={() => setSearched([])}>
+                      Clear Search
+                    </Button>
+                    <Button
+                      color="primary"
+                      onClick={() => handleMultipleFilter()}>
+                      Search
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div></div>
+              )}
+            </div>
+
             <div className="input-container-4column">
-              {searched.map((item) =>
-                item.trialcard.map((trial) => (
-                  <Card key={trial.uid}>
+              {searched.map((value, index) =>
+                value.data.map((item, index) => (
+                  <Card>
                     <CardHeader className="justify-between">
                       <div className="flex gap-5" style={{ display: "flex" }}>
-                        <div>{trial["Trial Card #"]}</div>
+                        <div>{item["Trial Card #"]}</div>
                       </div>
                       <div>
                         <Button
@@ -186,15 +314,16 @@ export const SearchTrialCard = ({ dataset }) => {
                     <Divider />
                     <CardBody>
                       <div>
-                        <p>{item.vessel}</p>
+                        <p>{value.vessel}</p>
+                        <p>{item["Dept"]}</p>
                         <p>
-                          {trial["Corrective Action"] ? (
+                          {item["Corrective Action"] ? (
                             <p color="green">CA Provided</p>
                           ) : (
                             <p color="red">*No Corrective Action*</p>
                           )}
                         </p>
-                        {trial.Status == "X" ? (
+                        {item.Status == "X" ? (
                           <Typography fontWeight="bold" color="red">
                             *Closed*
                           </Typography>
@@ -204,12 +333,12 @@ export const SearchTrialCard = ({ dataset }) => {
                           </Typography>
                         )}
                         <div className="overflow-visible py-2">
-                          {renderItemVesselImage(item.vessel)}
+                          {renderItemVesselImage(value.vessel)}
                         </div>
                       </div>
                     </CardBody>
                     <CardFooter>
-                      {"Created On: " + trial["Created On"]}
+                      {"Created On: " + item["Created On"]}
                     </CardFooter>
                   </Card>
                 ))

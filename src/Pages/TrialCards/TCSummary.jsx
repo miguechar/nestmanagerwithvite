@@ -1,8 +1,9 @@
-import { Card, CardBody, CardHeader } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
 export const TCSummary = ({ Cards }) => {
   const [cards, setCards] = useState("");
+  const [showAll, setShowAll] = useState(false)
 
   function generateSummary() {
     const currentVessels = Cards.filter(
@@ -26,7 +27,7 @@ export const TCSummary = ({ Cards }) => {
       let weEngineering = 0
       for (let t = 0; t < searchingHull.data.length; t++) {
         const card = searchingHull.data[t]["Date Closed"];
-        if(searchingHull.data[t]["Dept"] === 592) {
+        if(searchingHull.data[t]["Lead Trade"] === 592) {
             weEngineering += 1
         }
         if (card) {
@@ -52,6 +53,11 @@ export const TCSummary = ({ Cards }) => {
     }
 
     setCards(currentCards);
+  }
+
+  function findCompartments() {
+    var byCompartment = []
+
   }
 
   useEffect(() => {
@@ -85,6 +91,18 @@ export const TCSummary = ({ Cards }) => {
         ) : (
           <div></div>
         )}
+      </div>
+      <div className="input-container-1column">
+        {showAll ? 
+          <div>
+
+          </div>
+          :
+          <div></div>  
+        }
+      </div>
+      <div className="input-container-1column">
+        <Button color="secondary">Show More (*Soon*)</Button>
       </div>
     </div>
   );
