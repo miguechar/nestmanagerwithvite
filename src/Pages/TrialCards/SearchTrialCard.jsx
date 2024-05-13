@@ -14,16 +14,16 @@ import {
   Image,
 } from "@nextui-org/react";
 import { useState, useMemo, useEffect } from "react";
-import { ChevronRightIcon } from "../../Components/icons/ChevronRightIcon";
+import { ChevronRightIcon } from "./../../Components/icons/ChevronRightIcon";
 import { useNavigate } from "react-router-dom";
 import { Typography } from "@mui/material";
-import { ShipCustomIcon } from "../../Components/icons/ShipIcon";
-import lcs23 from "../../assets/imgs/lcs23.jpeg";
-import lcs25 from "../../assets/imgs/lcs25.avif";
-import lcs21 from "../../assets/imgs/lcs21.png";
-import lcs27 from "../../assets/imgs/lcs27.png";
-import lcs29 from "../../assets/imgs/lcs29.jpg";
-import lcs31 from "../../assets/imgs/lcs31.jpg";
+import { ShipCustomIcon } from "./../../Components/icons/ShipIcon";
+import lcs23 from "./../../assets/imgs/lcs23.jpeg";
+import lcs25 from "./../../assets/imgs/lcs25.avif";
+import lcs21 from "./../../assets/imgs/lcs21.png";
+import lcs27 from "./../../assets/imgs/lcs27.png";
+import lcs29 from "./../../assets/imgs/lcs29.jpg";
+import lcs31 from "./../../assets/imgs/lcs31.jpg";
 import { trades } from "./trades";
 
 export const SearchTrialCard = ({ dataset }) => {
@@ -39,6 +39,8 @@ export const SearchTrialCard = ({ dataset }) => {
   const [narrativeFilter, setNarrativeFilter] = useState("");
   const [compartmentFilter, setCompartmentFilter] = useState("");
   const [openOnlyFilter, setOpenOnlyFilter] = useState(false);
+
+  const[test, setTest] = useState([])
 
   const selectedValue = useMemo(
     () => Array.from(filter).join(", ").replaceAll("_", " "),
@@ -109,7 +111,7 @@ export const SearchTrialCard = ({ dataset }) => {
       }
     }
 
-    console.log(filteredCards);
+    console.log(selectedTrades);
     setSearched(filteredCards);
   }
 
@@ -166,12 +168,21 @@ export const SearchTrialCard = ({ dataset }) => {
     ) : null;
   };
 
+  const getArrayFromLocalStorage = () => {
+    const storedArray = localStorage.getItem('cards');
+    if (storedArray) {
+      setTest(JSON.parse(storedArray));
+    }
+  };
+
   useEffect(() => {
     const totalCount = searched.reduce(
       (sum, item) => sum + item.data.length,
       0
     );
     setTotalTrialCards(totalCount);
+
+    // getArrayFromLocalStorage()
   }, [searched]);
 
   return (
@@ -180,116 +191,64 @@ export const SearchTrialCard = ({ dataset }) => {
         <CardHeader>Search Trial Card</CardHeader>
         <CardBody>
           <div>
-            <div className="input-container-2column">
-              <Input
-                isDisabled={showAllFilters}
-                label={
-                  filter !== ""
-                    ? "Search Trial cards by " + selectedValue
-                    : "Choose filter"
-                }
-                onChange={(e) => handleFilter(e.target.value)}
-              />
-              <div className="input-container-2column">
-                <Dropdown isDisabled={showAllFilters}>
+            <div className="input-container-1column">
+              <div className="input-container-3column">
+                <Dropdown backdrop="blur" shouldBlockScroll={false}>
                   <DropdownTrigger>
-                    <Button
-                      variant="bordered"
-                      className="capitalize"
-                      style={{ width: "150px" }}>
-                      {selectedValue}
+                    <Button variant="bordered" className="capitalize">
+                      {selectTrades ? selectTrades : "Trades"}
                     </Button>
                   </DropdownTrigger>
                   <DropdownMenu
-                    aria-label="Single selection example"
+                    aria-label="Select Trades"
                     variant="flat"
-                    disallowEmptySelection
-                    selectionMode="single"
-                    selectedKeys={selectedValue}
-                    onSelectionChange={setFilter}>
-                    {filterOptions.map((value) => (
-                      <DropdownItem key={value.name}>{value.name}</DropdownItem>
+                    closeOnSelect={false}
+                    selectionMode="multiple"
+                    selectedKeys={selectedTrades}
+                    onSelectionChange={setSelectedTrades}>
+                    {trades.map((value) => (
+                      <DropdownItem
+                        description={value.Code + ", POC: " + value.POC}
+                        key={value.Code}>
+                        {value.Trade}
+                      </DropdownItem>
                     ))}
                   </DropdownMenu>
                 </Dropdown>
-                <p>
-                  {"*Showing " +
-                    totalTrialCards +
-                    " results on " +
-                    searched.length +
-                    " hulls*"}
-                </p>
-              </div>
-            </div>
 
-            <div className="input-container-3column">
-              <Switch
-                isSelected={showAllFilters}
-                onValueChange={setShowShowAllFilters}>
-                Show More Filters
-              </Switch>
-            </div>
-            <div className="input-container-1column">
-              {showAllFilters ? (
-                <div className="input-container-3column">
-                  <Dropdown backdrop="blur" shouldBlockScroll={false}>
-                    <DropdownTrigger>
-                      <Button variant="bordered" className="capitalize">
-                        {selectTrades ? selectTrades : "Trades"}
-                      </Button>
-                    </DropdownTrigger>
-                    <DropdownMenu
-                      aria-label="Select Trades"
-                      variant="flat"
-                      closeOnSelect={false}
-                      selectionMode="multiple"
-                      selectedKeys={selectedTrades}
-                      onSelectionChange={setSelectedTrades}>
-                      {trades.map((value) => (
-                        <DropdownItem
-                          description={value.Code + ", POC: " + value.POC}
-                          key={value.Code}>
-                          {value.Trade}
-                        </DropdownItem>
-                      ))}
-                    </DropdownMenu>
-                  </Dropdown>
+                <Input
+                  label="Originator"
+                  onChange={(e) => setOriginatorFilter(e.target.value)}
+                />
+                <Input
+                  label="Compartment"
+                  onChange={(e) => setCompartmentFilter(e.target.value)}
+                />
+                <Input
+                  label="Narrative Includes"
+                  onChange={(e) => setNarrativeFilter(e.target.value)}
+                />
+                <Switch
+                  isSelected={openOnlyFilter}
+                  onValueChange={setOpenOnlyFilter}>
+                  {openOnlyFilter ? "Show Only Open" : "Show All"}
+                </Switch>
 
-                  <Input
-                    label="Originator"
-                    onChange={(e) => setOriginatorFilter(e.target.value)}
-                  />
-                  <Input
-                    label="Compartment"
-                    onChange={(e) => setCompartmentFilter(e.target.value)}
-                  />
-                  <Input
-                    label="Narrative Includes"
-                    onChange={(e) => setNarrativeFilter(e.target.value)}
-                  />
-                  <Switch
-                    isSelected={openOnlyFilter}
-                    onValueChange={setOpenOnlyFilter}>
-                    {openOnlyFilter ? "Show Only Open" : "Show All"}
-                  </Switch>
-
-                  <div>
-                    <Button color="danger" onClick={() => clearFilters()}>
-                      Clear Filters
-                    </Button>
-                    <Button color="danger" onClick={() => setSearched([])}>
-                      Clear Search
-                    </Button>
-                    <Button
-                      color="primary"
-                      onClick={() => handleMultipleFilter()}>
-                      Search
-                    </Button>
-                  </div>
+                <div>
+                  <Button color="danger" onClick={() => clearFilters()}>
+                    Clear Filters
+                  </Button>
+                  <Button color="danger" onClick={() => setSearched([])}>
+                    Clear Search
+                  </Button>
+                  <Button
+                    color="primary"
+                    onClick={() => handleMultipleFilter()}>
+                    Search
+                  </Button>
+                  <Button onClick={() => console.log(test)} >Test</Button>
                 </div>
-              ) : (
-                <div></div>
-              )}
+              </div>
             </div>
 
             <div className="input-container-4column">

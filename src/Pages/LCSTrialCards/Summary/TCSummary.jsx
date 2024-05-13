@@ -1,16 +1,10 @@
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Skeleton,
-} from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Skeleton } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
 export const TCSummary = ({ Cards }) => {
   const [cards, setCards] = useState("");
   const [showAll, setShowAll] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(false)
 
   function generateSummary() {
     const currentVessels = Cards.filter(
@@ -60,6 +54,7 @@ export const TCSummary = ({ Cards }) => {
     }
 
     setCards(currentCards);
+    setLoaded(true)
   }
 
   function findCompartments() {
@@ -73,7 +68,7 @@ export const TCSummary = ({ Cards }) => {
   return (
     <div>
       <div className="input-container-3column">
-        {cards ? (
+        {loaded ? (
           cards.map((value) => (
             <div>
               <Card>
@@ -95,8 +90,40 @@ export const TCSummary = ({ Cards }) => {
             </div>
           ))
         ) : (
-          <div>
-            <Card className="w-[200px] space-y-5 p-4" radius="lg">
+          <div className="input-container-1column">
+            <Card className=" space-y-5 p-4" radius="lg">
+              <Skeleton className="rounded-lg">
+                <div className="h-24 rounded-lg bg-default-300"></div>
+              </Skeleton>
+              <div className="space-y-3">
+                <Skeleton className="w-3/5 rounded-lg">
+                  <div className="h-3 w-3/5 rounded-lg bg-default-200"></div>
+                </Skeleton>
+                <Skeleton className="w-4/5 rounded-lg">
+                  <div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
+                </Skeleton>
+                <Skeleton className="w-2/5 rounded-lg">
+                  <div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
+                </Skeleton>
+              </div>
+            </Card>
+            <Card className=" space-y-5 p-4" radius="lg">
+              <Skeleton className="rounded-lg">
+                <div className="h-24 rounded-lg bg-default-300"></div>
+              </Skeleton>
+              <div className="space-y-3">
+                <Skeleton className="w-3/5 rounded-lg">
+                  <div className="h-3 w-3/5 rounded-lg bg-default-200"></div>
+                </Skeleton>
+                <Skeleton className="w-4/5 rounded-lg">
+                  <div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
+                </Skeleton>
+                <Skeleton className="w-2/5 rounded-lg">
+                  <div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
+                </Skeleton>
+              </div>
+            </Card>
+            <Card className=" space-y-5 p-4" radius="lg">
               <Skeleton className="rounded-lg">
                 <div className="h-24 rounded-lg bg-default-300"></div>
               </Skeleton>
@@ -118,9 +145,6 @@ export const TCSummary = ({ Cards }) => {
       <div className="input-container-1column">
         {showAll ? <div></div> : <div></div>}
       </div>
-      {/* <div className="input-container-1column">
-        <Button color="secondary">Show More (*Soon*)</Button>
-      </div> */}
     </div>
   );
 };

@@ -37,6 +37,7 @@ import { PCPage } from "./Pages/BOM/Index";
 import { TeeInfo } from "./Pages/TeeInfo/Index";
 import { TrialCards } from "./Pages/TrialCards/Index";
 import { ViewTrialCard } from "./Pages/TrialCards/ViewTrialCard";
+import { LCSTRiadCards } from "./Pages/LCSTrialCards/Index";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -268,6 +269,13 @@ function App() {
             path="/trialcards/viewTrialCard"
             element={
               <WrapNav title={"View Trial Cards"} component={<ViewTrialCard />} />
+            }
+          />
+
+          <Route
+            path="/newtrialscards"
+            element={
+              <WrapNav title={"New Trial Cards"} component={<LCSTRiadCards />} />
             }
           />
         </Routes>

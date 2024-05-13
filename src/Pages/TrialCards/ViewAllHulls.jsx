@@ -35,7 +35,7 @@ export const LCSViewAllTC = ({ updateParentState }) => {
       setData(data);
       console.log(data)
 
-      localStorage.setItem("cards", JSON.stringify(data));
+      // localStorage.setItem("cards", JSON.stringify(data));
       setLoading(false);
       updateParentState(data);
     } catch (error) {
